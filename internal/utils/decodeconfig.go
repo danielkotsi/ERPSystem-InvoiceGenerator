@@ -9,7 +9,7 @@ import (
 
 func DecodeConf() (conf models.Config) {
 
-	configfile, err := os.Open("../../forum_config.json")
+	configfile, err := os.Open("../../config.json")
 	if err != nil {
 		log.Println(err)
 	}

@@ -19,4 +19,24 @@
 			<a href="/makeaninvoice" class="invoice">Make an invoice
 			</a>
     </nav>
+
+    {{range .Products }}
+    <div class="product-name">
+      ONOMA:{{.Name}}
+    </div>
+    <div class="product-description">
+      PARIGRAFI:{{.Description}}
+    </div>
+    <div class="product-code">
+      KODIKOS:{{.Product_code}}
+    </div>
+    <div class="unit-price">
+      TIMI:{{.Unit_price}}
+    </div>
+    <div class="category">
+      KATIGORIA:{{.Category}}
+    </div>
+    {{end}}
+
+
 	</body>
