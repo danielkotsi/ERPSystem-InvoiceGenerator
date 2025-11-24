@@ -47,7 +47,9 @@ func (h *InvoiceHandler) GetCustomers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", resp)
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string]models.Customers{"Customers": resp}); err != nil {
+		h.Excecutor.ServeErrorwithHTML(w, err, 500)
+	}
 }
 
 func (h *InvoiceHandler) GetProducts(w http.ResponseWriter, r *http.Request) {

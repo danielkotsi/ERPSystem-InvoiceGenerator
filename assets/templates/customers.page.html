@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/home.page.css" />
+  </head>
+
+
+  <body>
+
+    <nav class="navbar">
+			<a href="/customers" class="customers">Customers
+			</a>
+			<a href="/products" class="products">Products
+			</a>
+			<a href="/makeaninvoice" class="invoice">Make an invoice
+			</a>
+    </nav>
+
+    {{range .Customers }}
+    <div class="customer-name">
+      ONOMA:{{.Name}}
+    </div>
+    <div class="customer-add1">
+      ODOS 1:{{.Address1}}
+      ARITHMOS:{{.NumofAdd1}}
+    </div>
+    <div class="customer-add2">
+      ODOS 2:{{.Address2}}
+      ARITHMOS:{{.NumofAdd2}}
+    </div>
+    <div class="customer-city">
+      POLI:{{.City}}
+    </div>
+    <div class="customer-state">
+      NOMOS:{{.City}}
+    </div>
+    <div class="customer-postal-code">
+      T.K.:{{.Postal_code}}
+    </div>
+    <div class="customer-country">
+      XORA:{{.Country}}
+    </div>
+    <div class="customer-email">
+      E-MAIL:{{.Email}}
+    </div>
+    <div class="customer-phone">
+      TILEFONO:{{.Phone}}
+    </div>
+    <div class="customer-mobile-phone">
+      KINITO TILEFONO:{{.Mobile_Phone}}
+    </div>
+    <div class="customer-VAT">
+      AFM:{{.VAT}}
+    </div>
+    {{end}}
+
+
+	</body>

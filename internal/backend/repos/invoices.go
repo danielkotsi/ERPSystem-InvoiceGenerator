@@ -6,7 +6,7 @@ import (
 )
 
 type Invoice_repo interface {
-	ListCustomers(ctx context.Context, search string) ([]models.Customer, error)
+	ListCustomers(ctx context.Context, search string) (models.Customers, error)
 	ListProducts(ctx context.Context, search string) ([]models.Product, error)
 	// ListInvoices(ctx context.Context, search string) ([]models.Invoice, error)
 	// GetMAPK(ctx context.Context, search string) (int, error)

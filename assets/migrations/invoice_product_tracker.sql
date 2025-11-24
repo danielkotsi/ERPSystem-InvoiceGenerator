@@ -3,17 +3,20 @@ PRAGMA foreign_keys = ON;
 -- ============================================
 --  Companies table (seller + customers)
 -- ============================================
-CREATE TABLE companies (
+CREATE TABLE  if not exists companies (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     name            TEXT NOT NULL,
     address_line1   TEXT,
+    address_num1   int,
     address_line2   TEXT,
+    address_num2   int,
     city            TEXT,
     state           TEXT,
     postal_code     TEXT,
     country         TEXT,
     email           TEXT,
     phone           TEXT,
+    mobile_phone           TEXT,
     tax_id          TEXT,          -- VAT, EIN, etc.
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -21,7 +24,7 @@ CREATE TABLE companies (
 -- ============================================
 --  Product Categories (optional but useful)
 -- ============================================
-CREATE TABLE product_categories (
+CREATE TABLE  if not exists product_categories (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     name            TEXT NOT NULL UNIQUE,
     description     TEXT
@@ -30,7 +33,7 @@ CREATE TABLE product_categories (
 -- ============================================
 --  Products (available for sale)
 -- ============================================
-CREATE TABLE products (
+CREATE TABLE if not exists products (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     category_id     TEXT,
     name            TEXT NOT NULL,
@@ -47,17 +50,17 @@ CREATE TABLE products (
 );
 
 -- Trigger: auto-update timestamp
-CREATE TRIGGER update_products_updated_at
-AFTER UPDATE ON products
-BEGIN
-    UPDATE products SET updated_at = CURRENT_TIMESTAMP
-    WHERE id = NEW.id;
-END;
+-- CREATE TRIGGER update_products_updated_at
+-- AFTER UPDATE ON products
+-- BEGIN
+--     UPDATE products SET updated_at = CURRENT_TIMESTAMP
+--     WHERE id = NEW.id;
+-- END;
 
 -- ============================================
 --  Invoices table
 -- ============================================
-CREATE TABLE invoices (
+CREATE TABLE  if not exists invoices (
     id                  TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     invoice_number      TEXT NOT NULL UNIQUE,
     seller_id           TEXT NOT NULL,
@@ -78,18 +81,18 @@ CREATE TABLE invoices (
 );
 
 -- Trigger: auto-update timestamp
-CREATE TRIGGER update_invoices_updated_at
-AFTER UPDATE ON invoices
-BEGIN
-    UPDATE invoices SET updated_at = CURRENT_TIMESTAMP
-    WHERE id = NEW.id;
-END;
+-- CREATE TRIGGER update_invoices_updated_at
+-- AFTER UPDATE ON invoices
+-- BEGIN
+--     UPDATE invoices SET updated_at = CURRENT_TIMESTAMP
+--     WHERE id = NEW.id;
+-- END;
 
 -- ============================================
 --  Invoice line items
 --  (can reference products OR custom description)
 -- ============================================
-CREATE TABLE invoice_items (
+CREATE TABLE if not exists invoice_items (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     invoice_id      TEXT NOT NULL,
     product_id      TEXT,               -- optional: allow custom lines without products

@@ -1,9 +1,22 @@
 package models
 
 type Customer struct {
-	Something string
+	Name         string
+	Address1     string
+	NumofAdd1    int
+	Address2     string
+	NumofAdd2    int
+	City         string
+	State        string
+	Postal_code  string
+	Country      string
+	Email        string
+	Phone        string
+	Mobile_Phone string
+	VAT          string
 }
 
+type Customers []Customer
 type Products []Product
 type Product struct {
 	Name         string
