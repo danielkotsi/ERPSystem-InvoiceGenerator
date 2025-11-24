@@ -7,18 +7,19 @@ import (
 	"-invoice_manager/internal/backend/routes"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
+	"html/template"
 	"net/http"
 )
 
 func New() (http.Handler, *sql.DB) {
 	CONFIG := utils.DecodeConf()
 	db := sqlite.NewDatabase(&CONFIG)
-
+	tmpl := template.Must(template.ParseGlob("../../assets/templates/*.page.html"))
 	// Repos
 	invoiceRepo := sqlite.NewInvoiceRepo(db)
 
 	// Services
-	invoice_service := services.NewInvoiceService(invoiceRepo)
+	invoice_service := services.NewInvoiceService(invoiceRepo, tmpl)
 
 	// Handlers
 	invoiceHandler := &handlers.InvoiceHandler{InvoiceService: invoice_service}

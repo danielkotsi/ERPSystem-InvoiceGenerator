@@ -3,7 +3,6 @@ package handlers
 import (
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
-	"log"
 	"net/http"
 )
 
@@ -17,12 +16,13 @@ func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.InvoiceService.List(r.Context(), r)
-	if err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// resp, err := h.InvoiceService.List(r.Context(), r)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
-	utils.JsonResponse(w, resp, 200)
+	h.InvoiceService.Invoice.DesignInvoice()
+	h.InvoiceService.Tmpl.ExecuteTemplate(w, "home.page.html", nil)
 }
