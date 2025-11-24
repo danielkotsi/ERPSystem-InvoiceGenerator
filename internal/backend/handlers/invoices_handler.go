@@ -1,252 +1,71 @@
 package handlers
 
 import (
-	"errors"
+	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/services"
+	"-invoice_manager/internal/utils"
 	"log"
 	"net/http"
 )
 
-type PostHandler struct {
-	InvoiceService *services.PostService
+type InvoiceHandler struct {
+	InvoiceService *services.InvoiceService
+	Excecutor      *services.Excecutor
 }
 
-func (h *PostHandler) GetHome(w http.ResponseWriter, r *http.Request) {
+func NewInvoiceHandler(invoserv *services.InvoiceService, executor *services.Excecutor) *InvoiceHandler {
+	return &InvoiceHandler{InvoiceService: invoserv, Excecutor: executor}
+}
+
+func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	resp, err := h.PostService.List(r.Context(), r)
+	// resp, err := h.InvoiceService.List(r.Context(), r)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// h.InvoiceService.Invoice.DesignInvoice()
+	h.Excecutor.Tmpl.ExecuteTemplate(w, "home.page.html", nil)
+}
+
+func (h *InvoiceHandler) GetCustomers(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	resp, err := h.InvoiceService.ListCustomers(r.Context(), r)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	utils.JsonResponse(w, resp, 200)
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string]models.Customers{"Customers": resp}); err != nil {
+		h.Excecutor.ServeErrorwithHTML(w, err, 500)
+	}
 }
 
-func (h *PostHandler) GetPostByID(w http.ResponseWriter, r *http.Request) {
+func (h *InvoiceHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	resp, err := h.PostService.FindPostbyID(r.Context(), r)
+	resp, err := h.InvoiceService.ListProducts(r.Context(), r)
 	if err != nil {
 		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	if resp.Post.ID == "" {
-		utils.JsonResponse(w, errors.New("No Post Found"), http.StatusNotFound)
+		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
 		return
 	}
 
-	utils.JsonResponse(w, resp, 200)
-}
-
-func (h *PostHandler) CreateComment(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "products.page.html", map[string]models.Products{"Products": resp}); err != nil {
+		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, "User Action from guest", http.StatusBadRequest)
-		return
-
-	}
-
-	if err := h.PostService.CreateComment(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "Comment Successfully created", 200)
-}
-func (h *PostHandler) StorePost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusBadRequest)
-		return
-
-	}
-	if err := h.PostService.CreatePost(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "Post created", 200)
-}
-
-func (h *PostHandler) EditPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-	if err := h.PostService.EditPost(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "Post created", 200)
-}
-
-func (h *PostHandler) EditComment(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, "User Action from guest", http.StatusBadRequest)
-		return
-
-	}
-
-	if err := h.PostService.EditComment(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "Comment Successfully created", 200)
-}
-
-func (h *PostHandler) LikePost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-	if err := h.PostService.LikePost(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Liked Post", 200)
-}
-
-func (h *PostHandler) DislikePost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-
-	if err := h.PostService.DislikePost(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Disliked Post", 200)
-}
-
-func (h *PostHandler) LikeComment(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-	if err := h.PostService.LikeComment(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Liked Comment", 200)
-}
-
-func (h *PostHandler) DislikeComment(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-
-	if err := h.PostService.DislikeComment(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Disliked Comment", 200)
-}
-
-func (h *PostHandler) RemovePost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusInternalServerError)
-		return
-
-	}
-
-	if err := h.PostService.RemovePost(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Deleted Post", 200)
-}
-
-func (h *PostHandler) RemoveComment(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.JsonResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	user := r.Context().Value("user").(models.User)
-	if user.UUID == "" {
-		utils.JsonResponse(w, error.Error(errors.New("User Action from guest")), http.StatusBadRequest)
-		return
-
-	}
-
-	if err := h.PostService.RemoveComment(r.Context(), r, user); err != nil {
-		log.Println(err)
-		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	utils.JsonResponse(w, "User Deleted Comment", 200)
 }

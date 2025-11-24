@@ -1,21 +1,28 @@
 package routes
 
 import (
+	"-invoice_manager/internal/backend/handlers"
+	"-invoice_manager/internal/backend/middleware"
 	"net/http"
 )
 
 type Router struct {
-	Handler *handlers.PostHandler
+	InvoiceHandler *handlers.InvoiceHandler
+	Middleware     *middleware.Middleware
 }
 
 func (r *Router) Setup() http.Handler {
 	mux := http.NewServeMux()
 
-	// Sessions
-	mux.HandleFunc("POST /login", r.SessionHandler.LoginUser)
-	mux.HandleFunc("POST /logout", r.SessionHandler.LogoutUser)
-	mux.HandleFunc("POST /resend-verification", r.SessionHandler.ResendVerificationEmail)
-
-	// Wrap with middleware
-	return r.AuthMiddleware.Handler(mux)
+	// Get requests
+	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
+	mux.HandleFunc("GET /customers", r.InvoiceHandler.GetCustomers)
+	mux.HandleFunc("GET /products", r.InvoiceHandler.GetProducts)
+	// mux.HandleFunc("GET /make_an_invoice", r.InvoiceHandler.GetMakeAnInvoicePage)
+	//
+	// //Post requests
+	// mux.HandleFunc("POST /create-customer", r.InvoiceHandler.CreateCustomer)
+	// mux.HandleFunc("POST /create-product", r.InvoiceHandler.CreateProduct)
+	// mux.HandleFunc("POST /create-invoice", r.InvoiceHandler.CreateInvoice)
+	return r.Middleware.Handler(mux)
 }

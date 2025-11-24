@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/home.page.css" />
+  </head>
+
+
+  <body>
+
+    <nav class="navbar">
+			<a href="/customers" class="customers">Customers
+			</a>
+			<a href="/products" class="products">Products
+			</a>
+			<a href="/makeaninvoice" class="invoice">Make an invoice
+			</a>
+    </nav>
+
+    {{range .Products }}
+    <div class="product-name">
+      ONOMA:{{.Name}}
+    </div>
+    <div class="product-description">
+      PARIGRAFI:{{.Description}}
+    </div>
+    <div class="product-code">
+      KODIKOS:{{.Product_code}}
+    </div>
+    <div class="unit-price">
+      TIMI:{{.Unit_price}}
+    </div>
+    <div class="category">
+      KATIGORIA:{{.Category}}
+    </div>
+    {{end}}
+
+
+	</body>
