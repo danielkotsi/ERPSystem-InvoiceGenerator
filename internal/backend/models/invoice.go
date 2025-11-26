@@ -20,12 +20,13 @@ type Customer struct {
 type Customers []Customer
 type Products []Product
 type Product struct {
-	Name         string
-	Description  string
-	Product_code string
-	Unit_price   float64
-	Category     string
-	Active       bool
+	Name         string  `form:"name"`
+	Description  string  `form:"description"`
+	Product_code string  `form:"sku"`
+	Unit_price   float64 `form:"price"`
+	Currency     string  `form:"currency"`
+	Category     string  `form:"category"`
+	Active       bool    `form:"active"`
 }
 type Order struct {
 	Seller   Customer

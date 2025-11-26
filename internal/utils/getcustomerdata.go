@@ -44,6 +44,9 @@ func ParseFormData(r *http.Request, data any) (err error) {
 		case reflect.Int:
 			n, _ := strconv.Atoi(values[0])
 			v.Field(i).SetInt(int64(n))
+		case reflect.Float64:
+			n, _ := strconv.ParseFloat(values[0], 64)
+			v.Field(i).SetFloat(n)
 		case reflect.Bool:
 			b, _ := strconv.ParseBool(values[0])
 			v.Field(i).SetBool(b)

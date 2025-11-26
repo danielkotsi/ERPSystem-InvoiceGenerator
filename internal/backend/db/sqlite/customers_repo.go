@@ -42,7 +42,7 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (model
 func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Customer) error {
 	x := rand.Reader
 	y, _ := rand.Int(x, big.NewInt(2000))
-	code := fmt.Sprintf("%s%s", customer_data.Name[0:3], y.String())
+	code := fmt.Sprintf("%s-%s", customer_data.Name[0:3], y.String())
 
 	query := "insert into companies(code,name,address_line1,address_num1,address_line2,address_num2,city,state,postal_code,country,email,phone,mobile_phone,tax_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
 

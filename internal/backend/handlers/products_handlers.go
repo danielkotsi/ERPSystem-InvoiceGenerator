@@ -3,6 +3,7 @@ package handlers
 import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/services"
+	"-invoice_manager/internal/utils"
 	"log"
 	"net/http"
 )
@@ -28,4 +29,14 @@ func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "products.page.html", map[string]models.Products{"Products": resp}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
+}
+
+func (h *ProductsHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
+	err := h.ProductsService.CreateProduct(r.Context(), r)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	utils.ResponseForClient(w, true, "product created successfully", 200)
 }

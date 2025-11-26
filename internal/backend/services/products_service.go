@@ -4,6 +4,7 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
+	"-invoice_manager/internal/utils"
 	"fmt"
 	"net/http"
 )
@@ -25,4 +26,18 @@ func (s *ProductsService) ListProducts(ctx context.Context, r *http.Request) (re
 		return []models.Product{}, err
 	}
 	return products, nil
+}
+
+func (s *ProductsService) CreateProduct(ctx context.Context, r *http.Request) error {
+
+	var product models.Product
+	if err := utils.ParseFormData(r, &product); err != nil {
+		return err
+	}
+
+	fmt.Println(product)
+	if err := s.Products.CreateProduct(r.Context(), product); err != nil {
+		return err
+	}
+	return nil
 }

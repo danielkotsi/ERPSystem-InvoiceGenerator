@@ -18,7 +18,7 @@ func NewProductsRepo(db *sql.DB) *ProductsRepo {
 func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]models.Product, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
-	query := "SELECT products.name,products.description,products.sku,products.unit_price,product_categories.name from products join product_categories on category_id==product_categories.id where sku LIKE ? and active==1"
+	query := "SELECT products.name,products.description,products.sku,products.unit_price,categoriesforproducts.name from products join product_categories on products.id==product_categories.product_id join categoriesforproducts on product_categories.category_id==categoriesforproducts.id where sku LIKE ? and active==1;"
 
 	rows, err := r.DB.QueryContext(ctx, query, search)
 	if err != nil {
@@ -35,4 +35,14 @@ func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]model
 		out = append(out, p)
 	}
 	return out, nil
+}
+
+func (r *ProductsRepo) CreateProduct(ctx context.Context, product_data models.Product) error {
+	query := "insert into products(name,description,sku,unit_price,currency) values(?,?,?,?,?)"
+
+	_, err := r.DB.ExecContext(ctx, query, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Currency)
+	if err != nil {
+		return err
+	}
+	return nil
 }

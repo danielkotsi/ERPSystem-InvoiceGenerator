@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -34,7 +33,6 @@ func (s *CustomersService) CreateCustomer(ctx context.Context, r *http.Request) 
 		return err
 	}
 
-	fmt.Println(customer)
 	if err := s.Customers.CreateCustomer(r.Context(), customer); err != nil {
 		return err
 	}
