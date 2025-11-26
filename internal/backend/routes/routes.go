@@ -7,8 +7,10 @@ import (
 )
 
 type Router struct {
-	InvoiceHandler *handlers.InvoiceHandler
-	Middleware     *middleware.Middleware
+	InvoiceHandler   *handlers.InvoiceHandler
+	CustomersHandler *handlers.CustomersHandler
+	ProductsHandler  *handlers.ProductsHandler
+	Middleware       *middleware.Middleware
 }
 
 func (r *Router) Setup() http.Handler {
@@ -16,8 +18,9 @@ func (r *Router) Setup() http.Handler {
 
 	// Get requests
 	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
-	mux.HandleFunc("GET /customers", r.InvoiceHandler.GetCustomers)
-	mux.HandleFunc("GET /products", r.InvoiceHandler.GetProducts)
+	mux.HandleFunc("GET /customers", r.CustomersHandler.GetCustomers)
+	mux.HandleFunc("POST /customers/create", r.CustomersHandler.CreateCustomer)
+	mux.HandleFunc("GET /products", r.ProductsHandler.GetProducts)
 	// mux.HandleFunc("GET /make_an_invoice", r.InvoiceHandler.GetMakeAnInvoicePage)
 	//
 	// //Post requests

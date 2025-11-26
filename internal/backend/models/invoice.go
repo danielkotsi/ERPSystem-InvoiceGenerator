@@ -1,19 +1,19 @@
 package models
 
 type Customer struct {
-	Name         string
-	Address1     string
-	NumofAdd1    int
-	Address2     string
-	NumofAdd2    int
-	City         string
-	State        string
-	Postal_code  string
-	Country      string
-	Email        string
-	Phone        string
-	Mobile_Phone string
-	VAT          string
+	Name         string `form:"name"`
+	Address1     string `form:"address_line1"`
+	NumofAdd1    int    `form:"address_num1"`
+	Address2     string `form:"address_line2"`
+	NumofAdd2    int    `form:"address_num2"`
+	City         string `form:"city"`
+	State        string `form:"state"`
+	Postal_code  string `form:"postal_code"`
+	Country      string `form:"country"`
+	Email        string `form:"email"`
+	Phone        string `form:"phone"`
+	Mobile_Phone string `form:"mobile_phone"`
+	VAT          string `form:"tax_id"`
 }
 
 type Customers []Customer

@@ -18,20 +18,28 @@ func New() (http.Handler, *sql.DB) {
 	tmpl := template.Must(template.ParseGlob("../../assets/templates/*.page.html"))
 	// Repos
 	invoiceRepo := sqlite.NewInvoiceRepo(db)
+	customersRepo := sqlite.NewCustomersRepo(db)
+	productsRepo := sqlite.NewProductsRepo(db)
 
 	// Services
 	invoice_service := services.NewInvoiceService(invoiceRepo)
+	customers_service := services.NewCustomersService(customersRepo)
+	products_service := services.NewProductsService(productsRepo)
 	htmlexcecuteservice := services.NewHTMLExcecutor(tmpl)
 
 	// Handlers
 	invoiceHandler := handlers.NewInvoiceHandler(invoice_service, htmlexcecuteservice)
+	customersHandler := handlers.NewCustomersHandler(customers_service, htmlexcecuteservice)
+	productsHandler := handlers.NewProductsHandler(products_service, htmlexcecuteservice)
 
 	middleware := middleware.NewMiddleware(&CONFIG)
 
 	// Router
 	router := &routes.Router{
-		InvoiceHandler: invoiceHandler,
-		Middleware:     middleware,
+		InvoiceHandler:   invoiceHandler,
+		CustomersHandler: customersHandler,
+		ProductsHandler:  productsHandler,
+		Middleware:       middleware,
 	}
 
 	return router.Setup(), db
