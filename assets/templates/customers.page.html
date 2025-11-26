@@ -20,7 +20,7 @@
 			</a>
     </nav>
 
-    <form class="form" action="/customers/create" method="POST" enctype="multipart/form-data">
+    <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
 
       <input type="text" name="name" id="name" placeholder="Customer Name">
               <input type="text" name="address_line1" id="address_line1" placeholder="Address_line1"></input> 
@@ -42,6 +42,9 @@
     {{range .Customers }}
     <div class="customer-name">
       ONOMA:{{.Name}}
+    </div>
+    <div class="customer-code">
+      ONOMA:{{.Code}}
     </div>
     <div class="customer-add1">
       ODOS 1:{{.Address1}}
@@ -93,4 +96,5 @@
 }
     </style>
 
+ <script src="/static/scripts/customer.page.js"></script>
 	</body>

@@ -1,6 +1,7 @@
 package models
 
 type Customer struct {
+	Code         string
 	Name         string `form:"name"`
 	Address1     string `form:"address_line1"`
 	NumofAdd1    int    `form:"address_num1"`

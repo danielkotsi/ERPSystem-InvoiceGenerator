@@ -16,6 +16,7 @@ type Router struct {
 func (r *Router) Setup() http.Handler {
 	mux := http.NewServeMux()
 
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("../../static/"))))
 	// Get requests
 	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
 	mux.HandleFunc("GET /customers", r.CustomersHandler.GetCustomers)

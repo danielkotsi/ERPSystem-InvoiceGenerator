@@ -38,5 +38,5 @@ func (h *CustomersHandler) CreateCustomer(w http.ResponseWriter, r *http.Request
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	utils.JsonResponse(w, "customer created successfully", 200)
+	utils.ResponseForClient(w, true, "customer created successfully", 200)
 }

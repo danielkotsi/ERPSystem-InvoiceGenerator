@@ -27,9 +27,9 @@ func JsonResponse(w http.ResponseWriter, data any, status int) {
 
 // ErrorResponse sends a standardized JSON error response
 // This ensures consistent error format across the API
-func ErrorResponse(w http.ResponseWriter, message string, status int) {
+func ResponseForClient(w http.ResponseWriter, success bool, message string, status int) {
 	response := map[string]any{
-		"success": false,
+		"success": success,
 		"message": message,
 	}
 	JsonResponse(w, response, status)

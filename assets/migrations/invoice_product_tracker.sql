@@ -5,6 +5,7 @@ PRAGMA foreign_keys = ON;
 -- ============================================
 CREATE TABLE  if not exists companies (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    code            TEXT NOT NULL,
     name            TEXT NOT NULL,
     address_line1   TEXT,
     address_num1   int,
