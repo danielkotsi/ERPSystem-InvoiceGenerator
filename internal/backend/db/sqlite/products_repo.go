@@ -4,7 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
+	"errors"
 	"fmt"
+	"log"
+
+	"github.com/gofrs/uuid"
 )
 
 type ProductsRepo struct {
@@ -38,11 +42,50 @@ func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]model
 }
 
 func (r *ProductsRepo) CreateProduct(ctx context.Context, product_data models.Product) error {
-	query := "insert into products(name,description,sku,unit_price,currency) values(?,?,?,?,?)"
+	product_id, err := uuid.NewV4()
+	if err != nil {
+		return err
+	}
+	query := "insert into products(id,name,description,sku,unit_price,currency) values(?,?,?,?,?,?)"
 
-	_, err := r.DB.ExecContext(ctx, query, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Currency)
+	_, err = r.DB.ExecContext(ctx, query, product_id, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Currency)
+	if err != nil {
+		return err
+	}
+	err = r.InsertProductIntoCategories(ctx, product_id.String(), product_data.Category)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (r *ProductsRepo) InsertProductIntoCategories(ctx context.Context, product_id string, product_category string) error {
+	err, id := r.GetProductCategoryID(ctx, product_category)
+	if err != nil {
+		return err
+	}
+
+	query := "insert into product_categories(product_id,category_id)values(?,?)"
+	_, err = r.DB.ExecContext(ctx, query, product_id, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ProductsRepo) GetProductCategoryID(ctx context.Context, product_category string) (err error, id string) {
+	query := "select id from categoriesforproducts where name==?"
+
+	rows, err := r.DB.QueryContext(ctx, query, product_category)
+	if err != nil {
+		log.Println(err)
+		return errors.New("Category For Product does not exist"), ""
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&id); err != nil {
+			return err, ""
+		}
+	}
+	return nil, id
 }
