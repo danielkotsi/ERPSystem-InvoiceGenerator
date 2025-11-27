@@ -1,8 +1,5 @@
 PRAGMA foreign_keys = ON;
 
--- ============================================
---  Companies table (seller + customers)
--- ============================================
 CREATE TABLE  if not exists companies (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     code            TEXT NOT NULL,
@@ -22,9 +19,6 @@ CREATE TABLE  if not exists companies (
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- ============================================
---  Product Categories (optional but useful)
--- ============================================
 CREATE TABLE  if not exists categoriesforproducts  (
     id              integer NOT NULL PRIMARY KEY autoincrement,
     name            TEXT NOT NULL UNIQUE,
@@ -39,9 +33,6 @@ CREATE TABLE  if not exists product_categories  (
     FOREIGN KEY (category_id) REFERENCES categoriesforproducts(id) 
 );
 
--- ============================================
---  Products (available for sale)
--- ============================================
 CREATE TABLE if not exists products (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     name            TEXT NOT NULL,
@@ -57,17 +48,6 @@ CREATE TABLE if not exists products (
     FOREIGN KEY (category_id) REFERENCES product_categories(id)
 );
 
--- Trigger: auto-update timestamp
--- CREATE TRIGGER update_products_updated_at
--- AFTER UPDATE ON products
--- BEGIN
---     UPDATE products SET updated_at = CURRENT_TIMESTAMP
---     WHERE id = NEW.id;
--- END;
-
--- ============================================
---  Invoices table
--- ============================================
 CREATE TABLE  if not exists invoices (
     id                  TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     invoice_number      TEXT NOT NULL UNIQUE,
@@ -76,8 +56,6 @@ CREATE TABLE  if not exists invoices (
     issue_date          DATE NOT NULL,
     due_date            DATE NOT NULL,
     status              TEXT NOT NULL DEFAULT 'pending', 
-        -- statuses: pending, paid, cancelled
-
     currency            TEXT NOT NULL DEFAULT 'USD',
     notes               TEXT,
 
@@ -88,18 +66,6 @@ CREATE TABLE  if not exists invoices (
     FOREIGN KEY (customer_id) REFERENCES companies(id)
 );
 
--- Trigger: auto-update timestamp
--- CREATE TRIGGER update_invoices_updated_at
--- AFTER UPDATE ON invoices
--- BEGIN
---     UPDATE invoices SET updated_at = CURRENT_TIMESTAMP
---     WHERE id = NEW.id;
--- END;
-
--- ============================================
---  Invoice line items
---  (can reference products OR custom description)
--- ============================================
 CREATE TABLE if not exists invoice_items (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     invoice_id      TEXT NOT NULL,
@@ -112,7 +78,4 @@ CREATE TABLE if not exists invoice_items (
     FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
--- ============================================
---  Payments for invoic
 

@@ -33,8 +33,3 @@ type Order struct {
 	Buyer    Customer
 	Products map[int]Product
 }
-
-type Invoice struct {
-	Order Order
-	MAPK  string
-}

@@ -1,43 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>InvoiceManager</title>
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/home.page.css" />
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
 
+<h1>Invoice Generator</h1>
 
-  <body>
+<form action="/generate-invoice" method="POST">
+    
+    <label for="invoiceNumber">Invoice Number</label>
+    <input type="text" id="invoiceNumber" name="invoiceNumber" required>
 
-    <nav class="navbar">
-			<a href="/customers" class="customers">Customers
-			</a>
-			<a href="/products" class="products">Products
-			</a>
-			<a href="/makeaninvoice" class="invoice">Make an invoice
-			</a>
-    </nav>
+    <label for="date">Date</label>
+    <input type="date" id="date" name="date" required>
 
-    <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
+    <label for="customerName">Customer Name</label>
+    <input type="text" id="customerName" name="customerName" required>
 
-      <input type="text" name="name" id="name" placeholder="Customer Name">
-              <input type="text" name="address_line1" id="address_line1" placeholder="Address_line1"></input> 
-              <input type="text" name="address_num1" id="address_num1" placeholder="Address_num1"></input> 
-              <input type="text" name="address_line2" id="address_line2" placeholder="Address_line2"></input> 
-              <input type="text" name="address_num2" id="address_num2" placeholder="Address_num2"></input> 
-              <input type="text" name="city" id="city" placeholder="City"></input> 
-              <input type="text" name="state" id="state" placeholder="State"></input> 
-              <input type="text" name="postal_code" id="postal_code" placeholder="Postal_code"></input> 
-              <input type="text" name="country" id="country" placeholder="Country"></input> 
-              <input type="email" name="email" id="email" placeholder="Email"></input> 
-              <input type="text" name="phone" id="phone" placeholder="Phone"></input> 
-              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Mobile_phone"></input> 
-              <input type="text" name="tax_id" id="tax_id" placeholder="Tax ID"></input> 
-        <button class="submit-btn" type="submit">Add Customer</button>
+    <label for="customerEmail">Customer Email</label>
+    <input type="email" id="customerEmail" name="customerEmail">
 
-    </form>
+    <label for="customerAddress">Customer Address</label>
+    <textarea id="customerAddress" name="customerAddress" rows="3"></textarea>
 
- <script src="/static/scripts/customer.page.js"></script>
-	</body>
+    <h2>Items</h2>
+    <table id="itemsTable">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="items[0][description]" required></td>
+                <td><input type="number" name="items[0][quantity]" value="1" min="1" required></td>
+                <td><input type="number" name="items[0][unitPrice]" step="0.01" required></td>
+                <td><input type="number" name="items[0][total]" step="0.01" readonly></td>
+                <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" onclick="addRow()">Add Item</button>
+
+    <label for="grandTotal">Grand Total</label>
+    <input type="number" id="grandTotal" name="grandTotal" step="0.01" readonly>
+
+    <button type="submit">Generate PDF</button>
+</form>
+
+<script>
+    function updateTotals() {
+        const rows = document.querySelectorAll('#itemsTable tbody tr');
+        let grandTotal = 0;
+        rows.forEach(row => {
+            const qty = parseFloat(row.querySelector('[name$="[quantity]"]').value) || 0;
+            const price = parseFloat(row.querySelector('[name$="[unitPrice]"]').value) || 0;
+            const total = qty * price;
+            row.querySelector('[name$="[total]"]').value = total.toFixed(2);
+            grandTotal += total;
+        });
+        document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+    }
+
+    document.querySelector('#itemsTable').addEventListener('input', updateTotals);
+
+    function addRow() {
+        const tbody = document.querySelector('#itemsTable tbody');
+        const index = tbody.children.length;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="text" name="items[${index}][description]" required></td>
+            <td><input type="number" name="items[${index}][quantity]" value="1" min="1" required></td>
+            <td><input type="number" name="items[${index}][unitPrice]" step="0.01" required></td>
+            <td><input type="number" name="items[${index}][total]" step="0.01" readonly></td>
+            <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    function removeRow(button) {
+        const row = button.closest('tr');
+        row.remove();
+        updateTotals();
+    }
+
+    updateTotals();
+</script>
+
+</body>
+</html>
+
