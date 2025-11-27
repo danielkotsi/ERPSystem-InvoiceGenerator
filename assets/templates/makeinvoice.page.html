@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/home.page.css" />
+  </head>
+
+
+  <body>
+
+    <nav class="navbar">
+			<a href="/customers" class="customers">Customers
+			</a>
+			<a href="/products" class="products">Products
+			</a>
+			<a href="/makeaninvoice" class="invoice">Make an invoice
+			</a>
+    </nav>
+
+    <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
+
+      <input type="text" name="name" id="name" placeholder="Customer Name">
+              <input type="text" name="address_line1" id="address_line1" placeholder="Address_line1"></input> 
+              <input type="text" name="address_num1" id="address_num1" placeholder="Address_num1"></input> 
+              <input type="text" name="address_line2" id="address_line2" placeholder="Address_line2"></input> 
+              <input type="text" name="address_num2" id="address_num2" placeholder="Address_num2"></input> 
+              <input type="text" name="city" id="city" placeholder="City"></input> 
+              <input type="text" name="state" id="state" placeholder="State"></input> 
+              <input type="text" name="postal_code" id="postal_code" placeholder="Postal_code"></input> 
+              <input type="text" name="country" id="country" placeholder="Country"></input> 
+              <input type="email" name="email" id="email" placeholder="Email"></input> 
+              <input type="text" name="phone" id="phone" placeholder="Phone"></input> 
+              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Mobile_phone"></input> 
+              <input type="text" name="tax_id" id="tax_id" placeholder="Tax ID"></input> 
+        <button class="submit-btn" type="submit">Add Customer</button>
+
+    </form>
+
+ <script src="/static/scripts/customer.page.js"></script>
+	</body>

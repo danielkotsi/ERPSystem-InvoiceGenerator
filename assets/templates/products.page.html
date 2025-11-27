@@ -20,6 +20,18 @@
 			</a>
     </nav>
 
+    <form class="form" action="/products/create" id="create-product-form" method="POST" enctype="multipart/form-data">
+
+              <input type="text" name="name" id="name" placeholder="Product Name"></input> 
+              <textarea  name="description" id="description" placeholder="Product Description"></textarea> 
+	      <input type="text" name="price" id="price" placeholder="Product Price"></input> 
+	      <input type="text" name="currency" id="currency" placeholder="Currency"></input> 
+              <input type="text" name="category" id="category" placeholder="Product Category"></input> 
+              <input type="text" name="sku" id="sku" placeholder="Product Code"></input> 
+
+        <button class="submit-btn" type="submit">Add Product</button>
+
+    </form>
     {{range .Products }}
     <div class="product-name">
       ONOMA:{{.Name}}
@@ -36,7 +48,22 @@
     <div class="category">
       KATIGORIA:{{.Category}}
     </div>
+    <div class="line"></div>
     {{end}}
 
+
+<style>
+    .form{
+    margin:10px;
+    }
+.line{
+    margin:10px;
+    height:2px;
+    color:black;
+    background-color:black;
+    width:vw;
+}
+    </style>
+ <script src="/static/scripts/product.page.js"></script>
 
 	</body>

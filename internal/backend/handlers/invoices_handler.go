@@ -18,3 +18,6 @@ func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
 	// h.InvoiceService.Invoice.DesignInvoice()
 	h.Excecutor.Tmpl.ExecuteTemplate(w, "home.page.html", nil)
 }
+
+func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
+}

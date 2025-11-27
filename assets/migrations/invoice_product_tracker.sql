@@ -25,10 +25,18 @@ CREATE TABLE  if not exists companies (
 -- ============================================
 --  Product Categories (optional but useful)
 -- ============================================
-CREATE TABLE  if not exists product_categories (
-    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+CREATE TABLE  if not exists categoriesforproducts  (
+    id              integer NOT NULL PRIMARY KEY autoincrement,
     name            TEXT NOT NULL UNIQUE,
     description     TEXT
+);
+
+CREATE TABLE  if not exists product_categories  (
+    id              integer NOT NULL PRIMARY KEY autoincrement,
+    product_id TEXT NOT NULL ,
+    category_id TEXT NOT NULL ,
+    FOREIGN KEY (product_id) REFERENCES products(id) on delete cascade
+    FOREIGN KEY (category_id) REFERENCES categoriesforproducts(id) 
 );
 
 -- ============================================
@@ -36,7 +44,6 @@ CREATE TABLE  if not exists product_categories (
 -- ============================================
 CREATE TABLE if not exists products (
     id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    category_id     TEXT,
     name            TEXT NOT NULL,
     description     TEXT,
     sku             TEXT UNIQUE,        -- Optional stock-keeping code
