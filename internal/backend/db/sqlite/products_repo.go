@@ -46,9 +46,9 @@ func (r *ProductsRepo) CreateProduct(ctx context.Context, product_data models.Pr
 	if err != nil {
 		return err
 	}
-	query := "insert into products(id,name,description,sku,unit_price,currency) values(?,?,?,?,?,?)"
+	query := "insert into products(id,name,description,sku,unit_price,vat_category) values(?,?,?,?,?,?)"
 
-	_, err = r.DB.ExecContext(ctx, query, product_id, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Currency)
+	_, err = r.DB.ExecContext(ctx, query, product_id, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Vat_Category)
 	if err != nil {
 		return err
 	}

@@ -25,7 +25,7 @@ type Product struct {
 	Description  string  `form:"description"`
 	Product_code string  `form:"sku"`
 	Unit_price   float64 `form:"price"`
-	Currency     string  `form:"currency"`
+	Vat_Category string  `form:"vat_category"`
 	Category     string  `form:"category"`
 	Active       bool    `form:"active"`
 }
