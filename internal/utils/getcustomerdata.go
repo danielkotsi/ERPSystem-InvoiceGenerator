@@ -1,8 +1,10 @@
 package utils
 
 import (
-	"github.com/go-playground/form/v4"
+	"fmt"
 	"net/http"
+
+	"github.com/go-playground/form/v4"
 )
 
 func ParseFormData(r *http.Request, data any) (err error) {
@@ -11,6 +13,7 @@ func ParseFormData(r *http.Request, data any) (err error) {
 		return err
 	}
 
+	fmt.Println(r.Form)
 	if err := decoder.Decode(data, r.Form); err != nil {
 		return err
 	}

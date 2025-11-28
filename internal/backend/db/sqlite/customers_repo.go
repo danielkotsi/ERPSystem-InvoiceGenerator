@@ -58,12 +58,12 @@ func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models
 	// x := rand.Reader
 	// y, _ := rand.Int(x, big.NewInt(2000))
 	// code := fmt.Sprintf("%s-%s", customer_data.Name[0:3], y.String())
-	//
-	// query := "insert into companies(code,name,address_line1,address_num1,address_line2,address_num2,city,state,postal_code,country,email,phone,mobile_phone,tax_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
-	//
-	// _, err := r.DB.ExecContext(ctx, query, code, customer_data.Name, customer_data.Address1, customer_data.NumofAdd1, customer_data.Address2, customer_data.NumofAdd2, customer_data.City, customer_data.State, customer_data.Postal_code, customer_data.Country, customer_data.Email, customer_data.Phone, customer_data.Mobile_Phone, customer_data.VAT)
-	// if err != nil {
-	// 	return err
-	// }
+
+	query := "insert into companies(name,address_street,address_number,city,postal_code,country,email,phone,mobile_phone,vat_number,branch,entity_type) values(?,?,?,?,?,?,?,?,?,?,?,?) "
+
+	_, err := r.DB.ExecContext(ctx, query, customer_data.Name, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.City, customer_data.Address.PostalCode, customer_data.Country, customer_data.Email, customer_data.Phone, customer_data.Mobile_Phone, customer_data.VatNumber, customer_data.Branch, customer_data.EntityType)
+	if err != nil {
+		return err
+	}
 	return nil
 }
