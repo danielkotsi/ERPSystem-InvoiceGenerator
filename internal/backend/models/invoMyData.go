@@ -22,12 +22,6 @@ type Company struct {
 	Address    *AddressType `json:"address,omitempty" form:"address"`
 }
 
-type AddressType struct {
-	Street     *string `json:"street,omitempty" form:"street"`
-	Number     *string `json:"number,omitempty" form:"number"`
-	PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
-	City       *string `json:"city,omitempty" form:"city"`
-}
 type InvoiceHeader struct {
 	Series      string `json:"series" form:"series"`
 	Aa          string `json:"aa" form:"aa"`

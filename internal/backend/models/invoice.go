@@ -1,17 +1,23 @@
 package models
 
 type Customer struct {
-	VatNumber    string       `json:"vatNumber"`
-	Country      string       `json:"country"`
-	Branch       int          `json:"branch"`
-	EntityType   int          `json:"entityType"`
-	Name         string       `json:"name"`
-	Address      *AddressType `json:"address,omitempty"`
+	VatNumber    string       `json:"vatNumber" form:"vatNumber"`
+	Country      string       `json:"country" form:"country"`
+	Branch       int          `json:"branch" form:"branch"`
+	EntityType   int          `json:"entityType" form:"entityType"`
+	Name         string       `json:"name" form:"name"`
+	Address      *AddressType `json:"address,omitempty" form:"address"`
 	Email        *string      `form:"email"`
 	Phone        *string      `form:"phone"`
 	Mobile_Phone *string      `form:"mobile_phone"`
 }
 
+type AddressType struct {
+	Street     *string `json:"street,omitempty" form:"street"`
+	Number     *string `json:"number,omitempty" form:"number"`
+	PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
+	City       *string `json:"city,omitempty" form:"city"`
+}
 type Customers []Customer
 type Products []Product
 type Product struct {

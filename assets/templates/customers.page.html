@@ -22,7 +22,7 @@
 
     <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
 
-      <input type="text" name="name" id="name" placeholder="Customer Name">
+              <input type="text" name="name" id="name" placeholder="Customer Name">
               <input type="text" name="address_line1" id="address_line1" placeholder="Address_line1"></input> 
               <input type="text" name="address_num1" id="address_num1" placeholder="Address_num1"></input> 
               <input type="text" name="address_line2" id="address_line2" placeholder="Address_line2"></input> 
@@ -43,40 +43,44 @@
     <div class="customer-name">
       ONOMA:{{.Name}}
     </div>
-    <div class="customer-code">
-      ONOMA:{{.Code}}
-    </div>
+    {{if ne .Address nil}}
+    {{if and (ne .Address.Street nil) (ne .Address.Number nil)}}
     <div class="customer-add1">
-      ODOS 1:{{.Address1}}
-      ARITHMOS:{{.NumofAdd1}}
+      ODOS 1:{{.Address.Street}}
+      ARITHMOS:{{.Address.Number}}
     </div>
-    <div class="customer-add2">
-      ODOS 2:{{.Address2}}
-      ARITHMOS:{{.NumofAdd2}}
-    </div>
+    {{end}}
+    {{if ne .Address.City nil}}
     <div class="customer-city">
-      POLI:{{.City}}
+      POLI:{{.Address.City}}
     </div>
-    <div class="customer-state">
-      NOMOS:{{.City}}
-    </div>
+    {{end}}
+    {{if ne .Address.PostalCode nil }}
     <div class="customer-postal-code">
-      T.K.:{{.Postal_code}}
+      T.K.:{{.Address.PostalCode}}
     </div>
+    {{end}}
+    {{end}}
     <div class="customer-country">
       XORA:{{.Country}}
     </div>
+    {{if ne .Email nil}}
     <div class="customer-email">
       E-MAIL:{{.Email}}
     </div>
+    {{end}}
+    {{if ne .Phone nil}}
     <div class="customer-phone">
       TILEFONO:{{.Phone}}
     </div>
+    {{end}}
+    {{if ne .Mobile_Phone nil}}
     <div class="customer-mobile-phone">
       KINITO TILEFONO:{{.Mobile_Phone}}
     </div>
+    {{end}}
     <div class="customer-VAT">
-      AFM:{{.VAT}}
+      AFM:{{.VatNumber}}
     </div>
     <div class="line">
     </div>

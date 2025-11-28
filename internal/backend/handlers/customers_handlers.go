@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
 	"log"
@@ -24,11 +25,10 @@ func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) 
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	utils.JsonResponse(w, resp, 200)
-	//
-	// if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string]models.Customers{"Customers": resp}); err != nil {
-	// 	h.Excecutor.ServeErrorwithHTML(w, err, 500)
-	// }
+
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string]models.Customers{"Customers": resp}); err != nil {
+		h.Excecutor.ServeErrorwithHTML(w, err, 500)
+	}
 }
 
 func (h *CustomersHandler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
