@@ -2,10 +2,10 @@ package sqlite
 
 import (
 	"context"
-	"errors"
 	// "crypto/rand"
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/utils"
 	"fmt"
 	// "math/big"
 )
@@ -32,13 +32,26 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (model
 	var customers models.Customers
 	for rows.Next() {
 		var p models.Customer
-		if err := rows.Scan(&p.Name, &p.Address.Street, &p.Address.Number, &p.Address.City, &p.Address.PostalCode, &p.Country, &p.EntityType, &p.Branch, &p.VatNumber, p.Email, p.Phone, &p.Mobile_Phone); err != nil {
+		var street, number, city, postlacode, email, phone, mobilephone sql.NullString
+		if err := rows.Scan(&p.Name, &street, &number, &city, &postlacode, &p.Country, &p.EntityType, &p.Branch, &p.VatNumber, &email, &phone, &mobilephone); err != nil {
 			return nil, err
 		}
+
+		if utils.CheckIfSomethingNotNull(street, number, city, postlacode) {
+			p.Address = &models.AddressType{}
+			p.Address.Street = utils.NullableString(street)
+			p.Address.Number = utils.NullableString(number)
+			p.Address.City = utils.NullableString(city)
+			p.Address.PostalCode = utils.NullableString(postlacode)
+		}
+		p.Email = utils.NullableString(email)
+		p.Phone = utils.NullableString(phone)
+		p.Mobile_Phone = utils.NullableString(mobilephone)
+
 		customers = append(customers, p)
 	}
 	fmt.Println(customers)
-	return customers, errors.New("this is a test")
+	return customers, nil
 }
 
 func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Customer) error {

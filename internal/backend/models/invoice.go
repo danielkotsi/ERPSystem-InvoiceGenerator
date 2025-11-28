@@ -1,20 +1,15 @@
 package models
 
 type Customer struct {
-	Code         string
-	Name         string `form:"name"`
-	Address1     string `form:"address_line1"`
-	NumofAdd1    int    `form:"address_num1"`
-	Address2     string `form:"address_line2"`
-	NumofAdd2    int    `form:"address_num2"`
-	City         string `form:"city"`
-	State        string `form:"state"`
-	Postal_code  string `form:"postal_code"`
-	Country      string `form:"country"`
-	Email        string `form:"email"`
-	Phone        string `form:"phone"`
-	Mobile_Phone string `form:"mobile_phone"`
-	VAT          string `form:"tax_id"`
+	VatNumber    string       `json:"vatNumber"`
+	Country      string       `json:"country"`
+	Branch       int          `json:"branch"`
+	EntityType   int          `json:"entityType"`
+	Name         string       `json:"name"`
+	Address      *AddressType `json:"address,omitempty"`
+	Email        *string      `form:"email"`
+	Phone        *string      `form:"phone"`
+	Mobile_Phone *string      `form:"mobile_phone"`
 }
 
 type Customers []Customer

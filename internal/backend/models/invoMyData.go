@@ -23,10 +23,10 @@ type Company struct {
 }
 
 type AddressType struct {
-	Street     string `json:"street,omitempty"`
-	Number     string `json:"number,omitempty"`
-	PostalCode string `json:"postalCode,omitempty"`
-	City       string `json:"city,omitempty"`
+	Street     *string `json:"street,omitempty"`
+	Number     *string `json:"number,omitempty"`
+	PostalCode *string `json:"postalCode,omitempty"`
+	City       *string `json:"city,omitempty"`
 }
 
 type InvoiceHeader struct {
