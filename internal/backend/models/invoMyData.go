@@ -5,8 +5,8 @@ type InvoicePayload struct {
 }
 
 type Invoice struct {
-	Seller         Company               `json:"issuer" form:"issuer"`
-	Byer           Company               `json:"counterpart" form:"counterpart"`
+	Seller         Company               `json:"issuer" form:"seller"`
+	Byer           Company               `json:"counterpart" form:"buyer"`
 	InvoiceHeader  InvoiceHeader         `json:"invoiceHeader" form:"invoiceHeader"`
 	PaymentMethods []PaymentMethodDetail `json:"paymentMethods,omitempty" form:"paymentMethods"`
 	InvoiceDetails []InvoiceRow          `json:"invoiceDetails" form:"invoiceDetails"`

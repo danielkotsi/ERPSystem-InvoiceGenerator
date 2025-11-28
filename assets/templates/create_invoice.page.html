@@ -20,5 +20,101 @@
 			</a>
     </nav>
 
-<form>
-    </form>
+<form method="POST" action="/invoice/create" enctype="multipart/form-data">
+
+  <!-- ===== Seller (Issuer) ===== -->
+  <fieldset>
+    <legend>Seller (Issuer)</legend>
+    <label>Name: <input type="text" name="invoice.seller.name"></label><br>
+    <label>VAT Number: <input type="text" name="invoice.seller.vatNumber"></label><br>
+    <label>Country: <input type="text" name="invoice.seller.country"></label><br>
+    <label>Branch: <input type="number" name="invoice.seller.branch"></label><br>
+    <label>Entity Type: <input type="number" name="invoice.seller.entityType"></label><br>
+
+    <fieldset>
+      <legend>Address</legend>
+      <label>Street: <input type="text" name="invoice.seller.address.street"></label><br>
+      <label>City: <input type="text" name="invoice.seller.address.city"></label><br>
+      <label>Postal Code: <input type="text" name="invoice.seller.address.postalCode"></label><br>
+    </fieldset>
+  </fieldset>
+
+  <!-- ===== Buyer (Counterpart) ===== -->
+  <fieldset>
+    <legend>Buyer (Counterpart)</legend>
+    <label>Name: <input type="text" name="invoice.buyer.name"></label><br>
+    <label>VAT Number: <input type="text" name="invoice.buyer.vatNumber"></label><br>
+    <label>Country: <input type="text" name="invoice.buyer.country"></label><br>
+    <label>Branch: <input type="number" name="invoice.buyer.branch"></label><br>
+    <label>Entity Type: <input type="number" name="invoice.buyer.entityType"></label><br>
+
+    <fieldset>
+      <legend>Address</legend>
+      <label>Street: <input type="text" name="invoice.buyer.address.street"></label><br>
+      <label>City: <input type="text" name="invoice.buyer.address.city"></label><br>
+      <label>Postal Code: <input type="text" name="invoice.buyer.address.postalCode"></label><br>
+    </fieldset>
+  </fieldset>
+
+  <!-- ===== Invoice Header ===== -->
+  <fieldset>
+    <legend>Invoice Header</legend>
+    <label>Series: <input type="text" name="invoice.invoiceHeader.series"></label><br>
+    <label>Invoice Type: <input type="text" name="invoice.invoiceHeader.invoiceType"></label><br>
+  </fieldset>
+
+  <!-- ===== Invoice Details (Line Items) ===== -->
+  <fieldset>
+    <legend>Invoice Details</legend>
+    <div id="invoiceDetails">
+      <div class="line-item">
+        <label>Quantity: <input type="number" step="0.01" name="invoice.invoiceDetails[0].quantity"></label><br>
+        <label>Unit Price: <input type="number" step="0.01" name="invoice.invoiceDetails[0].unitPrice"></label><br>
+        <label>VAT Category: <input type="number" name="invoice.invoiceDetails[0].vatCategory"></label><br>
+      </div>
+    </div>
+    <button type="button" onclick="addLineItem()">Add Line Item</button>
+  </fieldset>
+
+  <!-- ===== Payment Methods ===== -->
+  <fieldset>
+    <legend>Payment Methods</legend>
+    <div id="paymentMethods">
+      <div class="payment-method">
+        <label>Type (1=Bank, 2=Credit Card): <input type="number" name="invoice.paymentMethods[0].type"></label><br>
+        <label>Amount: <input type="number" step="0.01" name="invoice.paymentMethods[0].amount"></label><br>
+      </div>
+    </div>
+    <button type="button" onclick="addPaymentMethod()">Add Payment Method</button>
+  </fieldset>
+
+  <button type="submit">Submit Invoice</button>
+</form>
+
+<script>
+let lineItemIndex = 1;
+function addLineItem() {
+  const div = document.createElement('div');
+  div.classList.add('line-item');
+  div.innerHTML = `
+    <label>Quantity: <input type="number" step="0.01" name="invoice.invoiceDetails[${lineItemIndex}].quantity"></label><br>
+    <label>Unit Price: <input type="number" step="0.01" name="invoice.invoiceDetails[${lineItemIndex}].unitPrice"></label><br>
+    <label>VAT Category: <input type="number" name="invoice.invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
+  `;
+  document.getElementById('invoiceDetails').appendChild(div);
+  lineItemIndex++;
+}
+
+let paymentMethodIndex = 1;
+function addPaymentMethod() {
+  const div = document.createElement('div');
+  div.classList.add('payment-method');
+  div.innerHTML = `
+    <label>Type (1=Bank, 2=Credit Card): <input type="number" name="invoice.paymentMethods[${paymentMethodIndex}].type"></label><br>
+    <label>Amount: <input type="number" step="0.01" name="invoice.paymentMethods[${paymentMethodIndex}].amount"></label><br>
+  `;
+  document.getElementById('paymentMethods').appendChild(div);
+  paymentMethodIndex++;
+}
+</script>
+

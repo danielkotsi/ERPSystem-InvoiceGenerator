@@ -26,6 +26,7 @@ func (r *Router) Setup() http.Handler {
 	mux.HandleFunc("POST /products/create", r.ProductsHandler.CreateProduct)
 
 	// mux.HandleFunc("GET /invoice/list", r.ProductsHandler.GetInvoices)
+	mux.HandleFunc("GET /makeaninvoice", r.InvoiceHandler.GetMakeInvoicePage)
 	mux.HandleFunc("POST /invoice/create", r.InvoiceHandler.CreateInvoice)
 	// mux.HandleFunc("GET /make_an_invoice", r.InvoiceHandler.GetMakeAnInvoicePage)
 	//
