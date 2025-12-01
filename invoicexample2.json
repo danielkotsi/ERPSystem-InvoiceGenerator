@@ -1,0 +1,55 @@
+{
+"Invoices": [
+{
+"InvoiceHeader": {
+"series": "A",
+"aa": "1542",
+"issueDate": "2025-12-01",
+"invoiceType": "1.1"
+},
+"Issuer": {
+"vatNumber": "123456789",
+"country": "GR",
+"branch": 0,
+"name": "My Company IKE",
+"address": "Kifisias 12",
+"postalCode": "11523",
+"city": "Athens"
+},
+"Counterpart": {
+"vatNumber": "987654321",
+"country": "GR",
+"branch": 0,
+"name": "Client SA",
+"address": "Patision 102",
+"postalCode": "11257",
+"city": "Athens"
+},
+"InvoiceDetails": [
+{
+"lineNumber": 1,
+"quantity": 2,
+"unitPrice": 50.0,
+"netValue": 100.0,
+"vatCategory": 1,
+"vatAmount": 24.0,
+"description": "Wireless Keyboard"
+},
+{
+"lineNumber": 2,
+"quantity": 1,
+"unitPrice": 80.0,
+"netValue": 80.0,
+"vatCategory": 1,
+"vatAmount": 19.2,
+"description": "Wireless Mouse"
+}
+],
+"InvoiceSummary": {
+"totalNetValue": 180.0,
+"totalVatAmount": 43.2,
+"totalGrossValue": 223.2
+}
+}
+]
+}

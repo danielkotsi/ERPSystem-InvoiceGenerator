@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"-invoice_manager/internal/backend/services"
+	"-invoice_manager/internal/utils"
 	"log"
 	"net/http"
 )
@@ -31,7 +32,5 @@ func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("Content-Disposition", "inline; filename=\"document.pdf\"")
-	w.Write(pdf)
+	utils.JsonResponse(w, pdf, 200)
 }

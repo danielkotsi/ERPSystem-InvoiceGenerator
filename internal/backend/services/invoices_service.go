@@ -19,11 +19,11 @@ func NewInvoiceService(in repository.Invoice_repo) *InvoiceService {
 	return &InvoiceService{Invoice: in}
 }
 
-func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
+func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf models.InvoicePayload, err error) {
 	var invo models.InvoicePayload
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
-		return nil, err
+		return models.InvoicePayload{}, err
 	}
 	fmt.Println("this is the seller", invo.Invoice.Seller)
 	fmt.Println("this is the seller", invo.Invoice.Seller)
@@ -31,10 +31,9 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	fmt.Println("this is the buyer", invo.Invoice.Byer)
 	fmt.Println("this is the buyer", *invo.Invoice.Byer.Address.Street)
 	fmt.Println("this is the invoice", invo.Invoice.InvoiceDetails)
-	return nil, nil
 	// pdf, err = s.Invoice.DesignInvoice(ctx, invo)
 	// if err != nil {
 	// 	return pdf, err
 	// }
-	// return pdf, nil
+	return invo, nil
 }
