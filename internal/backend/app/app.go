@@ -5,6 +5,7 @@ import (
 	"-invoice_manager/internal/backend/db/sqlite"
 	"-invoice_manager/internal/backend/handlers"
 	"-invoice_manager/internal/backend/middleware"
+	"-invoice_manager/internal/backend/mydata"
 	"-invoice_manager/internal/backend/routes"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
@@ -20,9 +21,10 @@ func New() (http.Handler, *sql.DB) {
 	invoiceRepo := sqlite.NewInvoiceRepo(db)
 	customersRepo := sqlite.NewCustomersRepo(db)
 	productsRepo := sqlite.NewProductsRepo(db)
+	myDataRepo := mydata.NewMyDataRepo()
 
 	// Services
-	invoice_service := services.NewInvoiceService(invoiceRepo)
+	invoice_service := services.NewInvoiceService(invoiceRepo, myDataRepo)
 	customers_service := services.NewCustomersService(customersRepo)
 	products_service := services.NewProductsService(productsRepo)
 	htmlexcecuteservice := services.NewHTMLExcecutor(tmpl)

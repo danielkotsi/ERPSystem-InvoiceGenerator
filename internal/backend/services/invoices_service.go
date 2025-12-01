@@ -13,10 +13,14 @@ import (
 
 type InvoiceService struct {
 	Invoice repository.Invoice_repo
+	MyData  repository.MyData_repo
 }
 
-func NewInvoiceService(in repository.Invoice_repo) *InvoiceService {
-	return &InvoiceService{Invoice: in}
+func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo) *InvoiceService {
+	return &InvoiceService{
+		Invoice: in,
+		MyData:  mydata,
+	}
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf models.InvoicePayload, err error) {
@@ -31,9 +35,13 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	fmt.Println("this is the buyer", invo.Invoice.Byer)
 	fmt.Println("this is the buyer", *invo.Invoice.Byer.Address.Street)
 	fmt.Println("this is the invoice", invo.Invoice.InvoiceDetails)
-	// pdf, err = s.Invoice.DesignInvoice(ctx, invo)
-	// if err != nil {
-	// 	return pdf, err
-	// }
-	return invo, nil
+
+	invoicePayload, err := s.Invoice.DesignInvoice(ctx, invo)
+	if err != nil {
+		return pdf, err
+	}
+
+	if err := s.MyData.SendInvoice(ctx, &invoicePayload); err != nil {
+	}
+	return pdf, nil
 }

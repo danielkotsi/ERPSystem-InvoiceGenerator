@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/utils"
-	"errors"
 	"html/template"
 	"log"
 	"time"
@@ -20,22 +19,22 @@ func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
 	return &InvoiceRepo{DB: db}
 }
 
-func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.InvoicePayload) (pdf []byte, err error) {
+func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.InvoicePayload) (pdf models.InvoicePayload, err error) {
 	if err := r.CompleteInvoicePayload(ctx, &invo); err != nil {
-		return nil, err
+		return models.InvoicePayload{}, err
 	}
 
-	finalInvoice, err := r.AssembleFinalInvoice(ctx, &invo)
-	if err != nil {
-		return nil, err
-	}
+	// finalInvoice, err := r.AssembleFinalInvoice(ctx, &invo)
+	// if err != nil {
+	// 	return models.Invoice{}, err
+	// }
 
-	pdf, err = r.MakePDF(ctx, &finalInvoice)
-	if err != nil {
-		return nil, err
-	}
+	// pdf, err = r.MakePDF(ctx, &finalInvoice)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return pdf, nil
+	return invo, nil
 }
 
 func (r *InvoiceRepo) CompleteInvoicePayload(ctx context.Context, invo *models.InvoicePayload) error {
@@ -65,8 +64,14 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.Invoice
 	return nil
 }
 
-func (r *InvoiceRepo) CalculateInvoiceLinePrices(*models.InvoiceRow) error {
-	//to do
+func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error {
+	amount := map[int]float64{
+		1: 0.24,
+		2: 0.13,
+	}
+	line.NetValue = line.Quantity * line.UnitPrice
+	line.VatAmount = line.Quantity * line.UnitPrice * amount[line.VatCategory]
+
 	return nil
 }
 
@@ -79,7 +84,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 	if err := r.CalculateAA(header); err != nil {
 		return err
 	}
-	header.IssueDate = time.Now().Format("2025-01-27")
+	header.IssueDate = time.Now().Format("2006-01-02")
 	return nil
 }
 func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
