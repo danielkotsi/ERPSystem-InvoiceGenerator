@@ -9,7 +9,7 @@ type Invoice struct {
 	Byer           Company               `json:"counterpart" form:"buyer"`
 	InvoiceHeader  InvoiceHeader         `json:"invoiceHeader" form:"invoiceHeader"`
 	PaymentMethods []PaymentMethodDetail `json:"paymentMethods,omitempty" form:"paymentMethods"`
-	InvoiceDetails []InvoiceRow          `json:"invoiceDetails" form:"invoiceDetails"`
+	InvoiceDetails []*InvoiceRow         `json:"invoiceDetails" form:"invoiceDetails"`
 	InvoiceSummary InvoiceSummary        `json:"invoiceSummary" form:"invoiceSummary"`
 }
 
@@ -42,6 +42,7 @@ type InvoiceRow struct {
 	NetValue    float64 `json:"netValue" form:"netValue"`
 	VatCategory int     `json:"vatCategory" form:"vatCategory"`
 	VatAmount   float64 `json:"vatAmount" form:"vatAmount"`
+	Description string  `json:"description" form:"description"`
 }
 
 type InvoiceSummary struct {

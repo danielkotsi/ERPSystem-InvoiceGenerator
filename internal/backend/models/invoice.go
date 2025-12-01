@@ -15,8 +15,8 @@ type Customer struct {
 type AddressType struct {
 	Street     *string `json:"street,omitempty" form:"street"`
 	Number     *string `json:"number,omitempty" form:"number"`
-	PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
 	City       *string `json:"city,omitempty" form:"city"`
+	PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
 }
 type Customers []Customer
 type Products []Product
