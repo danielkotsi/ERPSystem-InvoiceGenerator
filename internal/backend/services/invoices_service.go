@@ -20,16 +20,21 @@ func NewInvoiceService(in repository.Invoice_repo) *InvoiceService {
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
-	var invo models.Invoice
+	var invo models.InvoicePayload
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(invo)
+	fmt.Println("this is the seller", invo.Invoice.Seller)
+	fmt.Println("this is the seller", invo.Invoice.Seller)
+	fmt.Println("this is the seller", invo.Invoice.Seller.Address.Street)
+	fmt.Println("this is the buyer", invo.Invoice.Byer)
+	fmt.Println("this is the buyer", *invo.Invoice.Byer.Address.Street)
+	fmt.Println("this is the invoice", invo.Invoice.InvoiceDetails)
 	return nil, nil
-	pdf, err = s.Invoice.DesignInvoice(ctx, invo)
-	if err != nil {
-		return pdf, err
-	}
-	return pdf, nil
+	// pdf, err = s.Invoice.DesignInvoice(ctx, invo)
+	// if err != nil {
+	// 	return pdf, err
+	// }
+	// return pdf, nil
 }
