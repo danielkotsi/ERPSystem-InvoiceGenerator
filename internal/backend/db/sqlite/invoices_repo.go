@@ -103,14 +103,14 @@ func (r *InvoiceRepo) AssembleFinalInvoice(ctx context.Context, invo *models.Inv
 	return models.Invoice{}, err
 }
 
-func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
+func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.InvoicePayload) (pdf []byte, err error) {
 	tmpl, err := template.ParseFiles("../../assets/templates/invoice.page.html")
 	if err != nil {
 		log.Println(err)
 	}
 
 	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]models.Invoice{"Invoice": *finalInvoice})
+	err = tmpl.Execute(&buf, map[string]models.InvoicePayload{"Invoice": *finalInvoice})
 	if err != nil {
 		log.Println(err)
 	}

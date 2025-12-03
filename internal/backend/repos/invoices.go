@@ -13,4 +13,5 @@ type Invoice_repo interface {
 	// GetMAPK(ctx context.Context, search string) (int, error)
 	// CreateMAPK_QRcode(ctx context.Context, search string) (int, error)
 	DesignInvoice(ctx context.Context, invo models.InvoicePayload) (pdf models.InvoicePayload, err error)
+	MakePDF(ctx context.Context, invo *models.InvoicePayload) (pdf []byte, err error)
 }

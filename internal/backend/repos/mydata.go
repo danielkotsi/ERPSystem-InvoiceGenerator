@@ -6,5 +6,5 @@ import (
 )
 
 type MyData_repo interface {
-	SendInvoice(ctx context.Context, invoice *models.InvoicePayload) (err error)
+	SendInvoice(ctx context.Context, invoice *models.InvoicePayload) (completeinvo []byte, err error)
 }

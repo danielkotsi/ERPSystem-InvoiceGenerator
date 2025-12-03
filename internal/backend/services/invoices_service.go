@@ -7,7 +7,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -23,25 +22,21 @@ func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo
 	}
 }
 
-func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf models.InvoicePayload, err error) {
+func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
 	var invo models.InvoicePayload
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
-		return models.InvoicePayload{}, err
+		return nil, err
 	}
-	fmt.Println("this is the seller", invo.Invoice.Seller)
-	fmt.Println("this is the seller", invo.Invoice.Seller)
-	fmt.Println("this is the seller", invo.Invoice.Seller.Address.Street)
-	fmt.Println("this is the buyer", invo.Invoice.Byer)
-	fmt.Println("this is the buyer", *invo.Invoice.Byer.Address.Street)
-	fmt.Println("this is the invoice", invo.Invoice.InvoiceDetails)
-
 	invoicePayload, err := s.Invoice.DesignInvoice(ctx, invo)
 	if err != nil {
 		return pdf, err
 	}
 
-	if err := s.MyData.SendInvoice(ctx, &invoicePayload); err != nil {
+	completeinvo, err := s.MyData.SendInvoice(ctx, &invoicePayload)
+	if err != nil {
+		return completeinvo, err
 	}
-	return pdf, nil
+	// pdf, err := s.Invoice.MakePDF
+	return completeinvo, nil
 }
