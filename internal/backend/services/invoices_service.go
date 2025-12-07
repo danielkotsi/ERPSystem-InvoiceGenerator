@@ -7,6 +7,7 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
+	"fmt"
 	"net/http"
 )
 
@@ -28,6 +29,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("hello this is the invo from the form", invo)
 	invoicePayload, err := s.Invoice.DesignInvoice(ctx, invo)
 	if err != nil {
 		return pdf, err

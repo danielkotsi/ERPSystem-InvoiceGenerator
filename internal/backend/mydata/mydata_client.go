@@ -5,10 +5,10 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/models"
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -20,6 +20,10 @@ type Client struct {
 }
 
 func NewMyDataClient(base, userID, subscriptionKey string) *Client {
+	//this is going to change afterwards cause i dont know whoose keys are going to be used
+	base = os.Getenv("BASE_URL")
+	subscriptionKey = os.Getenv("API_KEY")
+	userID = os.Getenv("USER")
 	return &Client{
 		BaseURL:         base,
 		UserID:          userID,
@@ -35,6 +39,7 @@ func (c *Client) SendInvoice(ctx context.Context, invoicepayload *models.Invoice
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("hello this is the invo", string(invo))
 
 	completeinvo, err := c.DoRequest(invo)
 	if err != nil {
@@ -67,7 +72,7 @@ func (c *Client) DoRequest(invo []byte) (completeinvo []byte, err error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return body, errors.New(fmt.Sprintf("HTTP Error: %d", resp.StatusCode))
+		return body, fmt.Errorf("HTTP Error: %d", resp.StatusCode)
 	}
 
 	return body, nil
