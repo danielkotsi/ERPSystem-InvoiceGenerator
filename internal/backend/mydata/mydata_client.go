@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"context"
 	"-invoice_manager/internal/backend/models"
-	"encoding/xml"
+	// "encoding/xml"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -35,12 +36,16 @@ func NewMyDataClient(base, userID, subscriptionKey string) *Client {
 
 func (c *Client) SendInvoice(ctx context.Context, invoicepayload *models.InvoicePayload) ([]byte, error) {
 
-	invo, err := xml.MarshalIndent(invoicepayload, "", "  ")
+	// invo, err := xml.MarshalIndent(invoicepayload, "", "  ")
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	invo, err := ImportXML()
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
-	fmt.Println("hello this is the invo", string(invo))
-
 	completeinvo, err := c.DoRequest(invo)
 	if err != nil {
 		return nil, err
@@ -48,11 +53,25 @@ func (c *Client) SendInvoice(ctx context.Context, invoicepayload *models.Invoice
 	return completeinvo, nil
 }
 
+func ImportXML() (invo []byte, err error) {
+	file, err := os.Open("../../exampleInvoice.xml")
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	invo, err = io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+	return invo, nil
+}
 func (c *Client) DoRequest(invo []byte) (completeinvo []byte, err error) {
-	url := c.BaseURL + "/SendInvoices"
+	url := c.BaseURL + "SendInvoices"
+	fmt.Println(url)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(invo))
 	if err != nil {
+		log.Println("this is the request error", err)
 		return nil, err
 	}
 
@@ -62,11 +81,14 @@ func (c *Client) DoRequest(invo []byte) (completeinvo []byte, err error) {
 
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
+		log.Println("this is the error from my data", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
+
+	fmt.Println("this is the response", string(body))
 	if err != nil {
 		return nil, err
 	}

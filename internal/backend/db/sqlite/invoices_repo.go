@@ -41,9 +41,9 @@ func (r *InvoiceRepo) CompleteInvoicePayload(ctx context.Context, invo *models.I
 	if err := r.CompleteInvoiceHeader(&invo.Invoice.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.Invoice.InvoiceDetails, &invo.Invoice.InvoiceSummary); err != nil {
-		return err
-	}
+	// if err := r.CalculateAlltheInvoiceLines(invo.Invoice.InvoiceDetails, &invo.Invoice.InvoiceSummary); err != nil {
+	// 	return err
+	// }
 
 	if err := r.CalculateIncomeClasiffication(&invo.Invoice.InvoiceSummary); err != nil {
 		return err
@@ -60,7 +60,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.Invoice
 		summary.TotalNetValue += line.NetValue
 		summary.TotalVatAmount += line.VatAmount
 	}
-	summary.TotalWithVat = summary.TotalNetValue + summary.TotalVatAmount
+	// summary.TotalWithVat = summary.TotalNetValue + summary.TotalVatAmount
 	return nil
 }
 
@@ -88,7 +88,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 	return nil
 }
 func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
-	header.Aa = "12"
+	// header.Aa = "12"
 	return nil
 }
 
