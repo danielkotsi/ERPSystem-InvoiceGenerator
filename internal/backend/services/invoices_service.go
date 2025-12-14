@@ -24,7 +24,7 @@ func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
-	var invo models.InvoicePayload
+	var invo models.Invoice
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
 		return nil, err

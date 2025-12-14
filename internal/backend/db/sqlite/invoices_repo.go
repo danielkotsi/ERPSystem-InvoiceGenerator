@@ -19,9 +19,9 @@ func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
 	return &InvoiceRepo{DB: db}
 }
 
-func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.InvoicePayload) (pdf models.InvoicePayload, err error) {
-	if err := r.CompleteInvoicePayload(ctx, &invo); err != nil {
-		return models.InvoicePayload{}, err
+func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.Invoice) (pdf models.Invoice, err error) {
+	if err := r.CompleteInvoice(ctx, &invo); err != nil {
+		return models.Invoice{}, err
 	}
 
 	// finalInvoice, err := r.AssembleFinalInvoice(ctx, &invo)
@@ -37,15 +37,15 @@ func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.InvoicePayl
 	return invo, nil
 }
 
-func (r *InvoiceRepo) CompleteInvoicePayload(ctx context.Context, invo *models.InvoicePayload) error {
-	if err := r.CompleteInvoiceHeader(&invo.Invoice.InvoiceHeader); err != nil {
+func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
+	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
 	// if err := r.CalculateAlltheInvoiceLines(invo.Invoice.InvoiceDetails, &invo.Invoice.InvoiceSummary); err != nil {
 	// 	return err
 	// }
 
-	if err := r.CalculateIncomeClasiffication(&invo.Invoice.InvoiceSummary); err != nil {
+	if err := r.CalculateIncomeClasiffication(&invo.InvoiceSummary); err != nil {
 		return err
 	}
 

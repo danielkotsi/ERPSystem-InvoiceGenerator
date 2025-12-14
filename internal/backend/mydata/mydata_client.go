@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"-invoice_manager/internal/backend/models"
-	// "encoding/xml"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"log"
@@ -34,18 +34,21 @@ func NewMyDataClient(base, userID, subscriptionKey string) *Client {
 
 }
 
-func (c *Client) SendInvoice(ctx context.Context, invoicepayload *models.InvoicePayload) ([]byte, error) {
+func (c *Client) SendInvoice(ctx context.Context, invoice *models.Invoice) ([]byte, error) {
 
-	// invo, err := xml.MarshalIndent(invoicepayload, "", "  ")
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	invo, err := ImportXML()
+	var invoicePayload models.InvoicePayload
+	invoicePayload.Invoices = append(invoicePayload.Invoices, *invoice)
+	invo, err := xml.MarshalIndent(invoicePayload, "", "  ")
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
+
+	fmt.Println("this is the invoice after the marshalling\n", string(invo))
+	// invo, err := ImportXML()
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return nil, err
+	// }
 	completeinvo, err := c.DoRequest(invo)
 	if err != nil {
 		return nil, err

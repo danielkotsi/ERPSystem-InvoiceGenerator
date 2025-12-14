@@ -12,12 +12,12 @@ type Customer struct {
 	Mobile_Phone *string      `form:"mobile_phone"`
 }
 
-type AddressType struct {
-	Street     *string `json:"street,omitempty" form:"street"`
-	Number     *string `json:"number,omitempty" form:"number"`
-	City       *string `json:"city,omitempty" form:"city"`
-	PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
-}
+//	type AddressType struct {
+//		Street     *string `json:"street,omitempty" form:"street"`
+//		Number     *string `json:"number,omitempty" form:"number"`
+//		City       *string `json:"city,omitempty" form:"city"`
+//		PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
+//	}
 type Customers []Customer
 type Products []Product
 type Product struct {
