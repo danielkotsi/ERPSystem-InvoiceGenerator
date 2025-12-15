@@ -4,7 +4,7 @@ import "encoding/xml"
 
 type InvoicePayload struct {
 	XMLName  xml.Name  `xml:"http://www.aade.gr/myDATA/invoice/v1.0 InvoicesDoc"`
-	Invoices []Invoice `xml:"invoice"`
+	Invoices []Invoice `form:"invoice" xml:"invoice"`
 }
 
 type Invoice struct {
