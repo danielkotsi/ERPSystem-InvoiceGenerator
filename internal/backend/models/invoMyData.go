@@ -51,10 +51,10 @@ type InvoiceRow struct {
 	// RecType     int     `json:"recType,omitempty" form:"recType" xml:"recType"`
 	Quantity float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
 	//this is not tested on the xml therefore, when a bug is encountered this needs to be checked
-	UnitPrice   float64 `json:"unitPrice,omitempty" form:"unitPrice" xml:"unitPrice"`
-	NetValue    float64 `json:"netValue" form:"netValue" xml:"netValue"`
-	VatCategory int     `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
-	VatAmount   float64 `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`
+	UnitNetPrice float64 `json:"unitPrice,omitempty" form:"unitNetPrice"`
+	NetValue     float64 `json:"netValue" form:"netValue" xml:"netValue"`
+	VatCategory  int     `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
+	VatAmount    float64 `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`
 	// Description string  `json:"description" form:"description" xml:"description"`
 	IncomeClassification ClassificationItem `json:"incomeClassification" form:"incomeClassification" xml:"incomeClassification"`
 }

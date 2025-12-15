@@ -19,31 +19,13 @@ func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
 	return &InvoiceRepo{DB: db}
 }
 
-func (r *InvoiceRepo) DesignInvoice(ctx context.Context, invo models.Invoice) (pdf models.Invoice, err error) {
-	if err := r.CompleteInvoice(ctx, &invo); err != nil {
-		return models.Invoice{}, err
-	}
-
-	// finalInvoice, err := r.AssembleFinalInvoice(ctx, &invo)
-	// if err != nil {
-	// 	return models.Invoice{}, err
-	// }
-
-	// pdf, err = r.MakePDF(ctx, &finalInvoice)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	return invo, nil
-}
-
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	// if err := r.CalculateAlltheInvoiceLines(invo.Invoice.InvoiceDetails, &invo.Invoice.InvoiceSummary); err != nil {
-	// 	return err
-	// }
+	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
+		return err
+	}
 
 	if err := r.CalculateIncomeClasiffication(&invo.InvoiceSummary); err != nil {
 		return err
@@ -53,14 +35,15 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 }
 
 func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
-	for _, line := range invoicelines {
+	for i, line := range invoicelines {
+		line.LineNumber = i + 1
 		if err := r.CalculateInvoiceLinePrices(line); err != nil {
 			return err
 		}
 		summary.TotalNetValue += line.NetValue
 		summary.TotalVatAmount += line.VatAmount
 	}
-	// summary.TotalWithVat = summary.TotalNetValue + summary.TotalVatAmount
+	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
 	return nil
 }
 
@@ -69,8 +52,8 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 		1: 0.24,
 		2: 0.13,
 	}
-	line.NetValue = line.Quantity * line.UnitPrice
-	line.VatAmount = line.Quantity * line.UnitPrice * amount[line.VatCategory]
+	line.NetValue = line.Quantity * line.UnitNetPrice
+	line.VatAmount = line.Quantity * line.UnitNetPrice * amount[line.VatCategory]
 
 	return nil
 }
@@ -88,19 +71,8 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 	return nil
 }
 func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
-	// header.Aa = "12"
+	header.Aa = "12"
 	return nil
-}
-
-func (r *InvoiceRepo) MakePostRequestToMyData(invo *models.InvoicePayload) error {
-	//to do
-	return nil
-}
-
-// we'll see if we are going to use this since i already have the makepostrequesttoMydata
-func (r *InvoiceRepo) AssembleFinalInvoice(ctx context.Context, invo *models.InvoicePayload) (finalinvoice models.Invoice, err error) {
-
-	return models.Invoice{}, err
 }
 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.InvoicePayload) (pdf []byte, err error) {

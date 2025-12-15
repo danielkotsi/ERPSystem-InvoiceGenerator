@@ -29,7 +29,7 @@ func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Reque
 func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	pdf, err := h.InvoiceService.CreateInvoice(r.Context(), r)
 	if err != nil {
-		log.Println(string(pdf))
+		log.Println(pdf)
 		utils.JsonResponse(w, pdf, 500)
 		log.Println(err)
 	}
