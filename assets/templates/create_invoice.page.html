@@ -61,7 +61,8 @@
   <fieldset>
     <legend>Header</legend>
     <label>Series: <input type="text" name="invoiceHeader.series"></label><br>
-    <label>Type: <input type="text" name="invoiceHeader.ype"></label><br>
+    <label>Type: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
+	<div id="invoiceType-suggestions" class="suggestions"></div>
     <label>Currency <input type="text" name="invoiceHeader.currency"></label><br>
   </fieldset>
 
@@ -78,6 +79,9 @@
 	<div id="description-suggestions" class="suggestions"></div>
         <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType"></label><br>
 	<div id="income-classification-type-suggestions" class="suggestions"></div>
+        <label>Income Classification Category <input type="text" id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory"></label><br>
+	<div id="income-classification-category-suggestions" class="suggestions"></div>
+        <label>Income Classification Amount: <input type="number" step="0.01" name="invoiceDetails[0].incomeClassification.amount"></label><br>
       </div>
     </div>
     <button type="button" onclick="addLineItem()">Add Line Item</button>

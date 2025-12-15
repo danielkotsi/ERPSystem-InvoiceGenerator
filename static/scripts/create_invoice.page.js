@@ -4,6 +4,14 @@ const descriptions = [
 	{ value: "ORG", label: "Orange – Sweet Valencia oranges" }
 ];
 
+const invoiceTypes = [
+	{ value: "1.1", label: "1.1 Τιμολόγιο Πώλησης" },
+	{ value: "1.2", label: "1.2 Τιμολόγιο Πώλησης / Ενδοκοινοτικές Παραδόσεις" },
+	{ value: "1.3", label: "1.3 Τιμολόγιο Πώλησης / Παραδόσεις Τρίτων Χωρών" },
+	{ value: "1.4", label: "1.4 Τιμολόγιο Πώλησης / Πώληση για Λογαριασμό Τρίτων" },
+	{ value: "1.5", label: "1.5 Τιμολόγιο Πώλησης / Εκκαθάριση Πωλήσεων Τρίτων - Αμοιβή από Πωλήσεις Τρίτων" },
+	{ value: "1.6", label: "1.6 Τιμολόγιο Πώλησης / Συμπληρωματικό Παραστατικό" }
+];
 
 const vatCategories = [
 	{ value: "1", label: "1-ΦΠΑ συντελεστής 24% " },
@@ -17,7 +25,7 @@ const vatCategories = [
 	{ value: "9", label: "9-ΦΠΑ συντελεστής 3% (αρ.31 ν.5057/2023) " },
 	{ value: "10", label: "10-ΦΠΑ συντελεστής 4% (αρ.31 ν.5057/2023)" }
 ];
-const incomeClassificationType = [
+const incomeClassificationTypes = [
 	{ value: "E3_106", label: "E3_106 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Εμπορεύματα" },
 	{ value: "E3_205", label: "E3_205 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Πρώτες ύλες και λοιπά υλικά" },
 	{ value: "E3_210", label: "E3_210 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Προϊόντα και παραγωγή σε εξέλιξη" },
@@ -53,6 +61,25 @@ const incomeClassificationType = [
 	{ value: "E3_598_001", label: "E3_598_001 Πωλήσεις αγαθών που υπάγονται σε ΕΦΚ" },
 	{ value: "E3_598_003", label: "E3_598_003 Πωλήσεις για λογαριασμό αγροτών μέσω αγροτικού συνεταιρισμού κλπ" }
 ];
+
+const incomeClassificationCategories = [
+	{ value: "category2_1", label: "category2_1 Αγορές Εμπορευμάτων (-) / (+)" },
+	{ value: "category2_2", label: "category2_2 Αγορές Α'-Β' Υλών (-) / (+)" },
+	{ value: "category2_3", label: "category2_3 Λήψη Υπηρεσιών (-) / (+)" },
+	{ value: "category2_4", label: "category2_4 Γενικά Έξοδα με δικαίωμα έκπτωσης ΦΠΑ (-) / (+)" },
+	{ value: "category2_5", label: "category2_5 Γενικά Έξοδα χωρίς δικαίωμα έκπτωσης ΦΠΑ (-) / (+)" },
+	{ value: "category2_6", label: "category2_6 Αμοιβές και Παροχές προσωπικού (-) / (+)" },
+	{ value: "category2_7", label: "category2_7 Αγορές Παγίων (-) / (+)" },
+	{ value: "category2_8", label: "category2_8 Αποσβέσεις Παγίων (-) / (+)" },
+	{ value: "category2_9", label: "category2_9 Έξοδα για λ/σμο τρίτων (-) / (+)" },
+	{ value: "category2_10", label: "category2_10 Έξοδα προηγούμενων χρήσεων (-) / (+)" },
+	{ value: "category2_11", label: "category2_11 Έξοδα επομένων χρήσεων (-) / (+)" },
+	{ value: "category2_12", label: "category2_12 Λοιπές Εγγραφές Τακτοποίησης Εξόδων (-) / (+)" },
+	{ value: "category2_13", label: "category2_13 Αποθέματα Έναρξης Περιόδου (-) / (+)" },
+	{ value: "category2_14", label: "category2_14 Αποθέματα Λήξης Περιόδου (-) / (+)" },
+	{ value: "category2_95", label: "category2_95 Λοιπά Πληροφοριακά Στοιχεία Εξόδων (-) / (+)" }
+];
+
 
 function attachAutocomplete(inputId, items, whichsuggestions) {
 	const input = document.getElementById(inputId);
@@ -98,7 +125,10 @@ function attachAutocomplete(inputId, items, whichsuggestions) {
 
 attachAutocomplete('descriptioninput', descriptions, 'description-suggestions');
 attachAutocomplete('vatCategory', vatCategories, 'vatCategory-suggestions');
-attachAutocomplete('income_classification_type', incomeClassificationType, 'income-classification-type-suggestions');
+attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
+attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
+attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');
+
 
 let lineItemIndex = 1;
 function addLineItem() {
