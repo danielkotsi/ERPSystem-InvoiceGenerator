@@ -1,11 +1,62 @@
 const descriptions = [
-	"something",
-	"new",
-	"old",
+	{ value: "APL", label: "Apple – Fresh green apples" },
+	{ value: "BAN", label: "Banana – Organic yellow bananas" },
+	{ value: "ORG", label: "Orange – Sweet Valencia oranges" }
 ];
-function attachAutocomplete(inputId, items) {
+
+
+const vatCategories = [
+	{ value: "1", label: "1-ΦΠΑ συντελεστής 24% " },
+	{ value: "2", label: "2-ΦΠΑ συντελεστής 13%" },
+	{ value: "3", label: "3-ΦΠΑ συντελεστής 6% " },
+	{ value: "4", label: "4-ΦΠΑ συντελεστής 17% " },
+	{ value: "5", label: "5-ΦΠΑ συντελεστής 9% " },
+	{ value: "6", label: "6-ΦΠΑ συντελεστής 4%" },
+	{ value: "7", label: "7-Άνευ Φ.Π.Α." },
+	{ value: "8", label: "8-Εγγραφές χωρίς ΦΠΑ(πχ Μισθοδοσία, Αποσβέσεις)" },
+	{ value: "9", label: "9-ΦΠΑ συντελεστής 3% (αρ.31 ν.5057/2023) " },
+	{ value: "10", label: "10-ΦΠΑ συντελεστής 4% (αρ.31 ν.5057/2023)" }
+];
+const incomeClassificationType = [
+	{ value: "E3_106", label: "E3_106 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Εμπορεύματα" },
+	{ value: "E3_205", label: "E3_205 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Πρώτες ύλες και λοιπά υλικά" },
+	{ value: "E3_210", label: "E3_210 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Προϊόντα και παραγωγή σε εξέλιξη" },
+	{ value: "E3_305", label: "E3_305 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις – Καταστροφές αποθεμάτων/Πρώτες ύλες και λοιπά υλικά" },
+	{ value: "E3_310", label: "E3_310 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Προϊόντα και παραγωγή σε εξέλιξη" },
+	{ value: "E3_318", label: "E3_318 Ιδιοπαραγωγή παγίων - Αυτοπαραδόσεις - Καταστροφές αποθεμάτων/Έξοδα παραγωγής" },
+	{ value: "E3_561_001", label: "E3_561_001 Πωλήσεις αγαθών και υπηρεσιών Χονδρικές - Επιτηδευματιών" },
+	{ value: "E3_561_002", label: "E3_561_002 Πωλήσεις αγαθών και υπηρεσιών Χονδρικές βάσει άρθρου 39α παρ 5 του Κώδικα Φ.Π.Α. (Ν.2859/2000)" },
+	{ value: "E3_561_003", label: "E3_561_003 Πωλήσεις αγαθών και υπηρεσιών Λιανικές - Ιδιωτική Πελατεία" },
+	{ value: "E3_561_004", label: "E3_561_004 Πωλήσεις αγαθών και υπηρεσιών Λιανικές βάσει άρθρου 39α παρ 5 του Κώδικα Φ.Π.Α. (Ν.2859/2000)" },
+	{ value: "E3_561_005", label: "E3_561_005 Πωλήσεις αγαθών και υπηρεσιών Εξωτερικού Ενδοκοινοτικές" },
+	{ value: "E3_561_006", label: "E3_561_006 Πωλήσεις αγαθών και υπηρεσιών Εξωτερικού Τρίτες Χώρες" },
+	{ value: "E3_561_007", label: "E3_561_007 Πωλήσεις αγαθών και υπηρεσιών Λοιπά" },
+	{ value: "E3_562", label: "E3_562 Λοιπά συνήθη έσοδα" },
+	{ value: "E3_563", label: "E3_563 Πιστωτικοί τόκοι και συναφή έσοδα" },
+	{ value: "E3_564", label: "E3_564 Πιστωτικές συναλλαγματικές διαφορές" },
+	{ value: "E3_565", label: "E3_565 Έσοδα συμμετοχών" },
+	{ value: "E3_566", label: "E3_566 Κέρδη από διάθεση μη κυκλοφορούντων περιουσιακών στοιχείων" },
+	{ value: "E3_567", label: "E3_567 Κέρδη από αναστροφή προβλέψεων και απομειώσεων" },
+	{ value: "E3_568", label: "E3_568 Κέρδη από επιμέτρηση στην εύλογη αξία" },
+	{ value: "E3_570", label: "E3_570 Ασυνήθη έσοδα και κέρδη" },
+	{ value: "E3_595", label: "E3_595 Έξοδα σε ιδιοπαραγωγή" },
+	{ value: "E3_596", label: "E3_596 Επιδοτήσεις - Επιχορηγήσεις" },
+	{ value: "E3_597", label: "E3_597 Επιδοτήσεις - Επιχορηγήσεις για επενδυτικούς σκοπούς - κάλυψη δαπανών" },
+	{ value: "E3_880_001", label: "E3_880_001 Πωλήσεις Παγίων Χονδρικές" },
+	{ value: "E3_880_002", label: "E3_880_002 Πωλήσεις Παγίων Λιανικές" },
+	{ value: "E3_880_003", label: "E3_880_003 Πωλήσεις Παγίων Εξωτερικού Ενδοκοινοτικές" },
+	{ value: "E3_880_004", label: "E3_880_004 Πωλήσεις Παγίων Εξωτερικού Τρίτες Χώρες" },
+	{ value: "E3_881_001", label: "E3_881_001 Πωλήσεις για λογ/σμο Τρίτων Χονδρικές" },
+	{ value: "E3_881_002", label: "E3_881_002 Πωλήσεις για λογ/σμο Τρίτων Λιανικές" },
+	{ value: "E3_881_003", label: "E3_881_003 Πωλήσεις για λογ/σμο Τρίτων Εξωτερικού Ενδοκοινοτικές" },
+	{ value: "E3_881_004", label: "E3_881_004 Πωλήσεις για λογ/σμο Τρίτων Εξωτερικού Τρίτες Χώρες" },
+	{ value: "E3_598_001", label: "E3_598_001 Πωλήσεις αγαθών που υπάγονται σε ΕΦΚ" },
+	{ value: "E3_598_003", label: "E3_598_003 Πωλήσεις για λογαριασμό αγροτών μέσω αγροτικού συνεταιρισμού κλπ" }
+];
+
+function attachAutocomplete(inputId, items, whichsuggestions) {
 	const input = document.getElementById(inputId);
-	const suggestionsBox = document.getElementById("suggestions");
+	const suggestionsBox = document.getElementById(whichsuggestions);
 
 	function renderSuggestions(list) {
 		suggestionsBox.innerHTML = "";
@@ -13,10 +64,10 @@ function attachAutocomplete(inputId, items) {
 		list.forEach(item => {
 			const div = document.createElement("div");
 			div.className = "suggestion-item";
-			div.textContent = item;
+			div.textContent = item.label;
 
 			div.addEventListener("mousedown", () => {
-				input.value = item;
+				input.value = item.value;
 				suggestionsBox.innerHTML = "";
 			});
 
@@ -28,26 +79,26 @@ function attachAutocomplete(inputId, items) {
 		renderSuggestions(items);
 	});
 
-	// Filter items while typing
 	input.addEventListener("input", () => {
 		const value = input.value.toLowerCase();
 
 		const filtered = items.filter(item =>
-			item.toLowerCase().includes(value)
+			item.label.toLowerCase().includes(value)
 		);
 
 		renderSuggestions(filtered);
 	});
 
-	// Close suggestions when clicking outside
 	document.addEventListener("click", (e) => {
 		if (!e.target.closest("#" + inputId)) {
 			suggestionsBox.innerHTML = "";
 		}
 	});
 }
-attachAutocomplete('descriptioninput', descriptions);
 
+attachAutocomplete('descriptioninput', descriptions, 'description-suggestions');
+attachAutocomplete('vatCategory', vatCategories, 'vatCategory-suggestions');
+attachAutocomplete('income_classification_type', incomeClassificationType, 'income-classification-type-suggestions');
 
 let lineItemIndex = 1;
 function addLineItem() {
@@ -56,9 +107,9 @@ function addLineItem() {
 	div.innerHTML = `
     <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
     <label>Unit Price: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].unitPrice"></label><br>
-    <label>VAT Category: <input type="number" name="invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
+    <label>VAT Category: <input type="text" id="vatCategory" name="invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
   `;
-	document.getElementById('ivoiceDetails').appendChild(div);
+	document.getElementById('invoiceDetails').appendChild(div);
 	lineItemIndex++;
 }
 
@@ -73,3 +124,4 @@ function addPaymentMethod() {
 	document.getElementById('paymentMethods').appendChild(div);
 	paymentMethodIndex++;
 }
+

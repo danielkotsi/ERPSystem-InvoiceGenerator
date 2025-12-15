@@ -5,27 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
   <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/home.page.css" />
+  <link rel="stylesheet" href="/static/styles/create_invoice.page.css" />
   </head>
-
-<style>
-.suggestions {
-  border: 1px solid #ccc;
-  max-width: 300px;
-  position: absolute;
-  background: white;
-  z-index: 1000;
-}
-
-.suggestion-item {
-  padding: 8px;
-  cursor: pointer;
-}
-
-.suggestion-item:hover {
-  background-color: #eee;
-}
-  </style>
 
   <body>
 
@@ -91,9 +72,12 @@
       <div class="line-item">
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
         <label>Unit Net Price: <input type="number" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
-        <label>VAT Category: <input type="number" name="invoiceDetails[0].vatCategory"></label><br>
+        <label>VAT Category: <input type="text" id="vatCategory" name="invoiceDetails[0].vatCategory"></label><br>
+	<div id="vatCategory-suggestions" class="suggestions"></div>
         <label>Product Description: <input type="text" id="descriptioninput" name="invoiceDetails[0].description"></label><br>
-	<div id="suggestions" class="suggestions"></div>
+	<div id="description-suggestions" class="suggestions"></div>
+        <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType"></label><br>
+	<div id="income-classification-type-suggestions" class="suggestions"></div>
       </div>
     </div>
     <button type="button" onclick="addLineItem()">Add Line Item</button>
