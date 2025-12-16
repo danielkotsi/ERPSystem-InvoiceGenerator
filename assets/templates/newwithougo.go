@@ -95,26 +95,26 @@
 
 <table class="invoice-header">
   <tr>
-    <td class="left">Invoice No: {{ .Invoice.Number }}</td>
-    <td>Date: {{ .Invoice.Date }}</td>
+    <td class="left">Invoice No: </td>
+    <td>Date: </td>
   </tr>
   <tr>
-    <td class="left">UID: {{ .Invoice.UID }}</td>
-    <td>MARK: {{ .Invoice.MARK }}</td>
+    <td class="left">UID: </td>
+    <td>MARK: </td>
   </tr>
 </table>
 
 <section class="buyer">
   <div class="buyer-info">
     <strong>Buyer</strong><br>
-    {{ .Invoice.Buyer.Name }}<br>
-    {{ .Invoice.Buyer.Address }}<br>
-    VAT: {{ .Invoice.Buyer.VAT }}
+    <br>
+    <br>
+    VAT: 
   </div>
 
   <div class="correlated-invoices">
     <strong>Related Invoices</strong><br>
-    {{ range .Invoice.Related }}{{ . }}<br>{{ end }}
+    {}<br>
   </div>
 </section>
 
@@ -130,48 +130,48 @@
     </tr>
   </thead>
   <tbody>
-    {{ range .Invoice.Items }}
+    
     <tr>
-      <td class="left">{{ .Name }}</td>
-      <td>{{ .Qty }}</td>
-      <td>{{ .UnitPrice }}</td>
-      <td>{{ .Value }}</td>
-      <td>{{ .VatRate }}%</td>
-      <td>{{ .Total }}</td>
+      <td class="left"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>%</td>
+      <td></td>
     </tr>
-    {{ range .Details }}
+    
     <tr class="sub-row">
-      <td class="left">– {{ . }}</td>
+      <td class="left">– </td>
       <td></td><td></td><td></td><td></td><td></td>
     </tr>
-    {{ end }}
-    {{ end }}
+    
+    
   </tbody>
 </table>
 
 <section class="invoice-details">
   <table class="balance-table">
-    <tr><td class="left">Previous Balance</td><td>{{ .Invoice.PrevBalance }}</td></tr>
-    <tr><td class="left">New Balance</td><td>{{ .Invoice.NewBalance }}</td></tr>
+    <tr><td class="left">Previous Balance</td><td></td></tr>
+    <tr><td class="left">New Balance</td><td></td></tr>
   </table>
 
   <table class="vat-analysis">
     <tr><th>Value</th><th>% VAT</th><th>VAT</th><th>Total</th></tr>
-    {{ range .Invoice.VatAnalysis }}
+    
     <tr>
-      <td>{{ .Value }}</td>
-      <td>{{ .Rate }}%</td>
-      <td>{{ .Vat }}</td>
-      <td>{{ .Total }}</td>
+      <td></td>
+      <td>%</td>
+      <td></td>
+      <td></td>
     </tr>
-    {{ end }}
+    
   </table>
 
   <table class="totals">
-    <tr><td class="left">Value</td><td>{{ .Invoice.Value }}</td></tr>
-    <tr><td class="left">Discount</td><td>{{ .Invoice.Discount }}</td></tr>
-    <tr><td class="left">Total VAT</td><td>{{ .Invoice.TotalVAT }}</td></tr>
-    <tr><td class="left">Grand Total</td><td>{{ .Invoice.GrandTotal }}</td></tr>
+    <tr><td class="left">Value</td><td></td></tr>
+    <tr><td class="left">Discount</td><td></td></tr>
+    <tr><td class="left">Total VAT</td><td></td></tr>
+    <tr><td class="left">Grand Total</td><td></td></tr>
   </table>
 </section>
 
