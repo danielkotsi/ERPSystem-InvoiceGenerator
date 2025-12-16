@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InvoicesDoc xmlns="http://www.aade.gr/myDATA/invoice/v1.0" xmlns:s="https://www.aade.gr/myDATA/incomeClassificaton/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <invoice >
+        <issuer>
+            <vatNumber></vatNumber>
+            <country>GR</country>
+            <branch>0</branch>
+            <name>My Company IKE</name>
+            <address>
+                <street>Kifisias</street>
+                <number>12</number>
+                <postalCode>11523</postalCode>
+                <city>Athens</city>
+            </address>
+        </issuer>
+        <counterpart>
+            <vatNumber>987654321</vatNumber>
+            <country>GR</country>
+            <branch>0</branch>
+            <name>Client SA</name>
+            <address>
+                <street>Kifisias</street>
+                <number>12</number>
+                <postalCode>11523</postalCode>
+                <city>Athens</city>
+            </address>
+        </counterpart>
+        <invoiceHeader>
+            <series>A</series>
+            <aa>1542</aa>
+            <issueDate>2025-12-01</issueDate>
+            <invoiceType>1.1</invoiceType>
+            <currency>EUR</currency>
+        </invoiceHeader>
+        <paymentMethods>
+            <paymentMethodDetails>
+                <type>1</type>
+                <amount>12.30</amount>
+            </paymentMethodDetails>
+        </paymentMethods>
+        <invoiceDetails>
+            <lineNumber>1</lineNumber>
+            <quantity>2</quantity>
+            <netValue>10.00</netValue>
+            <vatCategory>1</vatCategory>
+            <vatAmount>12.30</vatAmount>
+            <incomeClassification>
+                <s:classificationType>E3_561_007</s:classificationType>
+                <s:classificationCategory>category1_2</s:classificationCategory>
+                <s:amount>12.30</s:amount>
+            </incomeClassification>
+        </invoiceDetails>
+        <invoiceSummary>
+            <totalNetValue>10.00</totalNetValue>
+            <totalVatAmount>2.30</totalVatAmount>
+            <totalWithheldAmount>12.30</totalWithheldAmount>
+            <totalFeesAmount>89.98</totalFeesAmount>
+            <totalStampDutyAmount>23.45</totalStampDutyAmount>
+            <totalOtherTaxesAmount>24.65</totalOtherTaxesAmount>
+            <totalDeductionsAmount>12.45</totalDeductionsAmount>
+            <totalGrossValue>223.20</totalGrossValue>
+            <incomeClassification>
+                <s:classificationType>E3_561_007</s:classificationType>
+                <s:classificationCategory>category1_2</s:classificationCategory>
+                <s:amount>12.30</s:amount>
+            </incomeClassification>
+        </invoiceSummary>
+    </invoice>
+</InvoicesDoc>

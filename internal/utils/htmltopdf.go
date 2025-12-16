@@ -2,8 +2,13 @@ package utils
 
 import (
 	"context"
+	"encoding/base64"
+	"fmt"
+	"net/url"
+
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
+	"github.com/skip2/go-qrcode"
 )
 
 func HTMLtoPDF(htmlContent string) (pdfinbytes []byte, err error) {
@@ -15,7 +20,7 @@ func HTMLtoPDF(htmlContent string) (pdfinbytes []byte, err error) {
 
 	err = chromedp.Run(ctx,
 		// Navigate to the HTML using a data URL
-		chromedp.Navigate("data:text/html,"+htmlContent),
+		chromedp.Navigate("data:text/html,"+url.PathEscape(htmlContent)),
 		chromedp.WaitReady("body"), // wait until the body is loaded
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			// Use cdproto page.PrintToPDF
@@ -32,4 +37,13 @@ func HTMLtoPDF(htmlContent string) (pdfinbytes []byte, err error) {
 	}
 
 	return pdfBuf, nil
+}
+
+func GenerateQRcodeBase64(qrURL string) (QRbase64 string, err error) {
+	qrpng, err := qrcode.Encode(qrURL, qrcode.Medium, 256)
+	if err != nil {
+		return "", fmt.Errorf("this is the error %v", err)
+	}
+	QRbase64 = base64.StdEncoding.EncodeToString(qrpng)
+	return QRbase64, nil
 }

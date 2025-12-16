@@ -2,11 +2,12 @@ package sqlite
 
 import (
 	"context"
-	"crypto/rand"
+	// "crypto/rand"
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/utils"
 	"fmt"
-	"math/big"
+	// "math/big"
 )
 
 type CustomersRepo struct {
@@ -20,7 +21,7 @@ func NewCustomersRepo(db *sql.DB) *CustomersRepo {
 func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (models.Customers, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
-	query := "SELECT code,name,address_line1,address_num1,address_line2,address_num2,city,state,postal_code,country,email,phone,mobile_phone,tax_id from companies  where name LIKE ? "
+	query := "SELECT name,address_street,address_number,city,postal_code,country,entity_type,branch,vat_number,email,phone,mobile_phone from companies  where name LIKE ? "
 
 	rows, err := r.DB.QueryContext(ctx, query, search)
 	if err != nil {
@@ -31,22 +32,36 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (model
 	var customers models.Customers
 	for rows.Next() {
 		var p models.Customer
-		if err := rows.Scan(&p.Code, &p.Name, &p.Address1, &p.NumofAdd1, &p.Address2, &p.NumofAdd2, &p.City, &p.State, &p.Postal_code, &p.Country, &p.Email, &p.Phone, &p.Mobile_Phone, &p.VAT); err != nil {
+		var street, number, city, postlacode, email, phone, mobilephone sql.NullString
+		if err := rows.Scan(&p.Name, &street, &number, &city, &postlacode, &p.Country, &p.EntityType, &p.Branch, &p.VatNumber, &email, &phone, &mobilephone); err != nil {
 			return nil, err
 		}
+
+		if utils.CheckIfSomethingNotNull(street, number, city, postlacode) {
+			p.Address = &models.AddressType{}
+			p.Address.Street = utils.NullableString(street)
+			p.Address.Number = utils.NullableString(number)
+			p.Address.City = utils.NullableString(city)
+			p.Address.PostalCode = utils.NullableString(postlacode)
+		}
+		p.Email = utils.NullableString(email)
+		p.Phone = utils.NullableString(phone)
+		p.Mobile_Phone = utils.NullableString(mobilephone)
+
 		customers = append(customers, p)
 	}
+	fmt.Println(customers)
 	return customers, nil
 }
 
 func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Customer) error {
-	x := rand.Reader
-	y, _ := rand.Int(x, big.NewInt(2000))
-	code := fmt.Sprintf("%s-%s", customer_data.Name[0:3], y.String())
+	// x := rand.Reader
+	// y, _ := rand.Int(x, big.NewInt(2000))
+	// code := fmt.Sprintf("%s-%s", customer_data.Name[0:3], y.String())
 
-	query := "insert into companies(code,name,address_line1,address_num1,address_line2,address_num2,city,state,postal_code,country,email,phone,mobile_phone,tax_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+	query := "insert into companies(name,address_street,address_number,city,postal_code,country,email,phone,mobile_phone,vat_number,branch,entity_type) values(?,?,?,?,?,?,?,?,?,?,?,?) "
 
-	_, err := r.DB.ExecContext(ctx, query, code, customer_data.Name, customer_data.Address1, customer_data.NumofAdd1, customer_data.Address2, customer_data.NumofAdd2, customer_data.City, customer_data.State, customer_data.Postal_code, customer_data.Country, customer_data.Email, customer_data.Phone, customer_data.Mobile_Phone, customer_data.VAT)
+	_, err := r.DB.ExecContext(ctx, query, customer_data.Name, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.City, customer_data.Address.PostalCode, customer_data.Country, customer_data.Email, customer_data.Phone, customer_data.Mobile_Phone, customer_data.VatNumber, customer_data.Branch, customer_data.EntityType)
 	if err != nil {
 		return err
 	}
