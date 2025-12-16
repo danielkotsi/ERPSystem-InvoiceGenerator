@@ -1,0 +1,70 @@
+{
+  "UID": "20D687D02803E8FDFE74EFC199CAB1E5594394DB",
+  "QrURL": "TimologioQR/QRInfo?q=UOf4TBcXX2Qz8%2fYDB7XPFHiWtqr4ag%2fdrWJIWgwqEGdq7c4jjTtgE9ykoj0oSqdDYikM0Ij1I%2fhEqt0G1R2gSiYbTyb5Kwy7hOHJINMshrg%3d",
+  "QrBase64": "",
+  "MARK": "400001958324084",
+  "issuer": {
+    "vatNumber": "",
+    "country": "GR",
+    "branch": 0,
+    "name": "Zone"
+  },
+  "counterpart": {
+    "vatNumber": "",
+    "country": "GR",
+    "branch": 0,
+    "name": "Zone01",
+    "address": {
+      "street": "mithimnis 17",
+      "postalCode": "11367",
+      "city": "Athens"
+    }
+  },
+  "invoiceHeader": {
+    "series": "sha",
+    "aa": "12",
+    "issueDate": "2025-12-16",
+    "invoiceType": "1.1",
+    "currency": "EUR"
+  },
+  "paymentMethods": {
+    "paymentdatails": [
+      {
+        "type": 1,
+        "amount": 2.48
+      }
+    ]
+  },
+  "invoiceDetails": [
+    {
+      "lineNumber": 1,
+      "quantity": 1,
+      "unitPrice": 2,
+      "netValue": 2,
+      "vatCategory": 1,
+      "vatAmount": 0.48,
+      "incomeClassification": {
+        "classificationType": "E3_561_001",
+        "classificationCategory": "category1_1",
+        "amount": 2.48
+      }
+    }
+  ],
+  "invoiceSummary": {
+    "totalNetValue": 2,
+    "totalVatAmount": 0.48,
+    "totalWithheldAmount": 0,
+    "totalFeesAmount": 0,
+    "totalStampDutyAmount": 0,
+    "totalOtherTaxesAmount": 0,
+    "totalDeductionsAmount": 0,
+    "totalGrossValue": 2.48,
+    "incomeClassification": [
+      {
+        "classificationType": "E3_561_001",
+        "classificationCategory": "category1_1",
+        "amount": 2.48
+      }
+    ]
+  }
+}
