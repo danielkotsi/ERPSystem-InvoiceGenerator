@@ -2,8 +2,10 @@ package utils
 
 import (
 	"context"
+	"encoding/base64"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
+	"github.com/skip2/go-qrcode"
 )
 
 func HTMLtoPDF(htmlContent string) (pdfinbytes []byte, err error) {
@@ -32,4 +34,13 @@ func HTMLtoPDF(htmlContent string) (pdfinbytes []byte, err error) {
 	}
 
 	return pdfBuf, nil
+}
+
+func GenerateQRcodeBase64(qrURL string) (QRbase64 string, err error) {
+	qrpng, err := qrcode.Encode(qrURL, qrcode.Medium, 256)
+	if err != nil {
+		return "", err
+	}
+	QRbase64 = base64.StdEncoding.EncodeToString(qrpng)
+	return QRbase64, nil
 }

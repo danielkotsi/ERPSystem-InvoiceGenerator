@@ -63,22 +63,20 @@ const incomeClassificationTypes = [
 ];
 
 const incomeClassificationCategories = [
-	{ value: "category2_1", label: "category2_1 Αγορές Εμπορευμάτων (-) / (+)" },
-	{ value: "category2_2", label: "category2_2 Αγορές Α'-Β' Υλών (-) / (+)" },
-	{ value: "category2_3", label: "category2_3 Λήψη Υπηρεσιών (-) / (+)" },
-	{ value: "category2_4", label: "category2_4 Γενικά Έξοδα με δικαίωμα έκπτωσης ΦΠΑ (-) / (+)" },
-	{ value: "category2_5", label: "category2_5 Γενικά Έξοδα χωρίς δικαίωμα έκπτωσης ΦΠΑ (-) / (+)" },
-	{ value: "category2_6", label: "category2_6 Αμοιβές και Παροχές προσωπικού (-) / (+)" },
-	{ value: "category2_7", label: "category2_7 Αγορές Παγίων (-) / (+)" },
-	{ value: "category2_8", label: "category2_8 Αποσβέσεις Παγίων (-) / (+)" },
-	{ value: "category2_9", label: "category2_9 Έξοδα για λ/σμο τρίτων (-) / (+)" },
-	{ value: "category2_10", label: "category2_10 Έξοδα προηγούμενων χρήσεων (-) / (+)" },
-	{ value: "category2_11", label: "category2_11 Έξοδα επομένων χρήσεων (-) / (+)" },
-	{ value: "category2_12", label: "category2_12 Λοιπές Εγγραφές Τακτοποίησης Εξόδων (-) / (+)" },
-	{ value: "category2_13", label: "category2_13 Αποθέματα Έναρξης Περιόδου (-) / (+)" },
-	{ value: "category2_14", label: "category2_14 Αποθέματα Λήξης Περιόδου (-) / (+)" },
-	{ value: "category2_95", label: "category2_95 Λοιπά Πληροφοριακά Στοιχεία Εξόδων (-) / (+)" }
+	{ value: "category1_1", label: "category1_1 Έσοδα από Πώληση Εμπορευμάτων (+) / (-)" },
+	{ value: "category1_2", label: "category1_2 Έσοδα από Πώληση Προϊόντων (+) / (-)" },
+	{ value: "category1_3", label: "category1_3 Έσοδα από Παροχή Υπηρεσιών (+) / (-)" },
+	{ value: "category1_4", label: "category1_4 Έσοδα από Πώληση Παγίων (+) / (-)" },
+	{ value: "category1_5", label: "category1_5 Λοιπά Έσοδα/ Κέρδη (+) / (-)" },
+	{ value: "category1_6", label: "category1_6 Αυτοπαραδόσεις / Ιδιοχρησιμοποιήσεις (+) / (-)" },
+	{ value: "category1_7", label: "category1_7 Έσοδα για λ/σμο τρίτων (+) / (-)" },
+	{ value: "category1_8", label: "category1_8 Έσοδα προηγούμενων χρήσεων (+)/ (-)" },
+	{ value: "category1_9", label: "category1_9 Έσοδα επομένων χρήσεων (+) / (-)" },
+	{ value: "category1_10", label: "category1_10 Λοιπές Εγγραφές Τακτοποίησης Εσόδων (+) / (-)" },
+	{ value: "category1_95", label: "category1_95 Λοιπά Πληροφοριακά Στοιχεία Εσόδων (+) / (-)" },
+	{ value: "category3", label: "category3 Διακίνηση" }
 ];
+
 
 
 function attachAutocomplete(inputId, items, whichsuggestions) {

@@ -8,6 +8,9 @@ type InvoicePayload struct {
 }
 
 type Invoice struct {
+	UID            string         `xml:"-"`
+	QrURL          string         `xml:"-"`
+	QrBase64       string         `xml:"-"`
 	Seller         Company        `json:"issuer" form:"seller" xml:"issuer"`
 	Byer           Company        `json:"counterpart" form:"buyer" xml:"counterpart"`
 	InvoiceHeader  InvoiceHeader  `json:"invoiceHeader" form:"invoiceHeader" xml:"invoiceHeader"`
@@ -20,8 +23,8 @@ type Company struct {
 	VatNumber string       `json:"vatNumber" form:"vatNumber" xml:"vatNumber"`
 	Country   string       `json:"country" form:"country" xml:"country"`
 	Branch    int          `json:"branch" form:"branch" xml:"branch"`
-	Name      string       `json:"name" form:"name" xml:"name"`
-	Address   *AddressType `json:"address,omitempty" form:"address" xml:"address"`
+	Name      string       `json:"name" form:"name" xml:"-"`
+	Address   *AddressType `json:"address,omitempty" form:"address" xml:"address,omitempty"`
 }
 
 type AddressType struct {
@@ -51,7 +54,7 @@ type InvoiceRow struct {
 	// RecType     int     `json:"recType,omitempty" form:"recType" xml:"recType"`
 	Quantity float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
 	//this is not tested on the xml therefore, when a bug is encountered this needs to be checked
-	UnitNetPrice float64 `json:"unitPrice,omitempty" form:"unitNetPrice"`
+	UnitNetPrice float64 `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
 	NetValue     float64 `json:"netValue" form:"netValue" xml:"netValue"`
 	VatCategory  int     `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
 	VatAmount    float64 `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`

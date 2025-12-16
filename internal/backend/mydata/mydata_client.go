@@ -34,26 +34,28 @@ func NewMyDataClient(base, userID, subscriptionKey string) *Client {
 
 }
 
-func (c *Client) SendInvoice(ctx context.Context, invoice *models.Invoice) ([]byte, error) {
+func (c *Client) SendInvoice(ctx context.Context, invoice *models.Invoice) (models.ResponseDoc, error) {
 
 	var invoicePayload models.InvoicePayload
 	invoicePayload.Invoices = append(invoicePayload.Invoices, *invoice)
 	invo, err := xml.MarshalIndent(invoicePayload, "", "  ")
 	if err != nil {
-		return nil, err
+		return models.ResponseDoc{}, err
 	}
 
 	fmt.Println("this is the invoice after the marshalling\n", string(invo))
-	// invo, err := ImportXML()
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return nil, err
-	// }
-	completeinvo, err := c.DoRequest(invo)
+
+	response, err := c.DoRequest(invo)
 	if err != nil {
-		return nil, err
+		return models.ResponseDoc{}, err
 	}
-	return completeinvo, nil
+
+	var myDataResponse models.ResponseDoc
+	err = xml.Unmarshal(response, &myDataResponse)
+	if err != nil {
+		return models.ResponseDoc{}, err
+	}
+	return myDataResponse, nil
 }
 
 func ImportXML() (invo []byte, err error) {
@@ -68,7 +70,7 @@ func ImportXML() (invo []byte, err error) {
 	}
 	return invo, nil
 }
-func (c *Client) DoRequest(invo []byte) (completeinvo []byte, err error) {
+func (c *Client) DoRequest(invo []byte) (response []byte, err error) {
 	url := c.BaseURL + "SendInvoices"
 	fmt.Println(url)
 

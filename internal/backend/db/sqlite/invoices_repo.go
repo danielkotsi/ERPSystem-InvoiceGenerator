@@ -20,6 +20,7 @@ func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
 }
 
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
+	invo.Seller.Address = nil
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
@@ -27,9 +28,9 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 		return err
 	}
 
-	if err := r.CalculateIncomeClasiffication(&invo.InvoiceSummary); err != nil {
-		return err
-	}
+	// if err := r.CalculateIncomeClasiffication(invo); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
@@ -42,6 +43,9 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.Invoice
 		}
 		summary.TotalNetValue += line.NetValue
 		summary.TotalVatAmount += line.VatAmount
+		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+			return err
+		}
 	}
 	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
 	return nil
@@ -58,9 +62,24 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 	return nil
 }
 
-func (r *InvoiceRepo) CalculateIncomeClasiffication(*models.InvoiceSummary) error {
-	//to do
+func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem models.ClassificationItem, summary *models.InvoiceSummary) error {
+	index, exists := r.ClassificationCategoryExists(classificationItem, summary.IncomeClassification)
+	if exists {
+		summary.IncomeClassification[index].Amount += classificationItem.Amount
+	} else {
+		summary.IncomeClassification = append(summary.IncomeClassification, classificationItem)
+	}
 	return nil
+}
+
+func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.ClassificationItem, summary []models.ClassificationItem) (int, bool) {
+	for index, category := range summary {
+		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
+			return index, true
+		}
+	}
+
+	return 0, false
 }
 
 func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {

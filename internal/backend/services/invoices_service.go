@@ -32,10 +32,10 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return models.Invoice{}, err
 	}
-	// completeinvo, err := s.MyData.SendInvoice(ctx, &invoicePayload)
-	// if err != nil {
-	// 	return completeinvo, err
-	// }
+	_, err = s.MyData.SendInvoice(ctx, &invo)
+	if err != nil {
+		return models.Invoice{}, err
+	}
 	// // pdf, err := s.Invoice.MakePDF
 	return invo, nil
 }
