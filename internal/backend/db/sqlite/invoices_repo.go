@@ -97,7 +97,7 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 		return nil, err
 	}
 
-	tmpl, err := template.ParseFiles("../../assets/templates/invoice.page.html")
+	tmpl, err := template.ParseFiles("../../assets/templates/newinvoice.page.html")
 	if err != nil {
 		log.Println(err)
 	}

@@ -6,18 +6,71 @@
 </head>
   <link rel="stylesheet" href="/static/styles/invoice.page.css" />
 <body>
+        <div class="invoice">
 
-    <h1>Invoice</h1>
-    <p>Date: 2025-11-27</p>
-        <p>Customer: {{.Invoice.Byer.Name}}</p>
-        <p>UID: {{.Invoice.UID}}</p>
-        <p>MARK: {{.Invoice.MARK}}</p>
+            <header class="invoice-head">
+                <div class="logo">
+                    <!-- this is where the company logo and slogan are going to be -->
+                    <img class="logo-image" src="somethingwhenwegetit">
+                    <div class="slogan">
+                    </div>
+                </div>
+                <div class="seller">
+                <!-- this is where the seller info are going to be -->
+                </div>
+                <!-- the qrCode is going to be added in the beggining right to the seller info -->
     <div class="qr-box">
         <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
         <div class="qr-label">Scan to verify invoice</div>
     </div>
+            </header>
+        <table class="invoice-header">
+        </table>
+
+            <section class="buyer">
+        <div class="buyer-info">
+        </div>
+        <div class="correlated-invoices">
+        </div>
+            </section>
+
+            <table class="invoice-rows">
+            </table>
+        
+        <section class="invoice-details">
+                <!-- this is what is going to happen probably -->
+                <table class="balance-table">
+                </table>
+                <table class="vat-analysis">
+                </table>
+                <table class="totals">
+                </table>
+                <div class="comments">
+                </div>
+        </section>
+
+        <footer>
+                <div class="terms-of-sale">
+                </div>
+                <div class="footer-low">
+                    <table class="bank-accounts">
+                    </table>
+                    <div class="publisher">
+                    </div>
+                    <div class="receiver">
+                    </div>
+                <div>
+
+        </footer>
+
+    <!-- <p>Date: 2025-11-27</p> -->
+    <!--     <p>Customer: {{.Invoice.Byer.Name}}</p> -->
+    <!--     <p>UID: {{.Invoice.UID}}</p> -->
+    <!--     <p>MARK: {{.Invoice.MARK}}</p> -->
 
 
+<!-- this is the closing tag for the invoice -->
+</div>
 </body>
 </html>
 

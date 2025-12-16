@@ -1,2 +1,3 @@
 internal/backend/mydata/mydata_repo.go
+*.json
 .env

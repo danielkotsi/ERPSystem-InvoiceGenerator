@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice</title>
+  <link rel="stylesheet" href="/static/styles/invoice.page.css" />
+</head>
+<body>
+  <div class="invoice">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="company">
+        <h1>LIVERA</h1>
+        <p>BAKLAVA – KADAIFI*</p>
+        <p class="slogan">With respect to tradition. Since 1985</p>
+      </div>
+      <div class="invoice-meta">
+        <h2>INVOICE</h2>
+        <p>No: 000123</p>
+        <p>Date: 01/01/2025</p>
+      </div>
+    </div>
+
+    <!-- ITEMS TABLE -->
+    <div class="section">
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Value</th>
+            <th>% VAT</th>
+            <th>VAT</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">Traditional Confectionery Products</td>
+            <td>10</td>
+            <td>5.00</td>
+            <td>50.00</td>
+            <td>24%</td>
+            <td>12.00</td>
+            <td>62.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- VAT ANALYSIS -->
+    <div class="section">
+      <div class="section-title">VAT Analysis</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>% VAT</th>
+            <th>VAT</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>50.00</td>
+            <td>24%</td>
+            <td>12.00</td>
+            <td>62.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SUMMARY -->
+    <table class="summary">
+      <tr>
+        <td>Previous Balance</td>
+        <td>0.00</td>
+      </tr>
+      <tr>
+        <td>New Balance</td>
+        <td>62.00</td>
+      </tr>
+      <tr>
+        <td>Value Before Printing</td>
+        <td>50.00</td>
+      </tr>
+      <tr>
+        <td>Discount</td>
+        <td>0.00</td>
+      </tr>
+      <tr>
+        <td>Total VAT</td>
+        <td>12.00</td>
+      </tr>
+      <tr class="total">
+        <td>Grand Total</td>
+        <td>62.00</td>
+      </tr>
+    </table>
+
+    <!-- COMMENTS -->
+    <div class="section">
+      <div class="section-title">Comments</div>
+      <p>*Traditional confectionery products</p>
+    </div>
+
+    <!-- BANKS -->
+    <div class="section banks">
+      <div class="section-title">Bank Accounts</div>
+      <p>PIRAEUS</p>
+      <p>OPTIMA</p>
+      <p>EUROBANK</p>
+      <p>ALPHA BANK – GR 8701401420142002002018579 – BIC: CRBAGRAA</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="signature">
+        THE PUBLISHER<br />
+        (I have received knowledge of the above terms)
+        <div class="line"></div>
+      </div>
+      <div class="signature">
+        THE RECEIVER
+        <div class="line"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
+
