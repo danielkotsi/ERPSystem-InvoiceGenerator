@@ -29,17 +29,10 @@ func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Reque
 func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	pdf, err := h.InvoiceService.CreateInvoice(r.Context(), r)
 	if err != nil {
-		log.Println(pdf)
-		utils.JsonResponse(w, pdf, 500)
+		log.Println(string(pdf))
 		log.Println(err)
+		utils.JsonResponse(w, err, 500)
 	}
 
-	// var invoicePayload models.InvoicePayload
-	// invoicePayload.Invoices = append(invoicePayload.Invoices, pdf)
-	// invo, err := xml.MarshalIndent(invoicePayload, "", "  ")
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// utils.XMLResponse(w, invo, 200)
-	utils.JsonResponse(w, pdf, 200)
+	utils.PDFResponse(w, pdf, 200)
 }

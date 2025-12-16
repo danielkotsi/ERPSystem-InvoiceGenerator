@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/utils"
+	"fmt"
 	"html/template"
 	"log"
 	"time"
@@ -27,10 +28,6 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
 		return err
 	}
-
-	// if err := r.CalculateIncomeClasiffication(invo); err != nil {
-	// 	return err
-	// }
 
 	return nil
 }
@@ -94,17 +91,24 @@ func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
 	return nil
 }
 
-func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.InvoicePayload) (pdf []byte, err error) {
+func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
+	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
+	if err != nil {
+		return nil, err
+	}
+
 	tmpl, err := template.ParseFiles("../../assets/templates/invoice.page.html")
 	if err != nil {
 		log.Println(err)
 	}
 
 	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]models.InvoicePayload{"Invoice": *finalInvoice})
+	fmt.Println("this is the finalinvoice MARK", finalInvoice.MARK)
+	err = tmpl.Execute(&buf, map[string]models.Invoice{"Invoice": *finalInvoice})
 	if err != nil {
 		log.Println(err)
 	}
+
 	pdf, err = utils.HTMLtoPDF(buf.String())
 	if err != nil {
 		return nil, err

@@ -4,38 +4,19 @@
     <meta charset="UTF-8">
     <title>Invoice PDF</title>
 </head>
+  <link rel="stylesheet" href="/static/styles/invoice.page.css" />
 <body>
 
     <h1>Invoice</h1>
     <p>Date: 2025-11-27</p>
-    <p>Customer: John Doe</p>
+        <p>Customer: {{.Invoice.Byer.Name}}</p>
+        <p>UID: {{.Invoice.UID}}</p>
+        <p>MARK: {{.Invoice.MARK}}</p>
+    <div class="qr-box">
+        <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
+        <div class="qr-label">Scan to verify invoice</div>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Service A</td>
-                <td>2</td>
-                <td>$50</td>
-                <td>$100</td>
-            </tr>
-            <tr>
-                <td>Service B</td>
-                <td>1</td>
-                <td>$75</td>
-                <td>$75</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <p><strong>Total: $175</strong></p>
 
 </body>
 </html>

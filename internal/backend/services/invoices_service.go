@@ -21,21 +21,28 @@ func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo
 	}
 }
 
-func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf models.Invoice, err error) {
+func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
 	var invo models.Invoice
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
-		return models.Invoice{}, err
+		return nil, err
 	}
 	fmt.Println("hello this is the invo from the form", invo)
+
 	err = s.Invoice.CompleteInvoice(ctx, &invo)
 	if err != nil {
-		return models.Invoice{}, err
+		return nil, err
 	}
-	_, err = s.MyData.SendInvoice(ctx, &invo)
+	err = s.MyData.SendInvoice(ctx, &invo)
 	if err != nil {
-		return models.Invoice{}, err
+		return nil, err
 	}
-	// // pdf, err := s.Invoice.MakePDF
-	return invo, nil
+	fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
+
+	pdf, err = s.Invoice.MakePDF(ctx, &invo)
+	if err != nil {
+		return nil, err
+	}
+
+	return pdf, nil
 }
