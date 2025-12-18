@@ -15,17 +15,42 @@ type Invoice struct {
 	Seller         Company        `json:"issuer" form:"seller" xml:"issuer"`
 	Byer           Company        `json:"counterpart" form:"buyer" xml:"counterpart"`
 	InvoiceHeader  InvoiceHeader  `json:"invoiceHeader" form:"invoiceHeader" xml:"invoiceHeader"`
-	PaymentMethods PaymentMethods `json:"paymentMethods,omitempty" form:"paymentMethods" xml:"paymentMethods"`
+	PaymentMethods PaymentMethods `json:"paymentMethods" form:"paymentMethods" xml:"paymentMethods"`
 	InvoiceDetails []*InvoiceRow  `json:"invoiceDetails" form:"invoiceDetails" xml:"invoiceDetails"`
 	InvoiceSummary InvoiceSummary `json:"invoiceSummary" form:"invoiceSummary" xml:"invoiceSummary"`
+	Notices        []string       `json:"notices" form:"notices" xml:"-"`
 }
 
 type Company struct {
-	VatNumber string       `json:"vatNumber" form:"vatNumber" xml:"vatNumber"`
-	Country   string       `json:"country" form:"country" xml:"country"`
-	Branch    int          `json:"branch" form:"branch" xml:"branch"`
-	Name      string       `json:"name" form:"name" xml:"-"`
-	Address   *AddressType `json:"address,omitempty" form:"address" xml:"address,omitempty"`
+	CodeNumber    string        `json:"codeNumber" form:"codeNumber" xml:"-"`
+	DOI           string        `json:"doi" form:"doi" xml:"-"`
+	GEMI          string        `json:"gemi" form:"gemi" xml:"-"`
+	Phone         string        `json:"phone" form:"phone" xml:"-"`
+	Mobile_Phone  string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`
+	Email         string        `json:"email" form:"email" xml:"-"`
+	PostalAddress PostalCell    `json:"postalAddress" form:"postalAddress" xml:"-"`
+	VatNumber     string        `json:"vatNumber" form:"vatNumber" xml:"vatNumber"`
+	Country       string        `json:"country" form:"country" xml:"country"`
+	Branch        int           `json:"branch" form:"branch" xml:"branch"`
+	Name          string        `json:"name" form:"name" xml:"-"`
+	Address       *AddressType  `json:"address,omitempty" form:"address" xml:"address,omitempty"`
+	Discount      int           `json:"discount" form:"discount" xml:"-"`
+	OldBalance    float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
+	NewBalance    float64       `json:"newBalance" form:"newBalance" xml:"-"`
+	TotalBalance  float64       `json:"totalBalance" form:"totalBalance" xml:"-"`
+	BankAccounts  []BankAccount `json:"bankAccounts" form:"bankAccounts" xml:"-"`
+}
+
+type BankAccount struct {
+	BankName string `json:"bankName" form:"bankName" xml:"-"`
+	IBAN     string `json:"iban" form:"iban" xml:"-"`
+}
+
+type PostalCell struct {
+	Naming     string `json:"naming" form:"naming" xml:"-"`
+	Cellnumber string `json:"cellNumber" form:"cellNumber" xml:"-"`
+	PostalCode string `json:"postalcode" form:"postalcode" xml:"-"`
+	City       string `json:"city" form:"city" xml:"-"`
 }
 
 type AddressType struct {
@@ -65,17 +90,16 @@ type PaymentMethodDetail struct {
 	Amount float64 `json:"amount" form:"amount" xml:"amount"`
 }
 type InvoiceRow struct {
-	LineNumber int `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
-	// RecType     int     `json:"recType,omitempty" form:"recType" xml:"recType"`
-	Quantity        float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
-	MeasurementUnit int     `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
-	//this is not tested on the xml therefore, when a bug is encountered this needs to be checked
-	UnitNetPrice float64 `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
-	NetValue     float64 `json:"netValue" form:"netValue" xml:"netValue"`
-	VatCategory  int     `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
-	VatAmount    float64 `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`
-	// Description string  `json:"description" form:"description" xml:"description"`
-	IncomeClassification ClassificationItem `json:"incomeClassification" form:"incomeClassification" xml:"incomeClassification"`
+	LineNumber             int                          `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
+	Quantity               float64                      `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
+	MeasurementUnit        int                          `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
+	UnitNetPrice           float64                      `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
+	NetValue               float64                      `json:"netValue" form:"netValue" xml:"netValue"`
+	VatCategory            int                          `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
+	VatAmount              float64                      `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`
+	IncomeClassification   ClassificationItem           `json:"incomeClassification" form:"incomeClassification" xml:"incomeClassification"`
+	ExpensesClassification []ExpensesClassificationItem `json:"expensesClassification,omitempty" form:"expensesClassification" xml:"expensesClassification"`
+	ItemDescr              string                       `json:"itemDescr,omitempty" form:"itemDescr" xml:"itemDescr,omitempty"`
 }
 
 type InvoiceSummary struct {
