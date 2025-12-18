@@ -40,9 +40,23 @@ type InvoiceHeader struct {
 	Aa          string `json:"aa" form:"aa" xml:"aa"`
 	IssueDate   string `json:"issueDate" form:"issueDate" xml:"issueDate"`
 	InvoiceType string `json:"invoiceType" form:"invoiceType" xml:"invoiceType"`
-	Currency    string `json:"currency" form:"currency" xml:"currency"`
+	//Unesseccary values might need an omit empty in the xml naming, we'll see later
+	VatPaymentSuspension    bool                    `json:"vatPaymentSuspension" form:"vatPaymentSuspension" xml:"vatPaymentSuspension"`
+	Currency                string                  `json:"currency" form:"currency" xml:"currency"`
+	DispatchDate            string                  `json:"dispatchDate" form:"dispatchDate" xml:"dispatchDate"`
+	DispatchTime            string                  `json:"dispatchTime" form:"dispatchTime" xml:"dispatchTime"`
+	VehicleNumber           string                  `json:"vehicleNumber" form:"vehicleNumber" xml:"vehicleNumber"`
+	MovePurpose             int                     `json:"movePurpose" form:"movePurpose" xml:"movePurpose"`
+	OtherDeliveryNoteHeader OtherDeliveryNoteHeader `json:"otherDeliveryNoteHeader" form:"otherDeliveryNoteHeader" xml:"otherDeliveryNoteHeader"`
+	IsDeliveryNote          bool                    `json:"isDeliveryNote" form:"isDeliveryNote" xml:"isDeliveryNote"`
 }
 
+type OtherDeliveryNoteHeader struct {
+	LoadingAddress         AddressType `json:"loadingAddress" form:"loadingAddress" xml:"loadingAddress"`
+	DeliveryAddress        AddressType `json:"deliveryAddress" form:"deliveryAddress" xml:"deliveryAddress"`
+	StartShippingBranch    int         `json:"startShippingBranch" form:"startShippingBranch" xml:"startShippingBranch"`
+	CompleteShippingBranch int         `json:"completeShippingBranch" form:"completeShippingBranch" xml:"completeShippingBranch"`
+}
 type PaymentMethods struct {
 	Details []PaymentMethodDetail `json:"paymentdatails" form:"paymentdetails" xml:"paymentMethodDetails"`
 }
@@ -53,7 +67,8 @@ type PaymentMethodDetail struct {
 type InvoiceRow struct {
 	LineNumber int `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
 	// RecType     int     `json:"recType,omitempty" form:"recType" xml:"recType"`
-	Quantity float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
+	Quantity        float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
+	MeasurementUnit int     `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
 	//this is not tested on the xml therefore, when a bug is encountered this needs to be checked
 	UnitNetPrice float64 `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
 	NetValue     float64 `json:"netValue" form:"netValue" xml:"netValue"`
@@ -64,15 +79,26 @@ type InvoiceRow struct {
 }
 
 type InvoiceSummary struct {
-	TotalNetValue         float64              `json:"totalNetValue" form:"totalNetValue" xml:"totalNetValue"`
-	TotalVatAmount        float64              `json:"totalVatAmount" form:"totalVatAmount" xml:"totalVatAmount"`
-	TotalWithheldAmount   float64              `json:"totalWithheldAmount" form:"totalWithheldAmount" xml:"totalWithheldAmount"`
-	TotalFeesAmount       float64              `json:"totalFeesAmount" form:"totalFeesAmount" xml:"totalFeesAmount"`
-	TotalStampDutyAmount  float64              `json:"totalStampDutyAmount" form:"totalStampDutyAmount" xml:"totalStampDutyAmount"`
-	TotalOtherTaxesAmount float64              `json:"totalOtherTaxesAmount" form:"totalOtherTaxesAmount" xml:"totalOtherTaxesAmount"`
-	TotalDeductionsAmount float64              `json:"totalDeductionsAmount" form:"totalDeductionsAmount" xml:"totalDeductionsAmount"`
-	TotalGrossValue       float64              `json:"totalGrossValue" form:"totalGrossValue" xml:"totalGrossValue"`
-	IncomeClassification  []ClassificationItem `json:"incomeClassification,omitempty" form:"incomeClassification" xml:"incomeClassification"`
+	TotalNetValue          float64                      `json:"totalNetValue" form:"totalNetValue" xml:"totalNetValue"`
+	TotalVatAmount         float64                      `json:"totalVatAmount" form:"totalVatAmount" xml:"totalVatAmount"`
+	TotalWithheldAmount    float64                      `json:"totalWithheldAmount" form:"totalWithheldAmount" xml:"totalWithheldAmount"`
+	TotalFeesAmount        float64                      `json:"totalFeesAmount" form:"totalFeesAmount" xml:"totalFeesAmount"`
+	TotalStampDutyAmount   float64                      `json:"totalStampDutyAmount" form:"totalStampDutyAmount" xml:"totalStampDutyAmount"`
+	TotalOtherTaxesAmount  float64                      `json:"totalOtherTaxesAmount" form:"totalOtherTaxesAmount" xml:"totalOtherTaxesAmount"`
+	TotalDeductionsAmount  float64                      `json:"totalDeductionsAmount" form:"totalDeductionsAmount" xml:"totalDeductionsAmount"`
+	TotalGrossValue        float64                      `json:"totalGrossValue" form:"totalGrossValue" xml:"totalGrossValue"`
+	IncomeClassification   []ClassificationItem         `json:"incomeClassification,omitempty" form:"incomeClassification" xml:"incomeClassification"`
+	ExpensesClassification []ExpensesClassificationItem `json:"expensesClassification,omitempty" form:"expensesClassification" xml:"expensesClassification"`
+}
+
+type ExpensesClassificationItem struct {
+	ClassificationType     string  `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 classificationType"`
+	ClassificationCategory string  `json:"classificationCategory" form:"classificationCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 classificationCategory"`
+	Amount                 float64 `json:"amount" form:"amount" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 amount"`
+	VatAmount              float64 `json:"vatAmount" form:"vatAmount" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatAmount"`
+	VatCategory            int     `json:"vatCategory" form:"vatCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatCategory"`
+	VatExemptionCategory   int     `json:"vatExemptionCategory" form:"vatExemptionCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatExemptionCategory"`
+	Id                     int     `json:"id" form:"id" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 id"`
 }
 
 type ClassificationItem struct {
