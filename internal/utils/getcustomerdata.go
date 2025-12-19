@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -14,6 +15,7 @@ func ParseFormData(r *http.Request, data any) (err error) {
 		return err
 	}
 
+	fmt.Println(r.Form)
 	if err := decoder.Decode(data, r.Form); err != nil {
 		log.Println(err)
 		return err

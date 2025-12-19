@@ -5,7 +5,7 @@ import (
 	// "crypto/rand"
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
-	"-invoice_manager/internal/utils"
+	// "-invoice_manager/internal/utils"
 	"fmt"
 	// "math/big"
 )
@@ -18,10 +18,10 @@ func NewCustomersRepo(db *sql.DB) *CustomersRepo {
 	return &CustomersRepo{DB: db}
 }
 
-func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (models.Customers, error) {
+func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]models.Company, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
-	query := "SELECT name,address_street,address_number,city,postal_code,country,entity_type,branch,vat_number,email,phone,mobile_phone from companies  where name LIKE ? "
+	query := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where NAME LIKE ? "
 
 	rows, err := r.DB.QueryContext(ctx, query, search)
 	if err != nil {
@@ -29,24 +29,23 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) (model
 	}
 	defer rows.Close()
 
-	var customers models.Customers
+	var customers []models.Company
 	for rows.Next() {
-		var p models.Customer
-		var street, number, city, postlacode, email, phone, mobilephone sql.NullString
-		if err := rows.Scan(&p.Name, &street, &number, &city, &postlacode, &p.Country, &p.EntityType, &p.Branch, &p.VatNumber, &email, &phone, &mobilephone); err != nil {
+		var p models.Company
+		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return nil, err
 		}
-
-		if utils.CheckIfSomethingNotNull(street, number, city, postlacode) {
-			p.Address = &models.AddressType{}
-			p.Address.Street = utils.NullableString(street)
-			p.Address.Number = utils.NullableString(number)
-			p.Address.City = utils.NullableString(city)
-			p.Address.PostalCode = utils.NullableString(postlacode)
-		}
-		p.Email = utils.NullableString(email)
-		p.Phone = utils.NullableString(phone)
-		p.Mobile_Phone = utils.NullableString(mobilephone)
+		//
+		// if utils.CheckIfSomethingNotNull(street, number, city, postlacode) {
+		// 	p.Address = &models.AddressType{}
+		// 	p.Address.Street = utils.NullableString(street)
+		// 	p.Address.Number = utils.NullableString(number)
+		// 	p.Address.City = utils.NullableString(city)
+		// 	p.Address.PostalCode = utils.NullableString(postlacode)
+		// }
+		// p.Email = utils.NullableString(email)
+		// p.Phone = utils.NullableString(phone)
+		// p.Mobile_Phone = utils.NullableString(mobilephone)
 
 		customers = append(customers, p)
 	}

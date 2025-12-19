@@ -24,7 +24,13 @@
   <!-- ===== Seller (Issuer) ===== -->
   <fieldset>
     <legend>Seller (Issuer)</legend>
+    <label>Code: <input type="text" name="seller.codeNumber"></label><br>
     <label>Name: <input type="text" name="seller.name"></label><br>
+    <label>DOI: <input type="text" name="seller.doi"></label><br>
+    <label>GEMI: <input type="text" name="seller.gemi"></label><br>
+    <label>Phone: <input type="text" name="seller.phone"></label><br>
+    <label>Mobile_Phone: <input type="text" name="seller.mobile_phone"></label><br>
+    <label>Email: <input type="text" name="seller.email"></label><br>
     <label>VAT Number: <input type="text" name="seller.vatNumber"></label><br>
     <label>Country: <input type="text" name="seller.country"></label><br>
     <label>Branch: <input type="number" name="seller.branch"></label><br>
@@ -42,7 +48,13 @@
   <!-- ===== Buyer (Counterpart) ===== -->
   <fieldset>
     <legend>Buyer (Counterpart)</legend>
+    <label>Code: <input type="text" name="buyer.codeNumber"></label><br>
     <label>Name: <input type="text" name="buyer.name"></label><br>
+    <label>DOI: <input type="text" name="buyer.doi"></label><br>
+    <label>GEMI: <input type="text" name="buyer.gemi"></label><br>
+    <label>Phone: <input type="text" name="buyer.phone"></label><br>
+    <label>Mobile_Phone: <input type="text" name="buyer.mobile_phone"></label><br>
+    <label>Email: <input type="text" name="buyer.email"></label><br>
     <label>VAT Number: <input type="text" name="buyer.vatNumber"></label><br>
     <label>Country: <input type="text" name="buyer.country"></label><br>
     <label>Branch: <input type="number" name="buyer.branch"></label><br>
@@ -51,7 +63,7 @@
     <fieldset>
       <legend>Address</legend>
       <label>Street: <input type="text" name="buyer.address.street"></label><br>
-      <label>Number: <input type="text" name="seller.address.number"></label><br>
+      <label>Number: <input type="text" name="buyer.address.number"></label><br>
       <label>City: <input type="text" name="buyer.address.city"></label><br>
       <label>Postal Code: <input type="text" name="buyer.address.postalCode"></label><br>
     </fieldset>
@@ -64,6 +76,36 @@
     <label>Type: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
 	<div id="invoiceType-suggestions" class="suggestions"></div>
     <label>Currency <input type="text" name="invoiceHeader.currency"></label><br>
+    <label>Deltio Apostolis <input type="text" name="invoiceHeader.isDeliveryNote"></label><br>
+  </fieldset>
+
+  <!-- ===== Diakinisi ===== -->
+  <fieldset>
+    <legend>Diakinisi</legend>
+    <label>Hmerominia apostolis: <input type="text" name="invoiceHeader.dispatchDate"></label><br>
+    <label>Ora apostolis: <input type="text" name="invoiceHeader.dispatchTime"></label><br>
+    <label>Arithmos Oximatos: <input type="text" name="invoiceHeader.vehicleNumber"></label><br>
+    <label>Skopos Diakinisis: <input type="text" name="invoiceHeader.movePurpose"></label><br>
+  <!-- ===== Dieythinsi Apostolea ===== -->
+      <fieldset>
+	<legend>Dieythinsi Apostolea</legend>
+	<label>Odos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.street"></label><br>
+	<label>Arithmos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.number"></label><br>
+	<label>T.K.: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.postalCode"></label><br>
+	<label>poli: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.city"></label><br>
+	<label>Egkatastasi: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.startShippingBranch"></label><br>
+      </fieldset>
+  <!-- ===== Dieythinsi Paralipti ===== -->
+      <fieldset>
+	<legend>Dieythinsi Paralipti</legend>
+	<label>Kodikos Ipokatastimatos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
+	<label>Odos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
+	<label>Arithmos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
+	<label>T.K.: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.postalCode"></label><br>
+	<label>poli: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
+	<label>Egkatastasi: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
+      </fieldset>
+
   </fieldset>
 
   <!-- ===== Details (Line Items) ===== -->
@@ -73,15 +115,24 @@
       <div class="line-item">
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
         <label>Unit Net Price: <input type="number" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
+        <label>Discount: <input type="number" step="1" name="buyer.discount"></label><br>
         <label>VAT Category: <input type="text" id="vatCategory" name="invoiceDetails[0].vatCategory"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
         <label>Product Description: <input type="text" id="descriptioninput" name="invoiceDetails[0].description"></label><br>
 	<div id="description-suggestions" class="suggestions"></div>
+	    <!-- IncomeClassification -->
         <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType"></label><br>
 	<div id="income-classification-type-suggestions" class="suggestions"></div>
         <label>Income Classification Category <input type="text" id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory"></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
         <label>Income Classification Amount: <input type="number" step="0.01" name="invoiceDetails[0].incomeClassification.amount"></label><br>
+	    <!-- expensesClassification -->
+        <label>Expenses Classification Type <input type="text" id="expenses_classification_type" name="invoiceDetails[0].expensesClassification.classificationType"></label><br>
+	<div id="expenses-classification-type-suggestions" class="suggestions"></div>
+        <label>Expenses Classification Category <input type="text" id="expenses_classification_category" name="invoiceDetails[0].expensesClassification.classificationCategory"></label><br>
+	<div id="expenses-classification-category-suggestions" class="suggestions"></div>
+        <label>Expenses Classification Amount: <input type="number" step="0.01" name="invoiceDetails[0].expensesClassification.amount"></label><br>
+	    <!-- it might need extra fields in the expenses classification in the case of a buying invoice IF if i have understood correctly -->
       </div>
     </div>
     <button type="button" onclick="addLineItem()">Add Line Item</button>

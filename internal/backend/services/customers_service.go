@@ -16,12 +16,12 @@ func NewCustomersService(in repository.Customers_repo) *CustomersService {
 	return &CustomersService{Customers: in}
 }
 
-func (s *CustomersService) ListCustomers(ctx context.Context, r *http.Request) (resp []models.Customer, err error) {
+func (s *CustomersService) ListCustomers(ctx context.Context, r *http.Request) (resp []models.Company, err error) {
 
 	search := r.URL.Query().Get("search")
 	customers, err := s.Customers.ListCustomers(ctx, search)
 	if err != nil {
-		return []models.Customer{}, err
+		return []models.Company{}, err
 	}
 	return customers, nil
 }

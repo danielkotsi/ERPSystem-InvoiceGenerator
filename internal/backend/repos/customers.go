@@ -6,6 +6,6 @@ import (
 )
 
 type Customers_repo interface {
-	ListCustomers(ctx context.Context, search string) (models.Customers, error)
+	ListCustomers(ctx context.Context, search string) ([]models.Company, error)
 	CreateCustomer(ctx context.Context, customer_data models.Customer) error
 }

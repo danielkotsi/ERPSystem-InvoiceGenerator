@@ -21,7 +21,7 @@ func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
 }
 
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
-	invo.Seller.Address = nil
+	// invo.Seller.Address = nil
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}

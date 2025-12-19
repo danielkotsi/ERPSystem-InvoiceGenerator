@@ -5,6 +5,7 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
+	"encoding/xml"
 	"fmt"
 	"net/http"
 )
@@ -33,16 +34,21 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	err = s.MyData.SendInvoice(ctx, &invo)
+
+	xmlinvo, err := xml.MarshalIndent(invo, "", "  ")
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
+	// err = s.MyData.SendInvoice(ctx, &invo)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
+	//
+	// pdf, err = s.Invoice.MakePDF(ctx, &invo)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	pdf, err = s.Invoice.MakePDF(ctx, &invo)
-	if err != nil {
-		return nil, err
-	}
-
-	return pdf, nil
+	return xmlinvo, nil
 }

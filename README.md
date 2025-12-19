@@ -17,3 +17,9 @@ So:
 
 
 ο δειγματισμος αναφερεται στον σκοπο διακινησης, και ειναι σε δελτιο αποστολης (9.3)
+
+
+
+TO DO :
+
+-I will make the invoice form and from there i will make the endpoints needed for the autocompletion, i guess its gonna work

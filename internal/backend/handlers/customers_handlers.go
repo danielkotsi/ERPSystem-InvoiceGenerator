@@ -26,11 +26,22 @@ func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string]models.Customers{"Customers": resp}); err != nil {
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string][]models.Company{"Customers": resp}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
 }
 
+func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http.Request) {
+
+	resp, err := h.CustomersService.ListCustomers(r.Context(), r)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
+}
 func (h *CustomersHandler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	err := h.CustomersService.CreateCustomer(r.Context(), r)
 	if err != nil {
