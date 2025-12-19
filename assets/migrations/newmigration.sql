@@ -1,55 +1,146 @@
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE  if not exists users (
-    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    -- code            TEXT NOT NULL,
-    name            TEXT NOT NULL,
-    entity_type INTEGER NOT NULL REFERENCES entity_types(code) ON DELETE RESTRICT 
-    ON UPDATE CASCADE,
-    branch INTEGER NOT NULL DEFAULT 0,
-    vat_number TEXT NOT NULL unique,
-    address_street   TEXT,
-    address_number   text,
-    city            TEXT,
-    postal_code     TEXT,
-    country         TEXT,
-    email           TEXT,
-    phone           TEXT,
-    mobile_phone           TEXT,
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+    CodeNumber TEXT PRIMARY KEY,
+    NAME TEXT NOT NULL,
+    DOI TEXT,
+    GEMI TEXT,
+    Phone TEXT,
+    Mobile_Phone TEXT,
+    Email TEXT,
+    -- these are for the postaladdress struct
+    PostalCellName TEXT,
+    PostalCellNumber TEXT,
+    PostalCellPostalCode TEXT,
+    PostalCellCity TEXT,
+    -- these are for the real address struct
+    AddStreet TEXT,
+    AddNumber TEXT,
+    AddPostalCode TEXT,
+    AddCity TEXT,
+    VatNumber TEXT NOT NULL UNIQUE,
+    Country VARCHAR(2),
+    Branch   INTEGER
 );
 
 
 CREATE TABLE  if not exists customers (
-    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    -- code            TEXT NOT NULL,
+    CodeNumber TEXT PRIMARY KEY,
+    NAME TEXT NOT NULL,
+    DOI TEXT,
+    GEMI TEXT,
+    Phone TEXT,
+    Mobile_Phone TEXT,
+    Email TEXT,
+    -- these are for the postaladdress struct
+    PostalCellName TEXT,
+    PostalCellNumber TEXT,
+    PostalCellPostalCode TEXT,
+    PostalCellCity TEXT,
+    -- these are for the real address struct
+    AddStreet TEXT,
+    AddNumber TEXT,
+    AddPostalCode TEXT,
+    AddCity TEXT,
+    VatNumber TEXT NOT NULL UNIQUE,
+    Country VARCHAR(2),
+    Branch   INTEGER,
+    -- these are attributes only for the customers
+    Balance REAL NOT NULL CHECK (Balance = round(Balance, 2)),
+    Discount INTEGER CHECK (Discount BETWEEN 1 and 100)
+);
+
+CREATE TABLE  IF NOT EXISTS USERS_BANK_ACCOUNTS (
+    USERCODE TEXT NOT NULL,
+    BANK_NAME TEXT NOT NULL,
+    IBAN TEXT NOT NULL UNIQUE,
+    FOREIGN KEY (USERCODE)
+        REFERENCES users(CodeNumber)
+        ON DELETE CASCADE
+);
+
+-- we might not need that table
+CREATE TABLE  IF NOT EXISTS CUSTOMER_BANK_ACCOUNTS (
+    CUSTOMERCODE TEXT NOT NULL,
+    BANK_NAME TEXT NOT NULL,
+    IBAN TEXT NOT NULL UNIQUE,
+    FOREIGN KEY (CUSTOMERCODE)
+        REFERENCES customers(CodeNumber)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE  if not exists BranchCompanies (
+    BranchCode TEXT PRIMARY KEY,
+    CompanyCode TEXT NOT NULL,
+    NAME TEXT NOT NULL,
+    Phone TEXT,
+    Mobile_Phone TEXT,
+    Email TEXT,
+    -- these are for the real address struct
+    AddStreet TEXT,
+    AddNumber TEXT,
+    AddPostalCode TEXT,
+    AddCity TEXT,
+    Country VARCHAR(2),
+    Branch   INTEGER,
+    -- these are attributes only for the customers
+    Balance REAL NOT NULL CHECK (Balance = round(Balance, 2)),
+    Discount INTEGER CHECK (Discount BETWEEN 1 and 100)
+);
+
+
+
+
+
+
+CREATE TABLE if not exists products (
+    CodeNumber TEXT PRIMARY KEY,
     name            TEXT NOT NULL,
-    entity_type INTEGER NOT NULL REFERENCES entity_types(code) ON DELETE RESTRICT 
-    ON UPDATE CASCADE,
-    branch INTEGER NOT NULL DEFAULT 0,
-    vat_number TEXT NOT NULL unique,
-    address_street   TEXT,
-    address_number   text,
-    city            TEXT,
-    postal_code     TEXT,
-    country         TEXT,
-    email           TEXT,
-    phone           TEXT,
-    mobile_phone           TEXT,
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+    description     TEXT,
+    unit_net_price      REAL NOT NULL CHECK (unit_net_price >= 0),
+    measurmentUnit INTEGER NOT NULL REFERENCES measurementUnits(id),
+    vat_category INTEGER NOT NULL references vat_categories(id)
 );
 
 
-CREATE TABLE IF NOT EXISTS entity_types(
-    id              integer NOT NULL PRIMARY KEY autoincrement,
-    code integer not null unique,
-    name text not null
+
+CREATE TABLE IF NOT EXISTS measurementUnits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    unit TEXT NOT NULL UNIQUE
 );
 
+INSERT INTO measurementUnits (unit) VALUES
+('Τεμάχια'),
+('Κιλά'),
+('Λίτρα'),
+('Μέτρα'),
+('Τετραγωνικά Μέτρα'),
+('Κυβικά Μέτρα'),
+('Τεμάχια_Λοιπές Περιπτώσεις')
+;
 
-INSERT INTO entity_types(code,name) values (1,'Business'),(2,'Private Individual'),(3,'Public Sector Entity'),(4,'Foreign Entity'),(5,'Non-Profit Organization'),(6,'Intra-EU VAT Registered Entity VIES');
 
 
+
+
+CREATE TABLE IF NOT EXISTS vat_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    rate REAL CHECK(rate >= 0)
+);
+
+INSERT INTO vat_categories(name, rate) VALUES
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 24%', 24),
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 13%', 13),
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 6%', 6),
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 17%', 17),
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 9%', 9),
+('ΦΠΑ ΣΥΝΤΕΛΕΣΤΗΣ 4%', 4),
+('Ανευ ΦΠΑ', 0),
+('Εγγραφές χωρίς ΦΠΑ (πχ Μισθοδοσία, Αποσβέσεις) ',0 ),
+('ΦΠΑ συντελεστής 3% (αρ.31 ν.5057/2023)',3 ),
+('ΦΠΑ συντελεστής 4% (αρ.31 ν.5057/2023)',4 );
 
 
 CREATE TABLE  if not exists categoriesforproducts  (
@@ -66,82 +157,3 @@ CREATE TABLE  if not exists product_categories  (
 );
 
 
-
-
-CREATE TABLE if not exists products (
-    id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    name            TEXT NOT NULL,
-    description     TEXT,
-    sku             TEXT UNIQUE,
-    unit_price      REAL NOT NULL CHECK (unit_price >= 0),
-    active          INTEGER NOT NULL DEFAULT 1, 
-    vat_category INTEGER NOT NULL references vat_categories(id),
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS vat_categories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
-    rate REAL CHECK(rate >= 0)
-);
-
-INSERT INTO vat_categories(name, rate) VALUES
-('Standard', 24),
-('Reduced', 13),
-('Super-reduced', 6),
-('Exempt', 0);
-
-
-
-
-CREATE TABLE IF NOT EXISTS invoices (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    seller_id TEXT NOT NULL REFERENCES companies(id) ON DELETE CASCADE, -- Your company issuing the invoice
-    buyer_id TEXT NOT NULL REFERENCES companies(id), -- Or separate customers table
-    series text,
-    aa text,
-    invoice_type text,
-    invoice_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    due_date DATETIME,
-    currency TEXT NOT NULL DEFAULT 'EUR',
-    total_net REAL NOT NULL CHECK(total_net >= 0),
-    total_vat REAL NOT NULL CHECK(total_vat >= 0),
-    total_with_vat REAL NOT NULL CHECK(total_with_vat >= 0),
-    status TEXT NOT NULL DEFAULT 'Draft', -- Draft, Issued, Paid
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS invoice_lines (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    invoice_id TEXT NOT NULL REFERENCES invoices(id) ON DELETE CASCADE, -- Belongs to which invoice
-    line_number INTEGER NOT NULL,
-    rec_type INTEGER DEFAULT 3,
-    net_value REAL NOT NULL CHECK(net_value >= 0),
-    vat_amount REAL NOT NULL CHECK(vat_amount >= 0),
-    product_id TEXT REFERENCES products(id), -- Optional: link to a product
-    description TEXT, -- Free text description of product/service
-    quantity REAL NOT NULL CHECK(quantity > 0),
-    unit_price REAL NOT NULL CHECK(unit_price >= 0),
-    vat_category INTEGER NOT NULL REFERENCES vat_categories(id), -- VAT category
-    line_total REAL NOT NULL CHECK(line_total >= 0), -- Quantity * Unit Price + VAT
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE IF NOT EXISTS invoice_payments (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    invoice_id TEXT NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
-    type INTEGER NOT NULL, -- 1=Cash, 2=Bank, 3=Card, 4=POS
-    amount REAL NOT NULL CHECK(amount >= 0),
-    tid TEXT -- optional POS terminal ID
-);
-
-CREATE TABLE IF NOT EXISTS invoice_classifications (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-    invoice_id TEXT NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
-    classification_type TEXT NOT NULL,
-    classification_category TEXT NOT NULL,
-    amount REAL NOT NULL CHECK(amount >= 0)
-);

@@ -22,6 +22,7 @@ type Invoice struct {
 }
 
 type Company struct {
+	Name          string        `json:"name" form:"name" xml:"-"`
 	CodeNumber    string        `json:"codeNumber" form:"codeNumber" xml:"-"`
 	DOI           string        `json:"doi" form:"doi" xml:"-"`
 	GEMI          string        `json:"gemi" form:"gemi" xml:"-"`
@@ -29,16 +30,31 @@ type Company struct {
 	Mobile_Phone  string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`
 	Email         string        `json:"email" form:"email" xml:"-"`
 	PostalAddress PostalCell    `json:"postalAddress" form:"postalAddress" xml:"-"`
+	Address       *AddressType  `json:"address,omitempty" form:"address" xml:"address,omitempty"`
 	VatNumber     string        `json:"vatNumber" form:"vatNumber" xml:"vatNumber"`
 	Country       string        `json:"country" form:"country" xml:"country"`
 	Branch        int           `json:"branch" form:"branch" xml:"branch"`
-	Name          string        `json:"name" form:"name" xml:"-"`
-	Address       *AddressType  `json:"address,omitempty" form:"address" xml:"address,omitempty"`
 	Discount      int           `json:"discount" form:"discount" xml:"-"`
 	OldBalance    float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
 	NewBalance    float64       `json:"newBalance" form:"newBalance" xml:"-"`
 	TotalBalance  float64       `json:"totalBalance" form:"totalBalance" xml:"-"`
 	BankAccounts  []BankAccount `json:"bankAccounts" form:"bankAccounts" xml:"-"`
+}
+
+// BankAccounts for cusotmers and branchcompanies might not be needed
+type BranchCompany struct {
+	CompanyCode  string
+	BranchCode   string
+	Name         string `json:"name" form:"name" xml:"-"`
+	Address      *AddressType
+	Country      string
+	Email        string        `json:"email" form:"email" xml:"-"`
+	Phone        string        `json:"phone" form:"phone" xml:"-"`
+	Mobile_Phone string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`
+	OldBalance   float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
+	NewBalance   float64       `json:"newBalance" form:"newBalance" xml:"-"`
+	TotalBalance float64       `json:"totalBalance" form:"totalBalance" xml:"-"`
+	BankAccounts []BankAccount `json:"bankAccounts" form:"bankAccounts" xml:"-"`
 }
 
 type BankAccount struct {
