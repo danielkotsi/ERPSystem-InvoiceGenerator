@@ -1,5 +1,6 @@
 PRAGMA foreign_keys = ON;
 
+
 CREATE TABLE  if not exists users (
     CodeNumber TEXT PRIMARY KEY,
     NAME TEXT NOT NULL,
@@ -152,7 +153,7 @@ CREATE TABLE  if not exists categoriesforproducts  (
 CREATE TABLE  if not exists product_categories  (
     product_id TEXT NOT NULL ,
     category_id integer NOT NULL ,
-    FOREIGN KEY (product_id) REFERENCES products(id) on delete cascade,
+    FOREIGN KEY (product_id) REFERENCES products(CodeNumber) on delete cascade,
     FOREIGN KEY (category_id) REFERENCES categoriesforproducts(id) on delete cascade
 );
 

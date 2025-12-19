@@ -17,7 +17,7 @@ func NewProductsService(in repository.Products_repo) *ProductsService {
 	return &ProductsService{Products: in}
 }
 
-func (s *ProductsService) ListProducts(ctx context.Context, r *http.Request) (resp models.Products, err error) {
+func (s *ProductsService) ListProducts(ctx context.Context, r *http.Request) (resp []models.Product, err error) {
 
 	search := r.URL.Query().Get("search")
 	fmt.Println("hello this is the search", search)

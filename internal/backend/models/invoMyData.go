@@ -30,7 +30,7 @@ type Company struct {
 	Mobile_Phone  string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`
 	Email         string        `json:"email" form:"email" xml:"-"`
 	PostalAddress PostalCell    `json:"postalAddress" form:"postalAddress" xml:"-"`
-	Address       AddressType   `json:"address,omitempty" form:"address" xml:"address,omitempty"`
+	Address       AddressType   `json:"address" form:"address" xml:"address,omitempty"`
 	VatNumber     string        `json:"vatNumber" form:"vatNumber" xml:"vatNumber,omitempty"`
 	Country       string        `json:"country" form:"country" xml:"country,omitempty"`
 	Branch        int           `json:"branch" form:"branch" xml:"branch,omitempty"`
@@ -147,4 +147,15 @@ type ClassificationItem struct {
 	ClassificationType     string  `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationType"`
 	ClassificationCategory string  `json:"classificationCategory" form:"classificationCategory" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationCategory"`
 	Amount                 float64 `json:"amount" form:"amount" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 amount"`
+}
+
+type Product struct {
+	CodeNumber          string  `json:"codeNumber"`
+	Name                string  `json:"name"`
+	Description         string  `json:"description"`
+	Unit_Net_Price      float64 `json:"unitNetPrice"`
+	MeasurementUnitCode int     `json:"measurementUnitCode"`
+	MeasurementUnit     string  `json:"measurementUnit"`
+	VatCategory         int     `json:"VatCategory"`
+	ProductCategory     string  `json:"productCategory"`
 }

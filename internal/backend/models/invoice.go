@@ -19,16 +19,18 @@ type Customer struct {
 //		PostalCode *string `json:"postalCode,omitempty" form:"postalCode"`
 //	}
 type Customers []Customer
-type Products []Product
-type Product struct {
-	Name         string  `form:"name"`
-	Description  string  `form:"description"`
-	Product_code string  `form:"sku"`
-	Unit_price   float64 `form:"price"`
-	Vat_Category string  `form:"vat_category"`
-	Category     string  `form:"category"`
-	Active       bool    `form:"active"`
-}
+
+// type Products []Product
+//
+//	type Product struct {
+//		Name         string  `form:"name"`
+//		Description  string  `form:"description"`
+//		Product_code string  `form:"sku"`
+//		Unit_price   float64 `form:"price"`
+//		Vat_Category string  `form:"vat_category"`
+//		Category     string  `form:"category"`
+//		Active       bool    `form:"active"`
+//	}
 type Order struct {
 	Seller   Customer
 	Buyer    Customer
