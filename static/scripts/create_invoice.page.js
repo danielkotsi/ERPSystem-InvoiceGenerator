@@ -3,6 +3,29 @@ import { invoiceTypes } from "./data.js"
 import { vatCategories } from "./data.js"
 import { incomeClassificationTypes } from "./data.js"
 import { incomeClassificationCategories } from "./data.js"
+const customersNameInput = document.getElementById('customersName')
+
+async function fetchDB(fetchurl) {
+	const response = await fetch(`${fetchurl}`, {
+	})
+	const data = await response.json();
+	return data;
+};
+
+customersNameInput.addEventListener('input', (e) => {
+	console.log(e.target.value);
+	const customersuggestions = fetchDB('http://localhost:8080/suggestions/customers?search=' + e.target.value)
+	console.log(customersuggestions);
+});
+
+
+customersNameInput.addEventListener('focus', (e) => {
+	console.log(e.target.value);
+	const customersuggestions = fetchDB('http://localhost:8080/suggestions/customers?search=' + e.target.value)
+	console.log(customersuggestions);
+});
+
+
 
 function attachAutocomplete(inputId, items, whichsuggestions) {
 	const input = document.getElementById(inputId);
