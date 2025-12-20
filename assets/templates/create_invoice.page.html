@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
-  <link rel="stylesheet" href="/static/style.css" />
   <link rel="stylesheet" href="/static/styles/create_invoice.page.css" />
   </head>
 
@@ -48,24 +47,25 @@
   <!-- ===== Buyer (Counterpart) ===== -->
   <fieldset>
     <legend>Buyer (Counterpart)</legend>
-    <label>Code: <input type="text" name="buyer.codeNumber"></label><br>
+    <label>Code: <input type="text" id="customersCode" name="buyer.codeNumber"></label><br>
     <label>Name: <input type="text" id="customersName" name="buyer.name"></label><br>
-    <label>DOI: <input type="text" name="buyer.doi"></label><br>
-    <label>GEMI: <input type="text" name="buyer.gemi"></label><br>
-    <label>Phone: <input type="text" name="buyer.phone"></label><br>
-    <label>Mobile_Phone: <input type="text" name="buyer.mobile_phone"></label><br>
-    <label>Email: <input type="text" name="buyer.email"></label><br>
-    <label>VAT Number: <input type="text" name="buyer.vatNumber"></label><br>
-    <label>Country: <input type="text" name="buyer.country"></label><br>
-    <label>Branch: <input type="number" name="buyer.branch"></label><br>
-    <label>Entity Type: <input type="number" name="buyer.entityType"></label><br>
+	<div id="customers-suggestions" class="suggestions"></div>
+    <label>DOI: <input type="text" id="customersDOI" name="buyer.doi"></label><br>
+    <label>GEMI: <input type="text" id="customersGEMI" name="buyer.gemi"></label><br>
+    <label>Phone: <input type="text" id="customersPhone" name="buyer.phone"></label><br>
+    <label>Mobile_Phone: <input type="text" id="customersMobile_Phone" name="buyer.mobile_phone"></label><br>
+    <label>Email: <input type="text" id="customersEmail" name="buyer.email"></label><br>
+    <label>VAT Number: <input type="text" id="customersVatNumber" name="buyer.vatNumber"></label><br>
+    <label>Country: <input type="text" id="customersCountry" name="buyer.country"></label><br>
+    <label>Branch: <input type="number" id="customersBranch" name="buyer.branch"></label><br>
+    <label>Entity Type: <input type="number" id="customersEntityType" name="buyer.entityType"></label><br>
 
     <fieldset>
       <legend>Address</legend>
-      <label>Street: <input type="text" name="buyer.address.street"></label><br>
-      <label>Number: <input type="text" name="buyer.address.number"></label><br>
-      <label>City: <input type="text" name="buyer.address.city"></label><br>
-      <label>Postal Code: <input type="text" name="buyer.address.postalCode"></label><br>
+      <label>Street: <input type="text" id="customersAddressStreet" name="buyer.address.street"></label><br>
+      <label>Number: <input type="text" id="customersAddressNumber" name="buyer.address.number"></label><br>
+      <label>City: <input type="text" id="customersAddressCity" name="buyer.address.city"></label><br>
+      <label>Postal Code: <input type="text" id="customersAddressPostalCode" name="buyer.address.postalCode"></label><br>
     </fieldset>
   </fieldset>
 
@@ -113,12 +113,16 @@
     <legend>Details</legend>
     <div id="invoiceDetails">
       <div class="line-item">
+        <label>Product Name: <input type="text" id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
+	<div id="product-suggestions" class="suggestions"></div>
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
-        <label>Unit Net Price: <input type="number" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
-        <label>Discount: <input type="number" step="1" name="buyer.discount"></label><br>
-        <label>VAT Category: <input type="text" id="vatCategory" name="invoiceDetails[0].vatCategory"></label><br>
+        <label>Measurement_Unit: <input type="text" id="product_measurementUnit-0" step="1" name="product.measurementUnit"></label><br>
+        <label>Measurement_Unit_Code: <input type="number" id="product_measurementUnitCode-0" step="1" name="invoiceDetails[0].measurementUnit"></label><br>
+        <label>Unit Net Price: <input type="number" id="product_unit_net_price-0" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
+        <label>Discount: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
+        <label>VAT Category: <input type="text" id="product_vatCategory-0" name="invoiceDetails[0].vatCategory"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
-        <label>Product Description: <input type="text" id="descriptioninput" name="invoiceDetails[0].description"></label><br>
+        <label>Product Description: <input type="text" id="product_description-0" name="invoiceDetails[0].description"></label><br>
 	<div id="description-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
         <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType"></label><br>

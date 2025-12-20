@@ -156,6 +156,6 @@ type Product struct {
 	Unit_Net_Price      float64 `json:"unitNetPrice"`
 	MeasurementUnitCode int     `json:"measurementUnitCode"`
 	MeasurementUnit     string  `json:"measurementUnit"`
-	VatCategory         int     `json:"VatCategory"`
+	VatCategory         int     `json:"vatCategory"`
 	ProductCategory     string  `json:"productCategory"`
 }
