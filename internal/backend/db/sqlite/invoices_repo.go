@@ -50,8 +50,16 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.Invoice
 
 func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error {
 	amount := map[int]float64{
-		1: 0.24,
-		2: 0.13,
+		1:  0.24,
+		2:  0.13,
+		3:  0.06,
+		4:  0.17,
+		5:  0.09,
+		6:  0.04,
+		7:  0.00,
+		8:  0.00,
+		9:  0.03,
+		10: 0.04,
 	}
 	line.NetValue = line.Quantity * line.UnitNetPrice
 	line.VatAmount = line.Quantity * line.UnitNetPrice * amount[line.VatCategory]

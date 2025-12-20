@@ -35,18 +35,6 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]mod
 		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return nil, err
 		}
-		//
-		// if utils.CheckIfSomethingNotNull(street, number, city, postlacode) {
-		// 	p.Address = &models.AddressType{}
-		// 	p.Address.Street = utils.NullableString(street)
-		// 	p.Address.Number = utils.NullableString(number)
-		// 	p.Address.City = utils.NullableString(city)
-		// 	p.Address.PostalCode = utils.NullableString(postlacode)
-		// }
-		// p.Email = utils.NullableString(email)
-		// p.Phone = utils.NullableString(phone)
-		// p.Mobile_Phone = utils.NullableString(mobilephone)
-
 		customers = append(customers, p)
 	}
 	fmt.Println(customers)
@@ -65,4 +53,41 @@ func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models
 		return err
 	}
 	return nil
+}
+
+func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]models.BranchCompany, error) {
+	search = fmt.Sprintf("%v%%", search)
+	fmt.Println(search)
+	query := `SELECT 
+	BranchCode,
+	CompanyCode,
+	NAME,
+	Phone,
+	Mobile_Phone,
+	Email,
+	AddStreet,
+	AddNumber,
+	AddPostalCode,
+	AddCity,
+	Country,
+	Balance
+	from BranchCompanies 
+	where CompanyCode==? and BranchCode like ?;`
+
+	rows, err := r.DB.QueryContext(ctx, query, company, search)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var branchcompanies []models.BranchCompany
+	for rows.Next() {
+		var p models.BranchCompany
+		if err := rows.Scan(&p.BranchCode, &p.CompanyCode, &p.Name, &p.Phone, &p.Mobile_Phone, &p.Email, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.Country, &p.OldBalance); err != nil {
+			return nil, err
+		}
+		branchcompanies = append(branchcompanies, p)
+	}
+	fmt.Println(branchcompanies)
+	return branchcompanies, nil
 }

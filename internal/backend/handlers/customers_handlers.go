@@ -42,6 +42,19 @@ func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http
 
 	utils.JsonResponse(w, resp, 200)
 }
+
+func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, r *http.Request) {
+
+	resp, err := h.CustomersService.ListBranchCompanies(r.Context(), r)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
+}
+
 func (h *CustomersHandler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	err := h.CustomersService.CreateCustomer(r.Context(), r)
 	if err != nil {

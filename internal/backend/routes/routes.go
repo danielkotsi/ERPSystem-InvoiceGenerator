@@ -21,6 +21,7 @@ func (r *Router) Setup() http.Handler {
 	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
 	mux.HandleFunc("GET /customers", r.CustomersHandler.GetCustomers)
 	mux.HandleFunc("GET /suggestions/customers", r.CustomersHandler.GetCustomerSuggestions)
+	mux.HandleFunc("GET /suggestions/branchcompanies", r.CustomersHandler.GetBranchCompaniesSuggestions)
 	mux.HandleFunc("POST /customers/create", r.CustomersHandler.CreateCustomer)
 
 	mux.HandleFunc("GET /products", r.ProductsHandler.GetProducts)

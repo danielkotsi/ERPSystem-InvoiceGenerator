@@ -26,6 +26,17 @@ func (s *CustomersService) ListCustomers(ctx context.Context, r *http.Request) (
 	return customers, nil
 }
 
+func (s *CustomersService) ListBranchCompanies(ctx context.Context, r *http.Request) (resp []models.BranchCompany, err error) {
+
+	search := r.URL.Query().Get("search")
+	company := r.URL.Query().Get("company")
+	customers, err := s.Customers.ListBranchCompanies(ctx, company, search)
+	if err != nil {
+		return []models.BranchCompany{}, err
+	}
+	return customers, nil
+}
+
 func (s *CustomersService) CreateCustomer(ctx context.Context, r *http.Request) error {
 
 	var customer models.Customer
