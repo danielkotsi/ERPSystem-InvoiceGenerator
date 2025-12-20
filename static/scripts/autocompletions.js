@@ -69,6 +69,7 @@ function selectSuggestion(item, input, element, fieldsMap = {}) {
 		}
 	}
 
+	updateDiscount();
 
 	console.log("Selected:", item);
 }
@@ -130,7 +131,6 @@ export function attachAutocomplete(inputId, items, whichsuggestions) {
 
 
 
-// <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
 
 export function addLineItem() {
 	const div = document.createElement('div');
@@ -138,16 +138,14 @@ export function addLineItem() {
 	const lineItemIndex = container.querySelectorAll('.line-item').length;
 	div.classList.add('line-item');
 	div.innerHTML = `
-<!-- this is the new addition  -->
 	<button type="button" class="remove-line-item">Remove</button><br>
-<!-- it ends here  -->
         <label>Product Name: <input type="text" id="product_name_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].name"></label><br>
 	<div id="product-suggestions-${lineItemIndex}" class="suggestions"></div>
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
         <label>Measurement_Unit: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="product.measurementUnit"></label><br>
         <label>Measurement_Unit_Code: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit"></label><br>
         <label>Unit Net Price: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice"></label><br>
-        <label>Discount: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
+        <label>Discount: <input type="number" id="customersDiscount-${lineItemIndex}" class="discount" step="1" name="buyer.discount"></label><br>
         <label>VAT Category: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
         <label>Product Description: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].description"></label><br>
@@ -166,24 +164,27 @@ export function addLineItem() {
         <label>Expenses Classification Amount: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].expensesClassification.amount"></label><br>
   `;
 	document.getElementById('invoiceDetails').appendChild(div);
-	// Add event listener to the remove button
+
+	updateDiscount();
+
 	const removeButton = div.querySelector('.remove-line-item');
 	removeButton.addEventListener('click', () => {
-		div.remove(); // removes this line item from the DOM
+		div.remove();
 		reIndexLineItems();
 	});
 }
 
-let paymentMethodIndex = 1;
-function addPaymentMethod() {
-	const div = document.createElement('div');
-	div.classList.add('payment-method');
-	div.innerHTML = `
-    <label>Type (1=Bank, 2=Credit Card): <input type="number" name="paymentMethods.paymentdetails[${paymentMethodIndex}].type"></label><br>
-    <label>Amount: <input type="number" step="0.01" name="paymentMethods.paymentdetails[${paymentMethodIndex}].amount"></label><br>
-  `;
-	document.getElementById('paymentMethods').appendChild(div);
-	paymentMethodIndex++;
+export function updateDiscount() {
+	const firstDiscount = document.getElementById('customersDiscount');
+	if (!firstDiscount) return;
+
+	const value = firstDiscount.value;
+
+	const discountInputs = document.querySelectorAll('#invoiceDetails .discount');
+
+	discountInputs.forEach(input => {
+		input.value = value;
+	});
 }
 
 function reIndexLineItems() {
@@ -216,3 +217,28 @@ function reIndexLineItems() {
 	});
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+// let paymentMethodIndex = 1;
+// function addPaymentMethod() {
+// 	const div = document.createElement('div');
+// 	div.classList.add('payment-method');
+// 	div.innerHTML = `
+//     <label>Type (1=Bank, 2=Credit Card): <input type="number" name="paymentMethods.paymentdetails[${paymentMethodIndex}].type"></label><br>
+//     <label>Amount: <input type="number" step="0.01" name="paymentMethods.paymentdetails[${paymentMethodIndex}].amount"></label><br>
+//   `;
+// 	document.getElementById('paymentMethods').appendChild(div);
+// 	paymentMethodIndex++;
+// }
+//
+//
