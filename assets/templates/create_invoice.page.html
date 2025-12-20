@@ -114,7 +114,7 @@
     <div id="invoiceDetails">
       <div class="line-item">
         <label>Product Name: <input type="text" id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
-	<div id="product-suggestions" class="suggestions"></div>
+	<div id="product-suggestions-0" class="suggestions"></div>
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
         <label>Measurement_Unit: <input type="text" id="product_measurementUnit-0" step="1" name="product.measurementUnit"></label><br>
         <label>Measurement_Unit_Code: <input type="number" id="product_measurementUnitCode-0" step="1" name="invoiceDetails[0].measurementUnit"></label><br>
@@ -139,7 +139,7 @@
 	    <!-- it might need extra fields in the expenses classification in the case of a buying invoice IF if i have understood correctly -->
       </div>
     </div>
-    <button type="button" onclick="addLineItem()">Add Line Item</button>
+    <button id="addrowbutton" type="button">Add Line Item</button>
   </fieldset>
 
   <!-- ===== Payment Methods ===== -->

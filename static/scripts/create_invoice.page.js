@@ -1,11 +1,11 @@
 import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories } from "./data.js"
-import { addAutocompletion, attachAutocomplete } from "./autocompletions.js"
+import { addAutocompletion, attachAutocomplete, addLineItem } from "./autocompletions.js"
 
 
 const customersNameInput = document.getElementById('customersName')
 const productNameInput = document.getElementById('product_name_input-0')
 const customer_suggestionsDiv = document.getElementById("customers-suggestions");
-const product_suggestionsDiv = document.getElementById("product-suggestions");
+const product_suggestionsDiv = document.getElementById("product-suggestions-0");
 
 const customers_fields = {
 	name: document.getElementById('customersName'),
@@ -35,6 +35,26 @@ const product_fields = {
 	vatCategory: document.getElementById('product_vatCategory-0'),
 };
 
+
+const addproductButton = document.getElementById('addrowbutton');
+
+addproductButton.addEventListener('click', () => {
+	addLineItem();
+	const container = document.getElementById('invoiceDetails');
+	const lineItemIndex = container.querySelectorAll('.line-item').length;
+	console.log('product_name_input-' + (lineItemIndex - 1));
+	const productwithIndexNameInput = document.getElementById('product_name_input-' + (lineItemIndex - 1));
+	const productwithIndexsuggestionsDiv = document.getElementById('product-suggestions-' + (lineItemIndex - 1));
+	const productwithIndexfields = {
+		description: document.getElementById('product_description-' + (lineItemIndex - 1)),
+		measurementUnit: document.getElementById('product_measurementUnit-' + (lineItemIndex - 1)),
+		measurementUnitCode: document.getElementById('product_measurementUnitCode-' + (lineItemIndex - 1)),
+		unitNetPrice: document.getElementById('product_unit_net_price-' + (lineItemIndex - 1)),
+		vatCategory: document.getElementById('product_vatCategory-' + (lineItemIndex - 1)),
+	};
+	addAutocompletion(productwithIndexNameInput, productwithIndexsuggestionsDiv, 'suggestions/products?search=', productwithIndexfields);
+
+});
 
 
 
