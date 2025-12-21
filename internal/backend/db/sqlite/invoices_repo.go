@@ -9,15 +9,17 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"path/filepath"
 	"time"
 )
 
 type InvoiceRepo struct {
-	DB *sql.DB
+	DB      *sql.DB
+	abspath string
 }
 
-func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
-	return &InvoiceRepo{DB: db}
+func NewInvoiceRepo(db *sql.DB, abspath string) *InvoiceRepo {
+	return &InvoiceRepo{DB: db, abspath: abspath}
 }
 
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
@@ -105,7 +107,8 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 		return nil, err
 	}
 
-	tmpl, err := template.ParseFiles("../../assets/templates/invoice.page.html")
+	invoicehtmltemp := filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)
 	}

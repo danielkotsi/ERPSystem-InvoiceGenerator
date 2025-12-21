@@ -8,17 +8,25 @@ import (
 	"-invoice_manager/internal/backend/mydata"
 	"-invoice_manager/internal/backend/routes"
 	"-invoice_manager/internal/backend/services"
-	"-invoice_manager/internal/utils"
 	"html/template"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 func New() (http.Handler, *sql.DB) {
-	CONFIG := utils.DecodeConf()
-	db := sqlite.NewDatabase(&CONFIG)
-	tmpl := template.Must(template.ParseGlob("../../assets/templates/*.page.html"))
-	// Repos
-	invoiceRepo := sqlite.NewInvoiceRepo(db)
+	var exeDir string
+	if os.Getenv("DEV") == "1" {
+		exeDir, _ = filepath.Abs("../../")
+	} else {
+		exePath, _ := os.Executable()
+		exeDir = filepath.Dir(exePath)
+	}
+	db := sqlite.NewDatabase(exeDir)
+	templatesDir := filepath.Join(exeDir, "assets", "templates", "*.page.html")
+	tmpl := template.Must(template.ParseGlob(templatesDir))
+
+	invoiceRepo := sqlite.NewInvoiceRepo(db, exeDir)
 	customersRepo := sqlite.NewCustomersRepo(db)
 	productsRepo := sqlite.NewProductsRepo(db)
 	myDataRepo := mydata.NewMyDataRepo()
@@ -34,7 +42,7 @@ func New() (http.Handler, *sql.DB) {
 	customersHandler := handlers.NewCustomersHandler(customers_service, htmlexcecuteservice)
 	productsHandler := handlers.NewProductsHandler(products_service, htmlexcecuteservice)
 
-	middleware := middleware.NewMiddleware(&CONFIG)
+	middleware := middleware.NewMiddleware()
 
 	// Router
 	router := &routes.Router{
@@ -44,5 +52,5 @@ func New() (http.Handler, *sql.DB) {
 		Middleware:       middleware,
 	}
 
-	return router.Setup(), db
+	return router.Setup(exeDir), db
 }

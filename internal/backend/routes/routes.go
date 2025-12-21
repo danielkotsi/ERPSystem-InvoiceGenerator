@@ -4,6 +4,7 @@ import (
 	"-invoice_manager/internal/backend/handlers"
 	"-invoice_manager/internal/backend/middleware"
 	"net/http"
+	"path/filepath"
 )
 
 type Router struct {
@@ -13,10 +14,10 @@ type Router struct {
 	Middleware       *middleware.Middleware
 }
 
-func (r *Router) Setup() http.Handler {
+func (r *Router) Setup(abspath string) http.Handler {
 	mux := http.NewServeMux()
 
-	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("../../static/"))))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(abspath, "static")))))
 	// Get requests
 	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
 	mux.HandleFunc("GET /customers", r.CustomersHandler.GetCustomers)
