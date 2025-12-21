@@ -39,7 +39,7 @@ func (s *CustomersService) ListBranchCompanies(ctx context.Context, r *http.Requ
 
 func (s *CustomersService) CreateCustomer(ctx context.Context, r *http.Request) error {
 
-	var customer models.Customer
+	var customer models.Company
 	if err := utils.ParseFormData(r, &customer); err != nil {
 		return err
 	}

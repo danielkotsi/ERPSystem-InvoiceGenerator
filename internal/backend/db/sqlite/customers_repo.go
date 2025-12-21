@@ -41,14 +41,35 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]mod
 	return customers, nil
 }
 
-func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Customer) error {
+func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Company) error {
 	// x := rand.Reader
 	// y, _ := rand.Int(x, big.NewInt(2000))
 	// code := fmt.Sprintf("%s-%s", customer_data.Name[0:3], y.String())
 
-	query := "insert into companies(name,address_street,address_number,city,postal_code,country,email,phone,mobile_phone,vat_number,branch,entity_type) values(?,?,?,?,?,?,?,?,?,?,?,?) "
+	query := `insert into customers(
+	CodeNumber,
+	NAME,
+	DOI,
+	GEMI,
+	Phone,
+	Mobile_Phone,
+	Email,
+	PostalCellName  ,
+	PostalCellNumber,
+	PostalCellPostalCode  ,
+	PostalCellCity  ,
+	AddStreet  ,
+	AddNumber  ,
+	AddPostalCode  ,
+	AddCity,
+	VatNumber,
+	Country,
+	Branch,
+	Balance,
+	Discount
+	) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `
 
-	_, err := r.DB.ExecContext(ctx, query, customer_data.Name, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.City, customer_data.Address.PostalCode, customer_data.Country, customer_data.Email, customer_data.Phone, customer_data.Mobile_Phone, customer_data.VatNumber, customer_data.Branch, customer_data.EntityType)
+	_, err := r.DB.ExecContext(ctx, query, customer_data.CodeNumber, customer_data.Name, customer_data.DOI, customer_data.GEMI, customer_data.Phone, customer_data.Mobile_Phone, customer_data.Email, customer_data.PostalAddress.Naming, customer_data.PostalAddress.Cellnumber, customer_data.PostalAddress.PostalCode, customer_data.PostalAddress.City, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.PostalCode, customer_data.Address.City, customer_data.VatNumber, customer_data.Country, customer_data.Branch, customer_data.OldBalance, customer_data.Discount)
 	if err != nil {
 		return err
 	}

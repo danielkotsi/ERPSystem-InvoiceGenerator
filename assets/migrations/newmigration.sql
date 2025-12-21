@@ -47,7 +47,7 @@ CREATE TABLE  if not exists customers (
     Country VARCHAR(2),
     Branch   INTEGER,
     -- these are attributes only for the customers
-    Balance REAL NOT NULL CHECK (Balance = round(Balance, 2)),
+    Balance REAL  CHECK (Balance = round(Balance, 2)),
     Discount INTEGER CHECK (Discount BETWEEN 1 and 100)
 );
 

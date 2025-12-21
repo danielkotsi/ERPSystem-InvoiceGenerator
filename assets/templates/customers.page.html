@@ -20,20 +20,24 @@
 			</a>
     </nav>
 
-    <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
+    <form class="form" action="/create/customer" id="create-customer-form" method="POST" enctype="multipart/form-data">
 
+              <input type="text" name="codeNumber" id="codeNumber" placeholder="Customer Code">
               <input type="text" name="name" id="name" placeholder="Customer Name">
-              <input type="text" name="address.street" id="address.street" placeholder="Address_line1"></input> 
-              <input type="text" name="address.number" id="address.number" placeholder="Address_num1"></input> 
+              <input type="text" name="doi" id="doi" placeholder="Customer DOI">
+              <input type="text" name="gemi" id="gemi" placeholder="Customer GEMI">
+              <input type="text" name="address.street" id="address.street" placeholder="Address_street"></input> 
+              <input type="text" name="address.number" id="address.number" placeholder="Address_number"></input> 
               <input type="text" name="address.city" id="address.city" placeholder="City"></input> 
               <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Postal_code"></input> 
               <input type="text" name="country" id="country" placeholder="Country"></input> 
               <input type="email" name="email" id="email" placeholder="Email"></input> 
               <input type="text" name="phone" id="phone" placeholder="Phone"></input> 
+              <input type="text" name="discount" id="discount" placeholder="Discount"></input> 
               <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Mobile_phone"></input> 
-              <input type="text" name="branch" id="branch" placeholder="Branch: 0 for basic branch"></input> 
-              <input type="text" name="entityType" id="entityType" placeholder="Entity Type"></input> 
+              <input type="text" name="branch" id="branch" placeholder="Branch: 0 for basic branch"></input>
               <input type="text" name="vatNumber" id="vatNumber" placeholder="VAT"></input> 
+              <input type="number" step="0.01" name="oldBalance" id="oldBalance" placeholder="Υπολοιπο"></input> 
         <button class="submit-btn" type="submit">Add Customer</button>
 
     </form>
