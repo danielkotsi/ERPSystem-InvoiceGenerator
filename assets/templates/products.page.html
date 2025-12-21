@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/home.page.css" />
+  <link rel="stylesheet" href="/static/styles/create_invoice.page.css" />
   </head>
 
 
@@ -23,11 +22,15 @@
     <form class="form" action="/products/create" id="create-product-form" method="POST" enctype="multipart/form-data">
 
               <input type="text" name="name" id="name" placeholder="Product Name"></input> 
+              <input type="text" name="codeNumber"  placeholder="Κωδικός προϊόντος"></input> 
               <textarea  name="description" id="description" placeholder="Product Description"></textarea> 
-	      <input type="text" name="price" id="price" placeholder="Product Price"></input> 
-	      <input type="text" name="vat_category" id="vat_category" placeholder="Vat Category"></input> 
-              <input type="text" name="category" id="category" placeholder="Product Category"></input> 
-              <input type="text" name="sku" id="sku" placeholder="Product Code"></input> 
+	      <input type="text" name="unitNetPrice" id="price" placeholder="Product Price"></input> 
+      <div class="measurementContainer">
+	      <input type="text" id="measurementUnitInput" name="measurementUnitCode"placeholder="Μοναδα Μετρησης"></input> 
+    <div id="measurementUnitsSuggestions" class="suggestions"></div>
+      </div>
+	      <input type="text" name="vatCategory" id="vat_category_input" placeholder="Vat Category"></input> 
+    <div id="vatCategoriesSuggestions" class="suggestions"></div>
 
         <button class="submit-btn" type="submit">Add Product</button>
 
@@ -40,13 +43,16 @@
       parigrafi:{{.Description}}
     </div>
     <div class="product-code">
-      KODIKOS:{{.Product_code}}
+      KODIKOS:{{.CodeNumber}}
+    </div>
+    <div class="measurementUnit">
+      KODIKOS:{{.MeasurementUnit}}
     </div>
     <div class="unit-price">
-      TIMI:{{.Unit_price}}
+      TIMI:{{.Unit_Net_Price}}
     </div>
-    <div class="category">
-      KATIGORIA:{{.Category}}
+    <div  class="vatcategory">
+      KATIGORIA:{{.VatCategory}}
     </div>
     <div class="line"></div>
     {{end}}
@@ -64,6 +70,6 @@
     width:vw;
 }
     </style>
- <script src="/static/scripts/product.page.js"></script>
+ <script type="module" src="/static/scripts/product.page.js"></script>
 
 	</body>

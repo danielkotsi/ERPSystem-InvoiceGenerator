@@ -80,3 +80,13 @@ export const incomeClassificationCategories = [
 ];
 
 
+export const measurementUnitCodes = [
+	{ value: "1", label: "1 - Τεμάχια" },
+	{ value: "2", label: "2 - Κιλά" },
+	{ value: "3", label: "3 - Λίτρα" },
+	{ value: "4", label: "4 - Μέτρα" },
+	{ value: "5", label: "5 - Τετραγωνικά" },
+	{ value: "6", label: "6 - Κυβικά Μέτρα" },
+	{ value: "7", label: "7 - Τεμάχια_Λοιπές Περιπτώσεις" },
+];
+

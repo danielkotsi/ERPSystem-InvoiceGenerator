@@ -4,6 +4,7 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -25,6 +26,7 @@ func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
 		return
 	}
+	fmt.Println("these are the products:", resp)
 
 	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "products.page.html", map[string][]models.Product{"Products": resp}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)

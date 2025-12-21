@@ -35,7 +35,7 @@ func (s *ProductsService) CreateProduct(ctx context.Context, r *http.Request) er
 		return err
 	}
 
-	fmt.Println(product)
+	fmt.Println("hello this is the product", product)
 	if err := s.Products.CreateProduct(r.Context(), product); err != nil {
 		return err
 	}

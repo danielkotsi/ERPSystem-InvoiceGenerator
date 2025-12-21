@@ -1,4 +1,13 @@
+import { vatCategories, measurementUnitCodes } from "./data.js"
+import { attachAutocomplete } from "./autocompletions.js"
+
+
 const form = document.getElementById('create-product-form');
+
+
+
+attachAutocomplete('vat_category_input', vatCategories, 'vatCategoriesSuggestions');
+attachAutocomplete('measurementUnitInput', measurementUnitCodes, 'measurementUnitsSuggestions');
 
 
 

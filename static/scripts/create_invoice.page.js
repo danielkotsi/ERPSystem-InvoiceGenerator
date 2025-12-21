@@ -1,11 +1,13 @@
 import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories } from "./data.js"
-import { addAutocompletion, attachAutocomplete, addLineItem } from "./autocompletions.js"
+import { addAutocompletion, attachAutocomplete, addLineItem, addBranchCompletion } from "./autocompletions.js"
 
 
 const customersNameInput = document.getElementById('customersName')
 const productNameInput = document.getElementById('product_name_input-0')
+const branchesCodeInput = document.getElementById('branchCode')
 const customer_suggestionsDiv = document.getElementById("customers-suggestions");
 const product_suggestionsDiv = document.getElementById("product-suggestions-0");
+const branches_suggestionsDiv = document.getElementById("branchcompany-suggestions");
 
 const customers_fields = {
 	name: document.getElementById('customersName'),
@@ -58,7 +60,7 @@ addproductButton.addEventListener('click', () => {
 
 
 
-
+addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies");
 addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields);
 addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields);
 

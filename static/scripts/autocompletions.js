@@ -12,6 +12,33 @@ async function fetchDB(fetchurl) {
 	}
 };
 
+export function addBranchCompletion(element, elementsuggestions, endpoint, fieldsMap = {}) {
+	element.addEventListener('input', async (e) => {
+		console.log(e.target.value);
+		const company = document.getElementById('customersCode')
+		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
+		const resultsuggestions = await fetchDB(url)
+		console.log(resultsuggestions, Array.isArray(resultsuggestions))
+		console.log(resultsuggestions);
+		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+	});
+
+
+	element.addEventListener('focus', async (e) => {
+		console.log(e.target.value);
+		const company = document.getElementById('customersCode')
+		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
+		const resultsuggestions = await fetchDB(url)
+		console.log(resultsuggestions);
+		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+	});
+
+	document.addEventListener("click", (e) => {
+		if (!e.target.closest("#" + element.id)) {
+			elementsuggestions.innerHTML = "";
+		}
+	});
+}
 export function addAutocompletion(element, elementsuggestions, endpoint, fieldsMap = {}) {
 	element.addEventListener('input', async (e) => {
 		console.log(e.target.value);
