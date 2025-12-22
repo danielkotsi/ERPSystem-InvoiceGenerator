@@ -43,11 +43,11 @@ type Company struct {
 
 // BankAccounts for cusotmers and branchcompanies might not be needed
 type BranchCompany struct {
-	CompanyCode  string
-	BranchCode   string
-	Name         string `json:"name" form:"name" xml:"-"`
-	Address      AddressType
-	Country      string
+	CompanyCode  string        `json:"companyCode" form:"companyCode" xml:"-"`
+	BranchCode   string        `json:"branchCode" form:"branchCode" xml:"-"`
+	Name         string        `json:"name" form:"name" xml:"-"`
+	Address      AddressType   `json:"address" form:"address" xml:"-"`
+	Country      string        `json:"country" form:"country" xml:"-"`
 	Email        string        `json:"email" form:"email" xml:"-"`
 	Phone        string        `json:"phone" form:"phone" xml:"-"`
 	Mobile_Phone string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`

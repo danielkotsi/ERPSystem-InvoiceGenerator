@@ -21,8 +21,10 @@ func (r *Router) Setup(abspath string) http.Handler {
 	// Get requests
 	mux.HandleFunc("GET /", r.InvoiceHandler.GetHome)
 	mux.HandleFunc("GET /customers", r.CustomersHandler.GetCustomers)
+	mux.HandleFunc("GET /customers/byid/", r.CustomersHandler.GetCustomerById)
 	mux.HandleFunc("GET /suggestions/customers", r.CustomersHandler.GetCustomerSuggestions)
 	mux.HandleFunc("GET /suggestions/branchcompanies", r.CustomersHandler.GetBranchCompaniesSuggestions)
+	mux.HandleFunc("POST /create/branchcompany", r.CustomersHandler.CreateBranchCompany)
 	mux.HandleFunc("POST /create/customer", r.CustomersHandler.CreateCustomer)
 
 	mux.HandleFunc("GET /products", r.ProductsHandler.GetProducts)

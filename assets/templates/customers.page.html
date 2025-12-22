@@ -19,7 +19,15 @@
 			<a href="/makeaninvoice" class="invoice">Make an invoice
 			</a>
     </nav>
+    <h3>Search Company</h3>
+    <form class="form" action="/customers" id="search-customers-form" method="GET" enctype="multipart/form/data">
+              <input type="text" name="search" id="customersearch" placeholder="Search Customer Name">
+	<div id="customer-search-suggestions" class="suggestions"></div>
+        <button class="submit-btn" type="submit">Search For Customer</button>
+    </form>
 
+    <div class="line"></div>
+    <h3>Add Company</h3>
     <form class="form" action="/create/customer" id="create-customer-form" method="POST" enctype="multipart/form-data">
 
               <input type="text" name="codeNumber" id="codeNumber" placeholder="Customer Code">
@@ -42,7 +50,9 @@
 
     </form>
     <div class="line"></div>
+    <h3>Customers</h3>
     {{range .Customers }}
+    <a href="customers/byid/{{.CodeNumber}}" class="customer">
     <div class="customer-name">
       ONOMA:{{.Name}}
     </div>
@@ -85,6 +95,7 @@
     <div class="customer-VAT">
       AFM:{{.VatNumber}}
     </div>
+    </a>
     <div class="line">
     </div>
     {{end}}
@@ -94,12 +105,38 @@
     .form{
     margin:10px;
     }
+    .customer{
+      all:unset;
+      cursor:pointer;
+    }
 .line{
     margin:10px;
     height:2px;
     color:black;
     background-color:black;
     width:vw;
+}
+
+
+.suggestions {
+  display:flex;
+  flex-direction:column;
+  border: 1px solid #ccc;
+  max-width: 300px;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  text-decoration:none;
+  color:inherit;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #eee;
 }
     </style>
 

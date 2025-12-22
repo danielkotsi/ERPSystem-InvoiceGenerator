@@ -87,7 +87,7 @@ CREATE TABLE  if not exists BranchCompanies (
     Branch   INTEGER,
     -- these are attributes only for the customers
     Balance REAL NOT NULL CHECK (Balance = round(Balance, 2)),
-    Discount INTEGER CHECK (Discount BETWEEN 1 and 100)
+    Discount INTEGER CHECK (Discount BETWEEN 0 and 100)
 );
 
 

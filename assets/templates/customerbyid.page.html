@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/home.page.css" />
+  </head>
+
+
+  <body>
+
+    <nav class="navbar">
+			<a href="/customers" class="customers">Customers
+			</a>
+			<a href="/products" class="products">Products
+			</a>
+			<a href="/makeaninvoice" class="invoice">Make an invoice
+			</a>
+    </nav>
+
+
+    <h1 class="customer-name">
+      ONOMA:{{.Resp.Customer.Name}}
+    </h1>
+    {{if ne .Resp.Customer.Address nil}}
+    {{if and (ne .Resp.Customer.Address.Street nil) (ne .Resp.Customer.Address.Number nil)}}
+    <div class="customer-add1">
+      ODOS 1:{{.Resp.Customer.Address.Street}}
+      ARITHMOS:{{.Resp.Customer.Address.Number}}
+    </div>
+    {{end}}
+    {{if ne .Resp.Customer.Address.City nil}}
+    <div class="customer-city">
+      POLI:{{.Resp.Customer.Address.City}}
+    </div>
+    {{end}}
+    {{if ne .Resp.Customer.Address.PostalCode nil }}
+    <div class="customer-postal-code">
+      T.K.:{{.Resp.Customer.Address.PostalCode}}
+    </div>
+    {{end}}
+    {{end}}
+    <div class="customer-country">
+      XORA:{{.Resp.Customer.Country}}
+    </div>
+    {{if ne .Resp.Customer.Email nil}}
+    <div class="customer-email">
+      E-MAIL:{{.Resp.Customer.Email}}
+    </div>
+    {{end}}
+    {{if ne .Resp.Customer.Phone nil}}
+    <div class="customer-phone">
+      TILEFONO:{{.Resp.Customer.Phone}}
+    </div>
+    {{end}}
+    {{if ne .Resp.Customer.Mobile_Phone nil}}
+    <div class="customer-mobile-phone">
+      KINITO TILEFONO:{{.Resp.Customer.Mobile_Phone}}
+    </div>
+    {{end}}
+    <div class="customer-VAT">
+      AFM:{{.Resp.Customer.VatNumber}}
+    </div>
+    <div class="line">
+    </div>
+
+
+      <h3>Add Branch Company </h3>
+    <form class="form" action="/create/branchcompany" id="create-branch-form" method="POST" enctype="multipart/form-data">
+
+      <input type="text" name="companyCode" id="companyCode" placeholder="Main Company Code" value="{{.Resp.Customer.CodeNumber}}">
+              <input type="text" name="branchCode" id="branchCode" placeholder="Branch Company Code">
+              <input type="text" name="name" id="name" placeholder="Branch Company Name">
+              <input type="text" name="address.street" id="address.street" placeholder="Address_street"></input> 
+              <input type="text" name="address.number" id="address.number" placeholder="Address_number"></input> 
+              <input type="text" name="address.city" id="address.city" placeholder="City"></input> 
+              <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Postal_code"></input> 
+              <input type="text" name="country" id="country" placeholder="Country"></input> 
+              <input type="email" name="email" id="email" placeholder="Email"></input> 
+              <input type="text" name="phone" id="phone" placeholder="Phone"></input> 
+              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Mobile_phone"></input> 
+              <input type="number" step="0.01" name="oldBalance" id="oldBalance" placeholder="Υπολοιπο"></input> 
+        <button class="submit-btn" type="submit">Add Branch Company</button>
+
+    </form>
+    <div class="line">
+    </div>
+
+    <section class="subcopmanies-list">
+      <h3>Branch Companies </h3>
+
+    {{range .Resp.BranchCompanies }}
+
+    <div class="branchcompany-name">
+      ONOMA:{{.Name}}
+    </div>
+    {{if ne .Address nil}}
+    {{if and (ne .Address.Street nil) (ne .Address.Number nil)}}
+    <div class="branchcompany-add1">
+      ODOS 1:{{.Address.Street}}
+      ARITHMOS:{{.Address.Number}}
+    </div>
+    {{end}}
+    {{if ne .Address.City nil}}
+    <div class="branchcompany-city">
+      POLI:{{.Address.City}}
+    </div>
+    {{end}}
+    {{if ne .Address.PostalCode nil }}
+    <div class="branchcompany-postal-code">
+      T.K.:{{.Address.PostalCode}}
+    </div>
+    {{end}}
+    {{end}}
+    <div class="branchcompany-country">
+      XORA:{{.Country}}
+    </div>
+    {{if ne .Email nil}}
+    <div class="branchcompany-email">
+      E-MAIL:{{.Email}}
+    </div>
+    {{end}}
+    {{if ne .Phone nil}}
+    <div class="branchcompany-phone">
+      TILEFONO:{{.Phone}}
+    </div>
+    {{end}}
+    {{if ne .Mobile_Phone nil}}
+    <div class="branchcompany-mobile-phone">
+      KINITO TILEFONO:{{.Mobile_Phone}}
+    </div>
+    {{end}}
+    <div class="line">
+    </div>
+      {{end}}
+
+
+
+    </section>
+
+
+
+<style>
+    .form{
+    margin:10px;
+    }
+    a{
+      all:unset;
+      cursor:pointer;
+    }
+.line{
+    margin:10px;
+    height:2px;
+    color:black;
+    background-color:black;
+    width:vw;
+}
+    </style>
+
+
+ <script src="/static/scripts/customerbyid.page.js"></script>
+  </body>
