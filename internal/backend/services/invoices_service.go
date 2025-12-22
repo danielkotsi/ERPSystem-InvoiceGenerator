@@ -22,6 +22,22 @@ func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo
 	}
 }
 
+func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, r *http.Request) (invoiceinfo models.InvoiceHTMLinfo, invoiceHTML string, err error) {
+	invoicetype := r.URL.Query().Get("invoice_type")
+
+	invoiceTypes := map[string]string{
+		"selling":      "create_selling_invoice.page.html",
+		"buying":       "create_buying_invoice.page.html",
+		"deliverynote": "create_deliverynote_invoice.page.html",
+		"reciept":      "create_reciept_invoice.page.html",
+	}
+	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
+	if err != nil {
+		return invoiceinfo, invoiceTypes[invoicetype], err
+	}
+	return invoiceinfo, invoiceTypes[invoicetype], nil
+}
+
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
 	var invo models.Invoice
 	err = utils.ParseFormData(r, &invo)

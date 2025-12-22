@@ -24,6 +24,29 @@ CREATE TABLE  if not exists users (
     Branch   INTEGER
 );
 
+create table if not exists invoice_types(
+    id text ,
+    type TEXT NOT NULL UNIQUE
+);
+
+insert into invoice_types (id,type) values
+    ('1.1','Τιμολογιο Πώλησης-Δελτίο Αποστολής'),
+    ('9.3','Δελτίο Αποστολής'),
+    ('8.1','Απόδειξη Εισπραξης-Έσοδο'),
+    ('1.1','Τιμολογιο Αγοράς')
+;
+create table if not exists user_invoice_types_series(
+codeNumber text not null,
+    invoice_type text not null,
+    series text not null,
+    aa text not null,
+    FOREIGN KEY (codeNumber)
+        REFERENCES users(CodeNumber)
+        ON DELETE CASCADE
+    FOREIGN KEY (invoice_type)
+        REFERENCES invoice_types(id)
+        ON DELETE CASCADE
+);
 
 CREATE TABLE  if not exists customers (
     CodeNumber TEXT PRIMARY KEY,

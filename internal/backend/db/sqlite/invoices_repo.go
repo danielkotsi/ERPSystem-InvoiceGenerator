@@ -69,6 +69,45 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 	return nil
 }
 
+func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error) {
+	query := `
+select users.CodeNumber, 
+	NAME,
+	DOI,
+	GEMI,
+	Phone,
+	Mobile_Phone,
+	Email,
+	PostalCellName,
+	PostalCellNumber,
+	PostalCellPostalCode,
+	PostalCellCity,
+	AddStreet,
+	AddNumber, 
+	AddPostalCode,
+	AddCity,
+	VatNumber,
+	Country,
+	Branch,
+	series,
+	aa
+from users join user_invoice_types_series on users.CodeNumber==user_invoice_types_series.codeNumber where users.CodeNumber== ? and invoice_type==?;
+`
+	rows, err := r.DB.QueryContext(ctx, query, "COMP01", invoicetype)
+	if err != nil {
+		return invoiceinfo, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&invoiceinfo.User.CodeNumber, &invoiceinfo.User.Name, &invoiceinfo.User.DOI, &invoiceinfo.User.GEMI, &invoiceinfo.User.Phone, &invoiceinfo.User.Mobile_Phone, &invoiceinfo.User.Email, &invoiceinfo.User.PostalAddress.Naming, &invoiceinfo.User.PostalAddress.Cellnumber, &invoiceinfo.User.PostalAddress.PostalCode, &invoiceinfo.User.PostalAddress.City, &invoiceinfo.User.Address.Street, &invoiceinfo.User.Address.Number, &invoiceinfo.User.Address.PostalCode, &invoiceinfo.User.Address.City, &invoiceinfo.User.VatNumber, &invoiceinfo.User.Country, &invoiceinfo.User.Branch, &invoiceinfo.Invoiceinfo.Series, &invoiceinfo.Invoiceinfo.Aa); err != nil {
+			return invoiceinfo, err
+		}
+	}
+
+	return invoiceinfo, nil
+}
+
 func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem models.ClassificationItem, summary *models.InvoiceSummary) error {
 	index, exists := r.ClassificationCategoryExists(classificationItem, summary.IncomeClassification)
 	if exists {
