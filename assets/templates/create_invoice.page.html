@@ -100,11 +100,12 @@
 	<legend>Dieythinsi Paralipti</legend>
 	<label>Kodikos Ipokatastimatos: <input type="text" id="branchCode" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
 	<div id="branchcompany-suggestions" class="suggestions"></div>
-	<label>Odos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
-	<label>Arithmos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
-	<label>T.K.: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.postalCode"></label><br>
-	<label>poli: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
-	<label>Egkatastasi: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
+	<label>Name: <input type="text" id="branchName" name="branchName"></label><br>
+	<label>Odos: <input type="text" id="branchAddStreet" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
+	<label>Arithmos: <input type="text" id="branchAddNumber" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
+	<label>T.K.: <input type="text" id="branchAddPostalCode" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.postalCode"></label><br>
+	<label>poli: <input type="text" id="branchCity" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
+	<label>Egkatastasi: <input type="text" id="branchBranch" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
       </fieldset>
 
   </fieldset>
@@ -148,16 +149,19 @@
     <legend>Payment Methods</legend>
     <div id="paymentMethods">
       <div class="payment-method">
-        <label>Type (1=Bank, 2=Credit Card): <input type="number" name="paymentMethods.paymentdetails[0].type"></label><br>
+        <label>Type (1=Bank, 2=Credit Card): <input type="string" id="paymentmethods-input" name="paymentMethods.paymentdetails[0].type"></label><br>
+	<div id="paymentmethods-suggestions" class="suggestions"></div>
         <label>Amount: <input type="number" step="0.01" name="paymentMethods.paymentdetails[0].amount"></label><br>
       </div>
     </div>
     <button type="button" onclick="addPaymentMethod()">Add Payment Method</button>
   </fieldset>
 
-  <button type="submit">Submit /button>
+  <button type="submit">Submit </button>
 </form>
 
+<div class="blank">
+    </div>
     <!-- <script src="/static/scripts/data.js"></script> -->
 <script type="module" src="/static/scripts/create_invoice.page.js">
 </script>

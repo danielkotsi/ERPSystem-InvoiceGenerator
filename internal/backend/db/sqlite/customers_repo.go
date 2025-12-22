@@ -122,7 +122,6 @@ func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search
 		if err := rows.Scan(&p.BranchCode, &p.CompanyCode, &p.Name, &p.Phone, &p.Mobile_Phone, &p.Email, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.Country, &p.OldBalance); err != nil {
 			return nil, err
 		}
-		p.Name = fmt.Sprintf("%s %s", p.BranchCode, p.Name)
 		branchcompanies = append(branchcompanies, p)
 	}
 	return branchcompanies, nil

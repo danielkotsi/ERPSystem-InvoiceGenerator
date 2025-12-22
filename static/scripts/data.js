@@ -90,3 +90,15 @@ export const measurementUnitCodes = [
 	{ value: "7", label: "7 - Τεμάχια_Λοιπές Περιπτώσεις" },
 ];
 
+
+export const paymentMethodCodes = [
+	{ value: "1", label: "1 - Επαγ. Λογαριασμός Πληρωμών Ημεδαπής" },
+	{ value: "2", label: "2 - Επαγ. Λογαριασμός Πληρωμών Αλλοδαπής" },
+	{ value: "3", label: "3 - Μετρητά" },
+	{ value: "4", label: "4 - Επιταγή" },
+	{ value: "5", label: "5 - Επί Πιστώσει" },
+	{ value: "6", label: "6 - Web Banking" },
+	{ value: "7", label: "7 - POS / e-POS" },
+	{ value: "8", label: "8 - Άμεσες Πληρωμές IRIS" },
+];
+

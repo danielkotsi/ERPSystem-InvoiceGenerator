@@ -1,4 +1,4 @@
-import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories } from "./data.js"
+import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories, paymentMethodCodes } from "./data.js"
 import { addAutocompletion, attachAutocomplete, addLineItem, addBranchCompletion } from "./autocompletions.js"
 
 
@@ -37,6 +37,15 @@ const product_fields = {
 	vatCategory: document.getElementById('product_vatCategory-0'),
 };
 
+const branches_fieldsmap = {
+	branchCode: document.getElementById('branchCode'),
+	name: document.getElementById('branchName'),
+	'address.street': document.getElementById('branchAddStreet'),
+	'address.number': document.getElementById('branchAddNumber'),
+	'address.postalCode': document.getElementById('branchAddPostalCode'),
+	'address.city': document.getElementById('branchCity'),
+
+};
 
 const addproductButton = document.getElementById('addrowbutton');
 
@@ -60,14 +69,13 @@ addproductButton.addEventListener('click', () => {
 
 
 
-addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies");
+addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies", branches_fieldsmap);
 addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields);
 addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields);
 
 
 
-attachAutocomplete('descriptioninput', descriptions, 'description-suggestions');
-attachAutocomplete('vatCategory', vatCategories, 'vatCategory-suggestions');
+attachAutocomplete('paymentmethods-input', paymentMethodCodes, 'paymentmethods-suggestions');
 attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
 attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
 attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');

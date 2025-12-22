@@ -5,7 +5,8 @@
   position: absolute;
   background: white;
   z-index: 1000;
-}
+  max-height: 300px; 
+  overflow-y: auto;  }
 
 .suggestion-item {
   padding: 8px;
@@ -15,3 +16,9 @@
 .suggestion-item:hover {
   background-color: #eee;
 }
+
+.blank{
+  width:20px;
+  height:300px;
+}
+

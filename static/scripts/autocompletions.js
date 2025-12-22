@@ -20,7 +20,7 @@ export function addBranchCompletion(element, elementsuggestions, endpoint, field
 		const resultsuggestions = await fetchDB(url)
 		console.log(resultsuggestions, Array.isArray(resultsuggestions))
 		console.log(resultsuggestions);
-		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
 	});
 
 
@@ -30,7 +30,7 @@ export function addBranchCompletion(element, elementsuggestions, endpoint, field
 		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
 		const resultsuggestions = await fetchDB(url)
 		console.log(resultsuggestions);
-		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
 	});
 
 	document.addEventListener("click", (e) => {
@@ -64,6 +64,21 @@ export function addAutocompletion(element, elementsuggestions, endpoint, fieldsM
 };
 
 
+function showBranchSuggestions(results, input, element, fieldsMap = {}) {
+	clearSuggestions(element);
+
+	results.forEach(item => {
+		const div = document.createElement("div");
+		div.className = "suggestion-item";
+		div.textContent = item.branchCode + item.name;
+
+		div.addEventListener("click", () => {
+			selectSuggestion(item, input, element, fieldsMap);
+		});
+
+		element.appendChild(div);
+	});
+}
 function showSuggestions(results, input, element, fieldsMap = {}) {
 	clearSuggestions(element);
 
