@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"encoding/xml"
 	"fmt"
 	"net/http"
 )
@@ -26,10 +25,10 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, r *http.Request) (i
 	invoicetype := r.URL.Query().Get("invoice_type")
 
 	invoiceTypes := map[string]string{
-		"selling":      "create_selling_invoice.page.html",
-		"buying":       "create_buying_invoice.page.html",
-		"deliverynote": "create_deliverynote_invoice.page.html",
-		"reciept":      "create_reciept_invoice.page.html",
+		"1.1":  "create_selling_invoice.page.html",
+		"13.1": "create_buying_invoice.page.html",
+		"9.3":  "create_deliverynote_invoice.page.html",
+		"8.1":  "create_reciept_invoice.page.html",
 	}
 	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
 	if err != nil {
@@ -51,20 +50,20 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 		return nil, err
 	}
 
-	xmlinvo, err := xml.MarshalIndent(invo, "", "  ")
+	// xmlinvo, err := xml.MarshalIndent(invo, "", "  ")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	err = s.MyData.SendInvoice(ctx, &invo)
 	if err != nil {
 		return nil, err
 	}
-	// err = s.MyData.SendInvoice(ctx, &invo)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	// fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
-	//
-	// pdf, err = s.Invoice.MakePDF(ctx, &invo)
-	// if err != nil {
-	// 	return nil, err
-	// }
 
-	return xmlinvo, nil
+	pdf, err = s.Invoice.MakePDF(ctx, &invo)
+	if err != nil {
+		return nil, err
+	}
+
+	return pdf, nil
 }

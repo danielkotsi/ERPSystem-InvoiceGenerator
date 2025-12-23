@@ -67,7 +67,6 @@ const product_fields = {
 	measurementUnit: document.getElementById('product_measurementUnit-0'),
 	measurementUnitCode: document.getElementById('product_measurementUnitCode-0'),
 	unitNetPrice: document.getElementById('product_unit_net_price-0'),
-	vatCategory: document.getElementById('product_vatCategory-0'),
 };
 
 const branches_fieldsmap = {
@@ -81,7 +80,6 @@ const branches_fieldsmap = {
 };
 
 const addproductButton = document.getElementById('addrowbutton');
-//this is where it starts
 function addLineItem() {
 	const div = document.createElement('div');
 	const container = document.getElementById('invoiceDetails');
@@ -91,19 +89,17 @@ function addLineItem() {
 	<button type="button" class="remove-line-item">Remove</button><br>
         <label>Product Name: <input type="text" id="product_name_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].name"></label><br>
 	<div id="product-suggestions-${lineItemIndex}" class="suggestions"></div>
-        <label>Product Description: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr"></label><br>
-        <label>Discount Option: <input type="text" id="discount-option-${lineItemIndex}" class="discount-option" name="invoiceDetails[${lineItemIndex}].discountOption"></label><br>
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
         <label>Measurement_Unit: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="product.measurementUnit"></label><br>
         <label>Measurement_Unit_Code: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit"></label><br>
         <label>Unit Net Price: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice"></label><br>
         <label>Discount: <input type="number" id="customersDiscount-${lineItemIndex}" class="discount" step="1" name="buyer.discount"></label><br>
-        <label>VAT Category: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
+        <label>VAT Category: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory" value="8"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
+        <label>Product Description: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].description"></label><br>
+	<div id="description-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
-        <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationType" value="E3_561_001"></label><br>
-	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Income Classification Category <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category1_2"></label><br>
+        <label>Income Classification Category <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category3"></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
         <label>Income Classification Amount: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].incomeClassification.amount"></label><br>
   `;
@@ -160,7 +156,6 @@ function reIndexLineItems() {
 		});
 	});
 }
-//this is where it ends
 
 addproductButton.addEventListener('click', () => {
 	addLineItem();
@@ -192,43 +187,3 @@ attachAutocomplete('paymentmethods-input', paymentMethodCodes, 'paymentmethods-s
 attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
 attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
 attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');
-
-
-
-
-
-const discountelement = document.getElementById('customersDiscount');
-
-discountelement.addEventListener("change", () => {
-	const value = discountelement.value
-	console.log(value)
-	const discountoptions = document.querySelectorAll('#invoiceDetails .discount-option');
-	discountoptions.forEach(option => {
-		if (Number(value) > 0) {
-			option.value = 'true'
-		} else {
-			option.value = 'false'
-		}
-	});
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

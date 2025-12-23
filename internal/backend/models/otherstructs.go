@@ -18,5 +18,5 @@ type invoforminfo struct {
 	MovePurpose              string
 	IncomeClassificationType string
 	IncomeClassificationCat  string
-	IsDeliveryNote           string
+	IsDeliveryNote           bool
 }

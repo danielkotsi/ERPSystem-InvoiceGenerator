@@ -32,6 +32,7 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]mod
 	var customers []models.Company
 	for rows.Next() {
 		var p models.Company
+		p.Address = &models.AddressType{}
 		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return nil, err
 		}
@@ -51,6 +52,7 @@ func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (custo
 	defer rows.Close()
 
 	var p models.Company
+	p.Address = &models.AddressType{}
 	for rows.Next() {
 		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return customer, err

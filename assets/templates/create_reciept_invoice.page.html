@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
   <link rel="stylesheet" href="/static/styles/create_invoice.page.css" />
+  <link rel="stylesheet" href="/static/styles/styles.css" />
   </head>
 
   <body>
 
-    <nav class="navbar">
-			<a href="/customers" class="customers">Customers
-			</a>
-			<a href="/products" class="products">Products
-			</a>
-			<a href="/makeaninvoice" class="invoice">Make an invoice
-			</a>
-    </nav>
-
+<nav class="navbar">
+  <a href="/customers" class="customers">Customers</a>
+  <a href="/products" class="products">Products</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
+  </div>
+</nav>
 <form method="POST" action="/invoice/create" enctype="multipart/form-data">
 
   <!-- ===== Seller (Issuer) ===== -->

@@ -4,21 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/home.page.css" />
+  <link rel="stylesheet" href="/static/styles/styles.css" />
+  <link rel="stylesheet" href="/static/styles/customers.page.css" />
   </head>
 
 
   <body>
 
-    <nav class="navbar">
-			<a href="/customers" class="customers">Customers
-			</a>
-			<a href="/products" class="products">Products
-			</a>
-			<a href="/makeaninvoice" class="invoice">Make an invoice
-			</a>
-    </nav>
+<nav class="navbar">
+  <a href="/customers" class="customers">Customers</a>
+  <a href="/products" class="products">Products</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
+  </div>
+</nav>
     <h3>Search Company</h3>
     <form class="form" action="/customers" id="search-customers-form" method="GET" enctype="multipart/form/data">
               <input type="text" name="search" id="customersearch" placeholder="Search Customer Name">
@@ -101,44 +101,6 @@
     {{end}}
 
 
-<style>
-    .form{
-    margin:10px;
-    }
-    .customer{
-      all:unset;
-      cursor:pointer;
-    }
-.line{
-    margin:10px;
-    height:2px;
-    color:black;
-    background-color:black;
-    width:vw;
-}
-
-
-.suggestions {
-  display:flex;
-  flex-direction:column;
-  border: 1px solid #ccc;
-  max-width: 300px;
-  position: absolute;
-  background: white;
-  z-index: 1000;
-}
-
-.suggestion-item {
-  text-decoration:none;
-  color:inherit;
-  padding: 8px;
-  cursor: pointer;
-}
-
-.suggestion-item:hover {
-  background-color: #eee;
-}
-    </style>
 
  <script src="/static/scripts/customer.page.js"></script>
 	</body>

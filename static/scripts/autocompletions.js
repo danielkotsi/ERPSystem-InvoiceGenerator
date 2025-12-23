@@ -227,6 +227,15 @@ export function updateDiscount() {
 	discountInputs.forEach(input => {
 		input.value = value;
 	});
+
+	const discountoptions = document.querySelectorAll('#invoiceDetails .discount-option');
+	discountoptions.forEach(option => {
+		if (Number(value) > 0) {
+			option.value = 'true'
+		} else {
+			option.value = 'false'
+		}
+	});
 }
 
 function reIndexLineItems() {

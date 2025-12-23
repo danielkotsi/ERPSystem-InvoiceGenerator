@@ -27,19 +27,22 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
+	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
+func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
 	for i, line := range invoicelines {
 		line.LineNumber = i + 1
-		if err := r.CalculateInvoiceLinePrices(line); err != nil {
-			return err
+		if invoicetype != "9.3" {
+			if err := r.CalculateInvoiceLinePrices(line); err != nil {
+				return err
+			}
 		}
+		line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
 		summary.TotalNetValue += line.NetValue
 		summary.TotalVatAmount += line.VatAmount
 		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
@@ -99,21 +102,52 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 	}
 	defer rows.Close()
 
+	invoiceinfo.User.Address = &models.AddressType{}
 	for rows.Next() {
 		if err := rows.Scan(&invoiceinfo.User.CodeNumber, &invoiceinfo.User.Name, &invoiceinfo.User.DOI, &invoiceinfo.User.GEMI, &invoiceinfo.User.Phone, &invoiceinfo.User.Mobile_Phone, &invoiceinfo.User.Email, &invoiceinfo.User.PostalAddress.Naming, &invoiceinfo.User.PostalAddress.Cellnumber, &invoiceinfo.User.PostalAddress.PostalCode, &invoiceinfo.User.PostalAddress.City, &invoiceinfo.User.Address.Street, &invoiceinfo.User.Address.Number, &invoiceinfo.User.Address.PostalCode, &invoiceinfo.User.Address.City, &invoiceinfo.User.VatNumber, &invoiceinfo.User.Country, &invoiceinfo.User.Branch, &invoiceinfo.Invoiceinfo.Series, &invoiceinfo.Invoiceinfo.Aa); err != nil {
 			return invoiceinfo, err
 		}
 	}
 
+	err = r.CompleteHTMLinfo(&invoiceinfo, invoicetype)
+	if err != nil {
+		return invoiceinfo, err
+	}
 	return invoiceinfo, nil
 }
 
-func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem models.ClassificationItem, summary *models.InvoiceSummary) error {
-	index, exists := r.ClassificationCategoryExists(classificationItem, summary.IncomeClassification)
+func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invoicetype string) error {
+	invoiceinfo.Invoiceinfo.Aa = "00002"
+	invoiceinfo.Invoiceinfo.Currency = "EUR"
+	invoiceinfo.Invoiceinfo.Invoicetype = invoicetype
+	switch invoicetype {
+	case "1.1":
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_2"
+		invoiceinfo.Invoiceinfo.MovePurpose = "1"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
+	case "8.1":
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = ""
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
+	case "9.3":
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category3"
+		invoiceinfo.Invoiceinfo.MovePurpose = "3"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
+	case "13.1":
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_201"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category2_2"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
+	}
+	return nil
+}
+func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *models.ClassificationItem, summary *models.InvoiceSummary) error {
+	index, exists := r.ClassificationCategoryExists(*classificationItem, summary.IncomeClassification)
 	if exists {
 		summary.IncomeClassification[index].Amount += classificationItem.Amount
 	} else {
-		summary.IncomeClassification = append(summary.IncomeClassification, classificationItem)
+		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
 	}
 	return nil
 }
@@ -136,7 +170,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 	return nil
 }
 func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
-	header.Aa = "12"
+	header.Aa = "14"
 	return nil
 }
 

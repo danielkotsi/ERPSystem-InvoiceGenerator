@@ -1,0 +1,64 @@
+
+
+.suggestions {
+  border: 1px solid #ccc;
+  max-width: 300px;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  max-height: 300px; 
+  overflow-y: auto;  }
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #eee;
+}
+
+.blank{
+  width:20px;
+  height:300px;
+}
+
+.navbar{
+  display:flex;
+  gap:20px;
+}
+    .invoice-wrapper {
+  position: rve;
+}
+
+.invoice-suggestions {
+  display: none; /* hidden by default */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.invoice-suggestions a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.invoice-suggestions a:hover {
+  background-color: #eee;
+}
+
+.line{
+    margin:10px;
+    height:2px;
+    color:black;
+    background-color:black;
+    width:vw;
+}
+

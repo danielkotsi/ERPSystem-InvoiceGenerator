@@ -42,6 +42,6 @@ func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, err, 500)
 	}
 
-	// utils.PDFResponse(w, pdf, 200)
-	utils.XMLResponse(w, pdf, 200)
+	utils.PDFResponse(w, pdf, 200)
+	// utils.XMLResponse(w, pdf, 200)
 }

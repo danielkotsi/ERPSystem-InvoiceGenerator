@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
   <link rel="stylesheet" href="/static/styles/create_invoice.page.css" />
+  <link rel="stylesheet" href="/static/styles/styles.css" />
   </head>
 
   <body>
 
-    <nav class="navbar">
-			<a href="/customers" class="customers">Customers
-			</a>
-			<a href="/products" class="products">Products
-			</a>
-			<a href="/makeaninvoice" class="invoice">Make an invoice
-			</a>
-    </nav>
+<nav class="navbar">
+  <a href="/customers" class="customers">Customers</a>
+  <a href="/products" class="products">Products</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
+  </div>
+</nav>
 
 <form method="POST" action="/invoice/create" enctype="multipart/form-data">
 
@@ -126,12 +127,6 @@
 	<div id="vatCategory-suggestions" class="suggestions"></div>
         <label>Product Description: <input type="text" id="product_description-0" name="invoiceDetails[0].description"></label><br>
 	<div id="description-suggestions" class="suggestions"></div>
-	    <!-- IncomeClassification -->
-        <label>Income Classification Type <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType"></label><br>
-	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Income Classification Category <input type="text" id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory"></label><br>
-	<div id="income-classification-category-suggestions" class="suggestions"></div>
-        <label>Income Classification Amount: <input type="number" step="0.01" name="invoiceDetails[0].incomeClassification.amount"></label><br>
 	    <!-- expensesClassification -->
         <label>Expenses Classification Type <input type="text" id="expenses_classification_type" name="invoiceDetails[0].expensesClassification.classificationType"></label><br>
 	<div id="expenses-classification-type-suggestions" class="suggestions"></div>
