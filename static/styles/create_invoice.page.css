@@ -1,12 +1,136 @@
 
+/* .suggestions { */
+/*   border: 1px solid #ccc; */
+/*   max-width: 300px; */
+/*   position: absolute; */
+/*   background: white; */
+/*   z-index: 1000; */
+/*   max-height: 300px;  */
+/*   overflow-y: auto;  } */
+
+/* ===== Global ===== */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-size: 14px;
+  background-color: #1c1c1c;
+  color: #e5e5e5;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  display: flex;
+  gap: 24px;
+  padding: 16px 32px;
+  background-color: #111;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.navbar a {
+  color: #d0d0d0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar a:hover {
+  color: #4da3ff;
+}
+
+/* ===== Form Layout ===== */
+form {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 60px;
+  display: grid;
+grid-template-columns: repeat(2, 1fr);
+  column-gap: 8rem;
+  row-gap: 28px;
+  background-color: #111;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px #2a2a2a;
+}
+
+/* Submit button full width */
+form > button[type="submit"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 32px;
+  padding: 16px;
+  font-size: 1rem;
+}
+
+/* ===== Fieldsets ===== */
+form > fieldset {
+  margin: 0;
+  padding: 18px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+fieldset fieldset {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+}
+
+legend {
+  padding: 0 6px;
+  background-color: #000;
+  color: #4da3ff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Full-width sections */
+fieldset:has(#invoiceDetails),
+fieldset:has(#paymentMethods) {
+  grid-column: 1 / -1;
+}
+
+/* ===== Labels & Input Layout ===== */
+fieldset > label,
+.line-item label,
+.payment-method label {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== Inputs ===== */
+input[type="text"],
+input[type="number"],
+input[type="string"] {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #f0f0f0;
+  outline: none;
+}
+
+input:focus {
+  border-color: #4da3ff;
+  box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.4);
+}
+
+/* ===== Suggestions ===== */
 .suggestions {
-  border: 1px solid #ccc;
-  max-width: 300px;
-  position: absolute;
-  background: white;
-  z-index: 1000;
-  max-height: 300px; 
-  overflow-y: auto;  }
+  margin-left: 236px;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+}
 
 .suggestion-item {
   padding: 8px;
@@ -14,11 +138,99 @@
 }
 
 .suggestion-item:hover {
-  background-color: #eee;
+  background-color: #333;
 }
 
-.blank{
-  width:20px;
-  height:300px;
+/* ===== Line Items & Payments ===== */
+.line-item,
+.payment-method {
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #202020;
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
+}
+
+/* ===== Buttons ===== */
+button {
+  margin-top: 16px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #4da3ff;
+  color: #0d0d0d;
+}
+
+button:hover {
+  background-color: #3394ff;
+}
+
+button[type="button"] {
+  background-color: #2f7dd1;
+  color: #fff;
+}
+
+button[type="button"]:hover {
+  background-color: #256bb3;
+}
+
+/* ===== Utility ===== */
+.blank {
+  width: 20px;
+  height: 300px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1000px) {
+  form {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+.diakinisi,
+  .header {
+    grid-column: 1;
+  }
+
+  .diakinisi > fieldset {
+    grid-template-columns: 1fr;
+  }
+  fieldset > label,
+  .line-item label,
+  .payment-method label {
+    grid-template-columns: 1fr;
+  }
+
+  .suggestions {
+    margin-left: 0;
+  }
+}
+
+
+/* Διακίνηση takes the wide column */
+/* Make Διακίνηση full width */
+.diakinisi {
+  grid-column: 1 / -1; /* span all columns */
+  display: grid;
+  gap: 2px;
+}
+
+
+/* Keep the two addresses side by side */
+.diakinisi > fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.diakinisi > .diakinisi-container {
+  display: flex;
+  justify-content: space-between;
+}
+/* Header stays in the narrow column */
+.header {
+  grid-column: 1 / -1; /* span all columns */
 }
 

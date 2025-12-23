@@ -17,6 +17,7 @@ export function addBranchCompletion(element, elementsuggestions, endpoint, field
 		console.log(e.target.value);
 		const company = document.getElementById('customersCode')
 		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
+		console.log(url);
 		const resultsuggestions = await fetchDB(url)
 		console.log(resultsuggestions, Array.isArray(resultsuggestions))
 		console.log(resultsuggestions);
@@ -28,6 +29,7 @@ export function addBranchCompletion(element, elementsuggestions, endpoint, field
 		console.log(e.target.value);
 		const company = document.getElementById('customersCode')
 		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
+		console.log(url);
 		const resultsuggestions = await fetchDB(url)
 		console.log(resultsuggestions);
 		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);

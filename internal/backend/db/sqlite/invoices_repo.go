@@ -10,6 +10,7 @@ import (
 	"html/template"
 	"log"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -22,6 +23,21 @@ func NewInvoiceRepo(db *sql.DB, abspath string) *InvoiceRepo {
 	return &InvoiceRepo{DB: db, abspath: abspath}
 }
 
+func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
+	aaint, err := strconv.Atoi(aa)
+	if err != nil {
+		return err
+	}
+	aaint++
+	aa = fmt.Sprintf("%05d", aaint)
+	fmt.Println(aa)
+	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
+
+	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {
+		return err
+	}
+	return nil
+}
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
 	// invo.Seller.Address = nil
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
@@ -44,13 +60,37 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 		}
 		line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
 		summary.TotalNetValue += line.NetValue
+		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 		summary.TotalVatAmount += line.VatAmount
+		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
 		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
 		}
 	}
 	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
+	summary.TotalGrossValue = utils.RoundTo2(summary.TotalGrossValue)
 	return nil
+}
+
+func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *models.ClassificationItem, summary *models.InvoiceSummary) error {
+	index, exists := r.ClassificationCategoryExists(*classificationItem, summary.IncomeClassification)
+	fmt.Println(classificationItem)
+	if exists {
+		summary.IncomeClassification[index].Amount += classificationItem.Amount
+	} else {
+		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
+	}
+	return nil
+}
+
+func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.ClassificationItem, summary []models.ClassificationItem) (int, bool) {
+	for index, category := range summary {
+		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
+			return index, true
+		}
+	}
+
+	return 0, false
 }
 
 func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error {
@@ -69,6 +109,8 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 	line.NetValue = line.Quantity * line.UnitNetPrice
 	line.VatAmount = line.Quantity * line.UnitNetPrice * amount[line.VatCategory]
 
+	line.NetValue = utils.RoundTo2(line.NetValue)
+	line.VatAmount = utils.RoundTo2(line.VatAmount)
 	return nil
 }
 
@@ -117,7 +159,6 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 }
 
 func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invoicetype string) error {
-	invoiceinfo.Invoiceinfo.Aa = "00002"
 	invoiceinfo.Invoiceinfo.Currency = "EUR"
 	invoiceinfo.Invoiceinfo.Invoicetype = invoicetype
 	switch invoicetype {
@@ -142,35 +183,9 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 	}
 	return nil
 }
-func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *models.ClassificationItem, summary *models.InvoiceSummary) error {
-	index, exists := r.ClassificationCategoryExists(*classificationItem, summary.IncomeClassification)
-	if exists {
-		summary.IncomeClassification[index].Amount += classificationItem.Amount
-	} else {
-		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
-	}
-	return nil
-}
-
-func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.ClassificationItem, summary []models.ClassificationItem) (int, bool) {
-	for index, category := range summary {
-		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
-			return index, true
-		}
-	}
-
-	return 0, false
-}
 
 func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {
-	if err := r.CalculateAA(header); err != nil {
-		return err
-	}
 	header.IssueDate = time.Now().Format("2006-01-02")
-	return nil
-}
-func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
-	header.Aa = "14"
 	return nil
 }
 
@@ -193,7 +208,7 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 		log.Println(err)
 	}
 
-	pdf, err = utils.HTMLtoPDF(buf.String())
+	pdf, err = utils.HTMLtoPDF2(buf.String())
 	if err != nil {
 		return nil, err
 	}

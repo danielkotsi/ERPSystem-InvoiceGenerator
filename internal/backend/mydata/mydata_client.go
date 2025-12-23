@@ -22,9 +22,9 @@ type Client struct {
 
 func NewMyDataClient(base, userID, subscriptionKey string) *Client {
 	//this is going to change afterwards cause i dont know whoose keys are going to be used
-	base = os.Getenv("BASE_URL")
-	subscriptionKey = os.Getenv("API_KEY")
-	userID = os.Getenv("USER")
+	// base = os.Getenv("BASE_URL")
+	// subscriptionKey = os.Getenv("API_KEY")
+	// userID = os.Getenv("USER")
 	return &Client{
 		BaseURL:         base,
 		UserID:          userID,

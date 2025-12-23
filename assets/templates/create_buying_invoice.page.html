@@ -11,10 +11,10 @@
   <body>
 
 <nav class="navbar">
-  <a href="/customers" class="customers">Customers</a>
-  <a href="/products" class="products">Products</a>
+  <a href="/customers" class="customers">Αγοραστές</a>
+  <a href="/products" class="products">Προϊόντα</a>
   <div class="invoice-wrapper">
-    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <a href="/makeaninvoice" class="invoice">Έκδοση Παραστατικού</a>
     <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
   </div>
 </nav>
@@ -23,136 +23,137 @@
 
   <!-- ===== Seller (Issuer) ===== -->
   <fieldset>
-    <legend>Seller (Issuer)</legend>
-    <label>Code: <input type="text" name="seller.codeNumber"></label><br>
-    <label>Name: <input type="text" name="seller.name"></label><br>
-    <label>DOI: <input type="text" name="seller.doi"></label><br>
-    <label>GEMI: <input type="text" name="seller.gemi"></label><br>
-    <label>Phone: <input type="text" name="seller.phone"></label><br>
-    <label>Mobile_Phone: <input type="text" name="seller.mobile_phone"></label><br>
+    <legend>Πωλητής</legend>
+    <label>Κωδικός: <input type="text" name="seller.codeNumber"></label><br>
+    <label>Όνομα: <input type="text" name="seller.name"></label><br>
+    <label>ΔΟΗ: <input type="text" name="seller.doi"></label><br>
+    <label>ΓΕΜΗ: <input type="text" name="seller.gemi"></label><br>
+    <label>Τηλέφωνο: <input type="text" name="seller.phone"></label><br>
+    <label>Κινητό_Τηλέφωνο: <input type="text" name="seller.mobile_phone"></label><br>
     <label>Email: <input type="text" name="seller.email"></label><br>
-    <label>VAT Number: <input type="text" name="seller.vatNumber"></label><br>
-    <label>Country: <input type="text" name="seller.country"></label><br>
-    <label>Branch: <input type="number" name="seller.branch"></label><br>
-    <label>Entity Type: <input type="number" name="seller.entityType"></label><br>
+    <label>ΑΦΜ: <input type="text" name="seller.vatNumber"></label><br>
+    <label>Χώρα: <input type="text" name="seller.country"></label><br>
+    <label>Παρακλάδι: <input type="number" name="seller.branch"></label><br>
+    <label>Τύπος Οντότητας: <input type="number" name="seller.entityType"></label><br>
 
     <fieldset>
-      <legend>Address</legend>
-      <label>Street: <input type="text" name="seller.address.street"></label><br>
-      <label>Number: <input type="text" name="seller.address.number"></label><br>
-      <label>City: <input type="text" name="seller.address.city"></label><br>
-      <label>Postal Code: <input type="text" name="seller.address.postalCode"></label><br>
+      <legend>Διεύθηνση Πωλητή</legend>
+      <label>Δρόμος: <input type="text" name="seller.address.street"></label><br>
+      <label>Αριθμός: <input type="text" name="seller.address.number"></label><br>
+      <label>Πόλη: <input type="text" name="seller.address.city"></label><br>
+      <label>Τ.Κ.: <input type="text" name="seller.address.postalCode"></label><br>
     </fieldset>
   </fieldset>
 
   <!-- ===== Buyer (Counterpart) ===== -->
   <fieldset>
-    <legend>Buyer (Counterpart)</legend>
-    <label>Code: <input type="text" id="customersCode" name="buyer.codeNumber"></label><br>
-    <label>Name: <input type="text" id="customersName" name="buyer.name"></label><br>
+    <legend>Αγοραστής</legend>
+    <label>Κωδικός: <input type="text" id="customersCode" name="buyer.codeNumber"></label><br>
+    <label>Όνομα: <input type="text" id="customersName" name="buyer.name"></label><br>
 	<div id="customers-suggestions" class="suggestions"></div>
-    <label>DOI: <input type="text" id="customersDOI" name="buyer.doi"></label><br>
-    <label>GEMI: <input type="text" id="customersGEMI" name="buyer.gemi"></label><br>
-    <label>Phone: <input type="text" id="customersPhone" name="buyer.phone"></label><br>
-    <label>Mobile_Phone: <input type="text" id="customersMobile_Phone" name="buyer.mobile_phone"></label><br>
+    <label>ΔΟΗ: <input type="text" id="customersDOI" name="buyer.doi"></label><br>
+    <label>ΓΕΜΗ: <input type="text" id="customersGEMI" name="buyer.gemi"></label><br>
+    <label>Τηλέφωνο: <input type="text" id="customersPhone" name="buyer.phone"></label><br>
+    <label>Κινητό_Τηλέφωνο: <input type="text" id="customersMobile_Phone" name="buyer.mobile_phone"></label><br>
     <label>Email: <input type="text" id="customersEmail" name="buyer.email"></label><br>
-    <label>VAT Number: <input type="text" id="customersVatNumber" name="buyer.vatNumber"></label><br>
-    <label>Country: <input type="text" id="customersCountry" name="buyer.country"></label><br>
-    <label>Branch: <input type="number" id="customersBranch" name="buyer.branch"></label><br>
-    <label>Entity Type: <input type="number" id="customersEntityType" name="buyer.entityType"></label><br>
+    <label>ΑΦΜ: <input type="text" id="customersVatNumber" name="buyer.vatNumber"></label><br>
+    <label>Χώρα: <input type="text" id="customersCountry" name="buyer.country"></label><br>
+    <label>Παρακλάδι: <input type="number" id="customersBranch" name="buyer.branch"></label><br>
+    <label>Τύπος Οντότητας: <input type="number" id="customersEntityType" name="buyer.entityType"></label><br>
 
     <fieldset>
-      <legend>Address</legend>
-      <label>Street: <input type="text" id="customersAddressStreet" name="buyer.address.street"></label><br>
-      <label>Number: <input type="text" id="customersAddressNumber" name="buyer.address.number"></label><br>
-      <label>City: <input type="text" id="customersAddressCity" name="buyer.address.city"></label><br>
-      <label>Postal Code: <input type="text" id="customersAddressPostalCode" name="buyer.address.postalCode"></label><br>
+      <legend>Διεύθηνση Αγοραστή</legend>
+      <label>Δρόμος: <input type="text" id="customersAddressStreet" name="buyer.address.street"></label><br>
+      <label>Αριθμός: <input type="text" id="customersAddressNumber" name="buyer.address.number"></label><br>
+      <label>Πόλη: <input type="text" id="customersAddressCity" name="buyer.address.city"></label><br>
+      <label>Τ.Κ.: <input type="text" id="customersAddressPostalCode" name="buyer.address.postalCode"></label><br>
     </fieldset>
   </fieldset>
 
   <!-- ===== Header ===== -->
   <fieldset>
-    <legend>Header</legend>
-    <label>Series: <input type="text" name="invoiceHeader.series"></label><br>
-    <label>Type: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
+    <legend>Επικεφαλίδα Παραστατικού</legend>
+    <label>Σειρά: <input type="text" name="invoiceHeader.series"></label><br>
+    <label>AA: <input type="text" name="invoiceHeader.aa" value="{{.Info.Invoiceinfo.Aa }}"></label><br>
+    <label>Τύπος: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
 	<div id="invoiceType-suggestions" class="suggestions"></div>
-    <label>Currency <input type="text" name="invoiceHeader.currency"></label><br>
-    <label>Deltio Apostolis <input type="text" name="invoiceHeader.isDeliveryNote"></label><br>
+    <label>Νόμισμα: <input type="text" name="invoiceHeader.currency"></label><br>
+    <label>Δελτίο Αποστολής: <input type="text" name="invoiceHeader.isDeliveryNote"></label><br>
   </fieldset>
 
   <!-- ===== Diakinisi ===== -->
   <fieldset>
-    <legend>Diakinisi</legend>
-    <label>Hmerominia apostolis: <input type="text" name="invoiceHeader.dispatchDate"></label><br>
-    <label>Ora apostolis: <input type="text" name="invoiceHeader.dispatchTime"></label><br>
-    <label>Arithmos Oximatos: <input type="text" name="invoiceHeader.vehicleNumber"></label><br>
-    <label>Skopos Diakinisis: <input type="text" name="invoiceHeader.movePurpose"></label><br>
+    <legend>Διακίνηση</legend>
+    <label>Ημερομηνία Αποστολής: <input type="text" name="invoiceHeader.dispatchDate"></label><br>
+    <label>Ώρα Αποστολής: <input type="text" name="invoiceHeader.dispatchTime"></label><br>
+    <label>Αριθμός Οχήματος: <input type="text" name="invoiceHeader.vehicleNumber"></label><br>
+    <label>Σκοπός Διακίνησης: <input type="text" name="invoiceHeader.movePurpose"></label><br>
   <!-- ===== Dieythinsi Apostolea ===== -->
       <fieldset>
-	<legend>Dieythinsi Apostolea</legend>
-	<label>Odos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.street"></label><br>
-	<label>Arithmos: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.number"></label><br>
+	<legend>Διεύθυνση Αποστολέα</legend>
+	<label>Οδός: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.street"></label><br>
+	<label>Αριθμός: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.number"></label><br>
 	<label>T.K.: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.postalCode"></label><br>
-	<label>poli: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.city"></label><br>
-	<label>Egkatastasi: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.startShippingBranch"></label><br>
+	<label>Πόλη: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.city"></label><br>
+	<label>Εγκατάσταση: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.startShippingBranch"></label><br>
       </fieldset>
   <!-- ===== Dieythinsi Paralipti ===== -->
       <fieldset>
-	<legend>Dieythinsi Paralipti</legend>
-	<label>Kodikos Ipokatastimatos: <input type="text" id="branchCode" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
+	<legend>Διεύθυνση Παραλήπτη</legend>
+	<label>Κωδικός Υποκαταστήματος: <input type="text" id="branchCode" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
 	<div id="branchcompany-suggestions" class="suggestions"></div>
-	<label>Name: <input type="text" id="branchName" name="branchName"></label><br>
-	<label>Odos: <input type="text" id="branchAddStreet" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
-	<label>Arithmos: <input type="text" id="branchAddNumber" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
+	<label>Όνομα: <input type="text" id="branchName" name="branchName"></label><br>
+	<label>Οδός: <input type="text" id="branchAddStreet" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
+	<label>Αριθμός: <input type="text" id="branchAddNumber" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
 	<label>T.K.: <input type="text" id="branchAddPostalCode" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.postalCode"></label><br>
-	<label>poli: <input type="text" id="branchCity" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
-	<label>Egkatastasi: <input type="text" id="branchBranch" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
+	<label>Πόλη: <input type="text" id="branchCity" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
+	<label>Εγκατάσταση: <input type="text" id="branchBranch" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
       </fieldset>
 
   </fieldset>
 
   <!-- ===== Details (Line Items) ===== -->
   <fieldset>
-    <legend>Details</legend>
+    <legend>Λεπτομέρειες Παραστατικού</legend>
     <div id="invoiceDetails">
       <div class="line-item">
-        <label>Product Name: <input type="text" id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
+        <label>Όνομα Προϊόντος: <input type="text" id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
 	<div id="product-suggestions-0" class="suggestions"></div>
-        <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
-        <label>Measurement_Unit: <input type="text" id="product_measurementUnit-0" step="1" name="product.measurementUnit"></label><br>
-        <label>Measurement_Unit_Code: <input type="number" id="product_measurementUnitCode-0" step="1" name="invoiceDetails[0].measurementUnit"></label><br>
-        <label>Unit Net Price: <input type="number" id="product_unit_net_price-0" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
-        <label>Discount: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
-        <label>VAT Category: <input type="text" id="product_vatCategory-0" name="invoiceDetails[0].vatCategory"></label><br>
+        <label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
+        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-0" step="1" name="product.measurementUnit"></label><br>
+        <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-0" step="1" name="invoiceDetails[0].measurementUnit"></label><br>
+        <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-0" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
+        <label>Έκπτωση: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
+        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-0" name="invoiceDetails[0].vatCategory"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
-        <label>Product Description: <input type="text" id="product_description-0" name="invoiceDetails[0].description"></label><br>
+        <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-0" name="invoiceDetails[0].description"></label><br>
 	<div id="description-suggestions" class="suggestions"></div>
 	    <!-- expensesClassification -->
-        <label>Expenses Classification Type <input type="text" id="expenses_classification_type" name="invoiceDetails[0].expensesClassification.classificationType"></label><br>
+        <label>Τύπος Κατάταξης Εξόδων <input type="text" id="expenses_classification_type" name="invoiceDetails[0].expensesClassification.classificationType"></label><br>
 	<div id="expenses-classification-type-suggestions" class="suggestions"></div>
-        <label>Expenses Classification Category <input type="text" id="expenses_classification_category" name="invoiceDetails[0].expensesClassification.classificationCategory"></label><br>
+        <label>Κατηγορία Κατάταξης Εξόδων  <input type="text" id="expenses_classification_category" name="invoiceDetails[0].expensesClassification.classificationCategory"></label><br>
 	<div id="expenses-classification-category-suggestions" class="suggestions"></div>
-        <label>Expenses Classification Amount: <input type="number" step="0.01" name="invoiceDetails[0].expensesClassification.amount"></label><br>
+        <label>Ποσότητα Κατάταξης Εξόδων : <input type="number" step="0.01" name="invoiceDetails[0].expensesClassification.amount"></label><br>
 	    <!-- it might need extra fields in the expenses classification in the case of a buying invoice IF if i have understood correctly -->
       </div>
     </div>
-    <button id="addrowbutton" type="button">Add Line Item</button>
+    <button id="addrowbutton" type="button">Προσθήκη Προϊόντος</button>
   </fieldset>
 
   <!-- ===== Payment Methods ===== -->
   <fieldset>
-    <legend>Payment Methods</legend>
+    <legend>Τρόποι Πληρωμής</legend>
     <div id="paymentMethods">
       <div class="payment-method">
-        <label>Type (1=Bank, 2=Credit Card): <input type="string" id="paymentmethods-input" name="paymentMethods.paymentdetails[0].type"></label><br>
+        <label>Τρόπος : <input type="string" id="paymentmethods-input" name="paymentMethods.paymentdetails[0].type"></label><br>
 	<div id="paymentmethods-suggestions" class="suggestions"></div>
-        <label>Amount: <input type="number" step="0.01" name="paymentMethods.paymentdetails[0].amount"></label><br>
+        <label>Ποσό: <input type="number" step="0.01" name="paymentMethods.paymentdetails[0].amount"></label><br>
       </div>
     </div>
-    <button type="button" onclick="addPaymentMethod()">Add Payment Method</button>
+    <button type="button" onclick="addPaymentMethod()">Προσθήκη Τρόπου Πληρωμής</button>
   </fieldset>
 
-  <button type="submit">Submit </button>
+  <button type="submit">Έκδοση Παραστατικού </button>
 </form>
 
 <div class="blank">

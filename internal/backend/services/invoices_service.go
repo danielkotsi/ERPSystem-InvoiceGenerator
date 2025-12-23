@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -43,14 +42,14 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("hello this is the invo from the form", invo)
+	// fmt.Println("hello this is the invo from the form", invo)
 
 	err = s.Invoice.CompleteInvoice(ctx, &invo)
 	if err != nil {
 		return nil, err
 	}
 
-	// xmlinvo, err := xml.MarshalIndent(invo, "", "  ")
+	// pdf, err = xml.MarshalIndent(invo, "", "  ")
 	// if err != nil {
 	// 	return nil, err
 	// }
@@ -58,8 +57,11 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
 
+	err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	if err != nil {
+		return nil, err
+	}
 	pdf, err = s.Invoice.MakePDF(ctx, &invo)
 	if err != nil {
 		return nil, err
