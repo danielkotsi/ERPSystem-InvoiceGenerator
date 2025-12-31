@@ -21,6 +21,17 @@
 
 <form method="POST" action="/invoice/create" enctype="multipart/form-data">
 
+  <!-- ===== Header ===== -->
+  <fieldset class="header">
+    <legend>Επικεφαλίδα Παραστατικού</legend>
+    <label>Σειρά: <input type="text" name="invoiceHeader.series"></label><br>
+    <label>AA: <input type="text" name="invoiceHeader.aa" value="{{.Info.Invoiceinfo.Aa }}"></label><br>
+    <label>Τύπος: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
+	<div id="invoiceType-suggestions" class="suggestions"></div>
+    <label>Νόμισμα: <input type="text" name="invoiceHeader.currency"></label><br>
+    <label>Δελτίο Αποστολής: <input type="text" name="invoiceHeader.isDeliveryNote"></label><br>
+  </fieldset>
+
   <!-- ===== Seller (Issuer) ===== -->
   <fieldset>
     <legend>Πωλητής</legend>
@@ -70,25 +81,15 @@
     </fieldset>
   </fieldset>
 
-  <!-- ===== Header ===== -->
-  <fieldset>
-    <legend>Επικεφαλίδα Παραστατικού</legend>
-    <label>Σειρά: <input type="text" name="invoiceHeader.series"></label><br>
-    <label>AA: <input type="text" name="invoiceHeader.aa" value="{{.Info.Invoiceinfo.Aa }}"></label><br>
-    <label>Τύπος: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType"></label><br>
-	<div id="invoiceType-suggestions" class="suggestions"></div>
-    <label>Νόμισμα: <input type="text" name="invoiceHeader.currency"></label><br>
-    <label>Δελτίο Αποστολής: <input type="text" name="invoiceHeader.isDeliveryNote"></label><br>
-  </fieldset>
-
   <!-- ===== Diakinisi ===== -->
-  <fieldset>
+  <fieldset class="diakinisi">
     <legend>Διακίνηση</legend>
     <label>Ημερομηνία Αποστολής: <input type="text" name="invoiceHeader.dispatchDate"></label><br>
     <label>Ώρα Αποστολής: <input type="text" name="invoiceHeader.dispatchTime"></label><br>
     <label>Αριθμός Οχήματος: <input type="text" name="invoiceHeader.vehicleNumber"></label><br>
     <label>Σκοπός Διακίνησης: <input type="text" name="invoiceHeader.movePurpose"></label><br>
   <!-- ===== Dieythinsi Apostolea ===== -->
+	<div class="diakinisi-container">
       <fieldset>
 	<legend>Διεύθυνση Αποστολέα</legend>
 	<label>Οδός: <input type="text" name="invoiceHeader.otherDeliveryNoteHeader.loadingAddress.street"></label><br>
@@ -109,6 +110,7 @@
 	<label>Πόλη: <input type="text" id="branchCity" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
 	<label>Εγκατάσταση: <input type="text" id="branchBranch" name="invoiceHeader.otherDeliveryNoteHeader.completeShippingBranch"></label><br>
       </fieldset>
+	</div>
 
   </fieldset>
 

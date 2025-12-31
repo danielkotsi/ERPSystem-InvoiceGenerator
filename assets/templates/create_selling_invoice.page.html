@@ -26,7 +26,7 @@
     <legend>Επικεφαλίδα Παραστατικού</legend>
     <label>Σειρά: <input type="text" name="invoiceHeader.series" value="{{.Info.Invoiceinfo.Series }}"></label><br>
     <label>AA: <input type="text" name="invoiceHeader.aa" value="{{.Info.Invoiceinfo.Aa }}"></label><br>
-    <label>Τύπος: <input type="text" id="invoiceType" name="invoiceHeader.invoiceType" value="{{.Info.Invoiceinfo.Invoicetype }}"></label><br>
+    <label>Τύπος: <input type="text" autocomplete="off" id="invoiceType" name="invoiceHeader.invoiceType" value="{{.Info.Invoiceinfo.Invoicetype }}"></label><br>
 	<div id="invoiceType-suggestions" class="suggestions"></div>
     <label>Νόμισμα: <input type="text" name="invoiceHeader.currency" value="{{.Info.Invoiceinfo.Currency }}"></label><br>
     <label>Δελτίο Αποστολής: <input type="text" name="invoiceHeader.isDeliveryNote" value="{{.Info.Invoiceinfo.IsDeliveryNote }}"></label><br>
@@ -59,7 +59,7 @@
   <fieldset>
     <legend>Αγοραστής</legend>
     <label>Κωδικός: <input type="text" id="customersCode" name="buyer.codeNumber"></label><br>
-    <label>Όνομα: <input type="text" id="customersName" name="buyer.name"></label><br>
+    <label>Όνομα: <input type="text" autocomplete="off" id="customersName" name="buyer.name"></label><br>
 	<div id="customers-suggestions" class="suggestions"></div>
     <label>ΔΟΗ: <input type="text" id="customersDOI" name="buyer.doi"></label><br>
     <label>ΓΕΜΗ: <input type="text" id="customersGEMI" name="buyer.gemi"></label><br>
@@ -101,10 +101,10 @@
   <!-- ===== Dieythinsi Paralipti ===== -->
       <fieldset>
 	<legend>Διεύθυνση Παραλήπτη</legend>
-	<label>Κωδικός Υποκαταστήματος: <input type="text" id="branchCode" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
+	<label>Κωδικός Υποκαταστήματος: <input type="text" autocomplete="off" id="branchCode" name="invoiceHeader.otherDeliveryNoteHeader.subcompanycode"></label><br>
 	<div id="branchcompany-suggestions" class="suggestions"></div>
 	<label>Όνομα: <input type="text" id="branchName" name="branchName"></label><br>
-	<label>Οδός: <input type="text" id="branchAddStreet" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street"></label><br>
+	<label>Οδός: <input type="text" id="branchAddStreet" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.street" ></label><br>
 	<label>Αριθμός: <input type="text" id="branchAddNumber" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.number"></label><br>
 	<label>T.K.: <input type="text" id="branchAddPostalCode" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.postalCode"></label><br>
 	<label>Πόλη: <input type="text" id="branchCity" name="invoiceHeader.otherDeliveryNoteHeader.deliveryAddress.city"></label><br>
@@ -119,7 +119,7 @@
     <legend>Λεπτομέρειες Παραστατικού</legend>
     <div id="invoiceDetails">
       <div class="line-item">
-        <label>Όνομα Προϊόντος: <input type="text" id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
+        <label>Όνομα Προϊόντος: <input type="text" autocomplete="off"id="product_name_input-0" name="invoiceDetails[0].name"></label><br>
 	<div id="product-suggestions-0" class="suggestions"></div>
         <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-0" name="invoiceDetails[0].itemDescr"></label><br>
         <label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-0" name="invoiceDetails[0].discountOption" class="discount-option"></label><br>
@@ -128,12 +128,12 @@
         <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-0" step="1" name="invoiceDetails[0].measurementUnit"></label><br>
         <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-0" step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
         <label>Έκπτωση: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
-        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-0" name="invoiceDetails[0].vatCategory"></label><br>
+        <label>Κατηγορία Φορολόγησης: <input type="text" autocomplete="off"id="product_vatCategory-0" name="invoiceDetails[0].vatCategory"></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
-        <label>Τύπος Κατάταξης Εσόδων:  <input type="text" id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType" value="{{.Info.Invoiceinfo.IncomeClassificationType }}"></label><br>
+        <label>Τύπος Κατάταξης Εσόδων:  <input type="text" autocomplete="off"id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType" value="{{.Info.Invoiceinfo.IncomeClassificationType }}"></label><br>
 	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Κατηγορία Κατάταξης Εσόδων:   <input type="text" id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory" value="{{.Info.Invoiceinfo.IncomeClassificationCat }}"></label><br>
+        <label>Κατηγορία Κατάταξης Εσόδων:   <input type="text" autocomplete="off"id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory" value="{{.Info.Invoiceinfo.IncomeClassificationCat }}"></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
         <label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01" name="invoiceDetails[0].incomeClassification.amount"></label><br>
       </div>
@@ -146,7 +146,7 @@
     <legend>Τρόποι Πληρωμής</legend>
     <div id="paymentMethods">
       <div class="payment-method">
-        <label>Τρόπος : <input type="string" id="paymentmethods-input" name="paymentMethods.paymentdetails[0].type"></label><br>
+        <label>Τρόπος : <input type="string" autocomplete="off"id="paymentmethods-input" name="paymentMethods.paymentdetails[0].type"></label><br>
 	<div id="paymentmethods-suggestions" class="suggestions"></div>
         <label>Ποσό: <input type="number" step="0.01" name="paymentMethods.paymentdetails[0].amount"></label><br>
       </div>

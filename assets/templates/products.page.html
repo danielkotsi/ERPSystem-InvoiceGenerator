@@ -5,71 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
   <link rel="stylesheet" href="/static/styles/styles.css" />
+  <link rel="stylesheet" href="/static/styles/products.page.css" />
   </head>
 
 
   <body>
 
 <nav class="navbar">
-  <a href="/customers" class="customers">Customers</a>
-  <a href="/products" class="products">Products</a>
+  <a href="/customers" class="customers">Αγοραστές</a>
+  <a href="/products" class="products">Προϊόντα</a>
   <div class="invoice-wrapper">
-    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <a href="/makeaninvoice" class="invoice">Έκδοση Παραστατικού</a>
     <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
   </div>
 </nav>
 
     <form class="form" action="/create/product" id="create-product-form" method="POST" enctype="multipart/form-data">
 
-              <input type="text" name="name" id="name" placeholder="Product Name"></input> 
-              <input type="text" name="codeNumber"  placeholder="Κωδικός προϊόντος"></input> 
-              <textarea  name="description" id="description" placeholder="Product Description"></textarea> 
-	      <input type="text" name="unitNetPrice" id="price" placeholder="Product Price"></input> 
-      <div class="measurementContainer">
-	      <input type="text" id="measurementUnitInput" name="measurementUnitCode"placeholder="Μοναδα Μετρησης"></input> 
+      <h3 class="form-header">Προσθήκη Προϊόντος</h3>
+              <input type="text" name="name" id="name" placeholder="Όνομα Προϊόντος"></input> 
+              <input type="text" name="codeNumber"  placeholder="Κωδικός Προϊόντος"></input> 
+              <textarea  name="description" id="description" placeholder="Περιγραφή Προϊόντος"></textarea> 
+	      <input type="text" name="unitNetPrice" id="price" placeholder="Τιμή Προϊόντος"></input> 
+      <div class="measurement-container">
+	      <input type="text" id="measurementUnitInput" name="measurementUnitCode"placeholder="Μονάδα Μέτρησης"></input> 
     <div id="measurementUnitsSuggestions" class="suggestions"></div>
       </div>
-	      <input type="text" name="vatCategory" id="vat_category_input" placeholder="Vat Category"></input> 
+      <div class="vat-container">
+	      <input type="text" name="vatCategory" id="vat_category_input" placeholder="Κατηγορία Φορολόγησης"></input> 
     <div id="vatCategoriesSuggestions" class="suggestions"></div>
+      </div>
 
-        <button class="submit-btn" type="submit">Add Product</button>
+        <button class="submit-btn" type="submit">Προσθήκη Προϊόντος</button>
 
     </form>
     {{range .Products }}
-    <div class="product-name">
-      ONOMA:{{.Name}}
+<div class="product-card">
+  <div class="Name">
+    <span class="product-value">{{.Name}}</span>
+  </div>
+
+  <div class="info">
+    {{if ne .Description nil}}
+    <div class="product-row">
+      <span class="product-title">Περιγραφή:</span>
+      <span class="product-value">{{.Description}}</span>
     </div>
-    <div class="product-description">
-      parigrafi:{{.Description}}
+    {{end}}
+
+    {{if ne .CodeNumber nil}}
+    <div class="product-row">
+      <span class="product-title">Κωδικός Προϊόντος:</span>
+      <span class="product-value">{{.CodeNumber}}</span>
     </div>
-    <div class="product-code">
-      KODIKOS:{{.CodeNumber}}
+    {{end}}
+
+    {{if ne .MeasurementUnit nil}}
+    <div class="product-row">
+      <span class="product-title">Μονάδα Μέτρησης:</span>
+      <span class="product-value">{{.MeasurementUnit}}</span>
     </div>
-    <div class="measurementUnit">
-      KODIKOS:{{.MeasurementUnit}}
+    {{end}}
+
+    {{if ne .Unit_Net_Price nil}}
+    <div class="product-row">
+      <span class="product-title">Τιμή Μονάδας:</span>
+      <span class="product-value">{{.Unit_Net_Price}}</span>
     </div>
-    <div class="unit-price">
-      TIMI:{{.Unit_Net_Price}}
+    {{end}}
+
+    {{if ne .VatCategory nil}}
+    <div class="product-row">
+      <span class="product-title">Κατηγορία Φορολόγησης:</span>
+      <span class="product-value">{{.VatCategory}}</span>
     </div>
-    <div  class="vatcategory">
-      KATIGORIA:{{.VatCategory}}
-    </div>
-    <div class="line"></div>
+    {{end}}
+  </div>
+  </div>
+
     {{end}}
 
 
-<style>
-    .form{
-    margin:10px;
-    }
-.line{
-    margin:10px;
-    height:2px;
-    color:black;
-    background-color:black;
-    width:vw;
-}
-    </style>
  <script type="module" src="/static/scripts/product.page.js"></script>
 
 	</body>

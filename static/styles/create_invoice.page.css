@@ -124,12 +124,17 @@ input:focus {
   box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.4);
 }
 
+/*   overflow-y: auto;  } */
 /* ===== Suggestions ===== */
 .suggestions {
-  margin-left: 236px;
+  position: absolute;
+  margin-top:-10px;
+  margin-left: 234px;
   background-color: #2a2a2a;
   border: 1px solid #3a3a3a;
   border-radius: 6px;
+  z-index:1000;
+  overflow-y: auto;  }
 }
 
 .suggestion-item {
@@ -204,6 +209,7 @@ button[type="button"]:hover {
   }
 
   .suggestions {
+  z-index:50;
     margin-left: 0;
   }
 }

@@ -5,6 +5,101 @@ const searchInput = document.getElementById('customersearch')
 const searchInputSuggestions = document.getElementById('customer-search-suggestions')
 const invoiceLink = document.querySelector(".invoice");
 const suggestionsBox = document.querySelector(".invoice-suggestions");
+const deletebtns = document.getElementsByName('delete-btn-container');
+const editbtns = document.getElementsByName('edit-btn-container');
+
+
+
+
+
+function deletelement(btn, url) {
+
+	btn.addEventListener('click', async (e) => {
+		e.preventDefault();
+
+
+		try {
+			const response = await fetch(url + btn.id, {
+				method: 'POST',
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				console.log('success');
+				window.location.reload();
+			} else {
+				showPopup('error-popup');
+				console.log('error');
+			}
+		} catch (error) {
+			showPopup('error-popup');
+			console.log(error);
+		}
+
+	});
+}
+
+
+
+deletebtns.forEach((btn) => {
+	deletelement(btn, '/remove/customer/');
+});
+
+
+
+
+editbtns.forEach((btn) => {
+	const wholecard = btn.closest(".whole");
+	const card = wholecard.querySelector(".customer-card");
+	const form = wholecard.querySelector(".edit-form");
+	form.style.display = 'none';
+
+	btn.addEventListener('click', function(e) {
+		e.preventDefault();
+		if (form.style.display == 'none') {
+			form.style.display = 'grid';
+			card.style.display = 'none';
+		} else {
+			card.style.display = 'grid';
+			form.style.display = 'none';
+		}
+
+
+
+		// if (article.style.display === 'none') {
+		// 	article.style.display = 'flex'; // Resets to default
+		// } else {
+		// 	article.style.display = 'none'; // Hides the div
+		// }
+		//
+		// if (form.style.display === 'none') {
+		// 	form.style.display = 'flex'; // Resets to default
+		// } else {
+		// 	form.style.display = 'none'; // Hides the div
+		// }
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Example suggestions
 const suggestions = [

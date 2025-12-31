@@ -22,4 +22,7 @@ So:
 
 TO DO :
 
--the branch company field should be in the customer field so that the phone_number and the other stuff are completed
+-When a company with no subcompanies is chosen the fileds of the delivery must filled up
+-AA must be changalble
+-Customers, subcompanies and products must be editable.
+-epi pistosi must have options for how long, which is going to be presented in the invoice.
