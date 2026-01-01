@@ -41,6 +41,9 @@ func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, err, 500)
 	}
 
+	// if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "invoice.page.html", map[string]models.Invoice{"Customers": pdf}); err != nil {
+	// 	h.Excecutor.ServeErrorwithHTML(w, err, 500)
+	// }
 	utils.PDFResponse(w, pdf, 200)
 	// utils.XMLResponse(w, pdf, 200)
 }

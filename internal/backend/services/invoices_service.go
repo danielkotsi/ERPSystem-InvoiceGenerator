@@ -42,7 +42,6 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println("hello this is the invo from the form", invo)
 
 	err = s.Invoice.CompleteInvoice(ctx, &invo)
 	if err != nil {
@@ -53,15 +52,15 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	// if err != nil {
 	// 	return nil, err
 	// }
-	err = s.MyData.SendInvoice(ctx, &invo)
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
-	if err != nil {
-		return nil, err
-	}
+	// err = s.MyData.SendInvoice(ctx, &invo)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	//
+	// err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	pdf, err = s.Invoice.MakePDF(ctx, &invo)
 	if err != nil {
 		return nil, err

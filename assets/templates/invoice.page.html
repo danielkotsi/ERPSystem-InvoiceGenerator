@@ -1,32 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Invoice PDF</title>
 </head>
-  <link rel="stylesheet" href="/static/styles/invoice.page.css" />
+
 <body>
 
-    <h1>Τιμολογιο</h1>
+    <section class="header">
+        <img class="logo" src="data:image/jpeg;base64,{{ .Invoice.LogoImage }}" />
+        <h1>Τιμολογιο</h1>
+    </section>
+
+
+    <section class="invoice-header">
         <p>Date: {{.Invoice.InvoiceHeader.IssueDate}}</p>
         <p>Series: {{.Invoice.InvoiceHeader.Series}}</p>
         <p>AA: {{.Invoice.InvoiceHeader.Aa}}</p>
-        <p>Customer: {{.Invoice.Byer.Name}}</p>
         <p>UID: {{.Invoice.UID}}</p>
         <p>MARK: {{.Invoice.MARK}}</p>
+        <div class="qr-box">
+            <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
+            <div class="qr-label">Scan to verify invoice</div>
+        </div>
+    </section>
+
+
+
+    <section class="customer-delivery">
+        <p>Customer: {{.Invoice.Byer.Name}}</p>
+    </section>
+
+
+    <section class="invoice-details">
         {{ range .Invoice.InvoiceDetails}}
         <p>Product: {{.ItemDescr}}</p>
         <p>Product: {{.Quantity}}</p>
         {{end}}
+    </section>
+
+    <section class="costs">
         <p>TotalNet: {{.Invoice.InvoiceSummary.TotalNetValue}}</p>
         <p>TotalVat: {{.Invoice.InvoiceSummary.TotalVatAmount}}</p>
         <p>TotalGross: {{.Invoice.InvoiceSummary.TotalGrossValue}}</p>
-    <div class="qr-box">
-        <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
-        <div class="qr-label">Scan to verify invoice</div>
-    </div>
+    </section>
+
+
+
+    <section class="footer">
+    </section>
+
+
 
 
 </body>
-</html>
 
+<style>
+</style>
+
+</html>

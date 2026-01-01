@@ -11,6 +11,7 @@ type Invoice struct {
 	UID            string          `xml:"-"`
 	QrURL          string          `xml:"-"`
 	QrBase64       string          `xml:"-"`
+	LogoImage      string          `xml:"-"`
 	MARK           string          `xml:"-"`
 	Seller         Company         `json:"issuer" form:"seller" xml:"issuer,omitempty"`
 	Byer           Company         `json:"counterpart" form:"buyer" xml:"counterpart"`

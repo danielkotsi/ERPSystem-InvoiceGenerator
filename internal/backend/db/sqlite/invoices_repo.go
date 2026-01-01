@@ -17,10 +17,11 @@ import (
 type InvoiceRepo struct {
 	DB      *sql.DB
 	abspath string
+	logo    string
 }
 
-func NewInvoiceRepo(db *sql.DB, abspath string) *InvoiceRepo {
-	return &InvoiceRepo{DB: db, abspath: abspath}
+func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
+	return &InvoiceRepo{DB: db, abspath: abspath, logo: logo}
 }
 
 func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
@@ -190,7 +191,10 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 }
 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
-	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
+	// finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
+	finalInvoice.LogoImage = r.logo
+	fmt.Println("this is the image base 64", finalInvoice.LogoImage)
+	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64("http://localhost:8080")
 	if err != nil {
 		return nil, err
 	}
@@ -202,13 +206,13 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 	}
 
 	var buf bytes.Buffer
-	fmt.Println("this is the finalinvoice MARK", finalInvoice.MARK)
 	err = tmpl.Execute(&buf, map[string]models.Invoice{"Invoice": *finalInvoice})
 	if err != nil {
 		log.Println(err)
 	}
 
-	pdf, err = utils.HTMLtoPDF2(buf.String())
+	fmt.Println(buf.String())
+	pdf, err = utils.HTMLtoPDF(buf.String())
 	if err != nil {
 		return nil, err
 	}

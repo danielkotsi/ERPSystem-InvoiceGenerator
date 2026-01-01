@@ -23,7 +23,6 @@ func initChrome() {
 		chromedp.Flag("disable-background-networking", true),
 		chromedp.Flag("disable-sync", true),
 		chromedp.Flag("disable-default-apps", true),
-		chromedp.Flag("disable-images", true),
 	)
 
 	allocCtx, _ = chromedp.NewExecAllocator(context.Background(), opts...)

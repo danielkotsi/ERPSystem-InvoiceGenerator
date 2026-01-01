@@ -8,6 +8,7 @@ import (
 	"-invoice_manager/internal/backend/mydata"
 	"-invoice_manager/internal/backend/routes"
 	"-invoice_manager/internal/backend/services"
+	"-invoice_manager/internal/utils"
 	"html/template"
 	"net/http"
 	"os"
@@ -22,11 +23,12 @@ func New() (http.Handler, *sql.DB) {
 		exePath, _ := os.Executable()
 		exeDir = filepath.Dir(exePath)
 	}
+	logo := utils.Imageto64(exeDir)
 	db := sqlite.NewDatabase(exeDir)
 	templatesDir := filepath.Join(exeDir, "assets", "templates", "*.page.html")
 	tmpl := template.Must(template.ParseGlob(templatesDir))
 
-	invoiceRepo := sqlite.NewInvoiceRepo(db, exeDir)
+	invoiceRepo := sqlite.NewInvoiceRepo(db, exeDir, logo)
 	customersRepo := sqlite.NewCustomersRepo(db)
 	productsRepo := sqlite.NewProductsRepo(db)
 	myDataRepo := mydata.NewMyDataRepo()
