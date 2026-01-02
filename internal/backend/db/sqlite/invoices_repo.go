@@ -187,6 +187,7 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 
 func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {
 	header.IssueDate = time.Now().Format("2006-01-02")
+	header.Time = time.Now().Format("15:04")
 	return nil
 }
 

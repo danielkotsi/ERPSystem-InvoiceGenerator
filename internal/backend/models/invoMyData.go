@@ -1,6 +1,8 @@
 package models
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type InvoicePayload struct {
 	XMLName  xml.Name  `xml:"http://www.aade.gr/myDATA/invoice/v1.0 InvoicesDoc"`
@@ -78,6 +80,7 @@ type AddressType struct {
 }
 
 type InvoiceHeader struct {
+	Time        string `xml:"-"`
 	Series      string `json:"series" form:"series" xml:"series"`
 	Aa          string `json:"aa" form:"aa" xml:"aa"`
 	IssueDate   string `json:"issueDate" form:"issueDate" xml:"issueDate"`
