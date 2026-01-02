@@ -8,7 +8,7 @@ import (
 )
 
 func Imageto64(path string) string {
-	data, err := os.ReadFile(filepath.Join(path, "static", "images", "logo.jpg"))
+	data, err := os.ReadFile(filepath.Join(path, "static", "images", "logo.png"))
 	if err != nil {
 		log.Println(err)
 	}

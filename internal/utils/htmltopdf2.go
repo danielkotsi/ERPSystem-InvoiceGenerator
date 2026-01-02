@@ -49,8 +49,9 @@ func HTMLtoPDF2(htmlContent string) ([]byte, error) {
 
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			buf, _, err := page.PrintToPDF().
+				WithPaperWidth(8.27).
+				WithPaperHeight(11.69).
 				WithPrintBackground(true).
-				WithPreferCSSPageSize(true).
 				Do(ctx)
 			if err != nil {
 				return err

@@ -9,8 +9,29 @@
 <body>
 
     <section class="header">
-        <img class="logo" src="data:image/jpeg;base64,{{ .Invoice.LogoImage }}" />
-        <h1>Τιμολογιο</h1>
+        <img class="logo" src="data:image/png;base64,{{ .Invoice.LogoImage }}" />
+        <div class="byer">
+            <p class="seller-name">{{.Invoice.Seller.Name}}</p>
+            <p class="seller-address">
+                <strong> {{.Invoice.Seller.Address.Street}}
+                    {{.Invoice.Seller.Address.Number}}
+                </strong>
+                {{.Invoice.Seller.Address.PostalCode}}
+                {{.Invoice.Seller.Address.City}}
+            </p>
+            <p class="postal-address">ΔΙΕΥΘΥΝΣΗ ΑΛΛΗΛΟΓΡΑΦΙΑΣ :{{.Invoice.Seller.PostalAddress.Naming}}
+                {{.Invoice.Seller.PostalAddress.Cellnumber}}
+                {{.Invoice.Seller.PostalAddress.PostalCode}}
+                {{.Invoice.Seller.PostalAddress.City}}
+            </p>
+            <p class="seller-phone">ΤΗΛ. : {{.Invoice.Seller.Phone}}</p>
+            <p class="seller-mobile_phone">Whats App : {{.Invoice.Seller.Mobile_Phone}}</p>
+            <p class="seller-email">E-MAIL : {{.Invoice.Seller.Email}}</p>
+            <p class="seller-Vat">Α.Φ.Μ. : {{.Invoice.Seller.VatNumber}}</p>
+            <p class="seller-DOI">Δ.Ο.Υ. : {{.Invoice.Seller.DOI}}</p>
+            <p class="seller-GEMI">ΓΕΜΗ : {{.Invoice.Seller.GEMI}}</p>
+        </div>
+        <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
     </section>
 
 
@@ -18,13 +39,12 @@
         <p>Date: {{.Invoice.InvoiceHeader.IssueDate}}</p>
         <p>Series: {{.Invoice.InvoiceHeader.Series}}</p>
         <p>AA: {{.Invoice.InvoiceHeader.Aa}}</p>
+        <p>{{.Invoice.InvoiceHeader.MovePurpose}}</p>
         <p>UID: {{.Invoice.UID}}</p>
         <p>MARK: {{.Invoice.MARK}}</p>
-        <div class="qr-box">
-            <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
-            <div class="qr-label">Scan to verify invoice</div>
-        </div>
     </section>
+
+
 
 
 
@@ -57,6 +77,24 @@
 </body>
 
 <style>
+    * {
+        margin: 5px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .logo {
+        height: 180px;
+        width: auto;
+    }
+
+    .qr {
+        width: 120px;
+        height: 120px;
+    }
 </style>
 
 </html>

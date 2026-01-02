@@ -212,7 +212,7 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 	}
 
 	fmt.Println(buf.String())
-	pdf, err = utils.HTMLtoPDF(buf.String())
+	pdf, err = utils.HTMLtoPDF2(buf.String())
 	if err != nil {
 		return nil, err
 	}
