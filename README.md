@@ -26,4 +26,4 @@ TO DO :
 -AA must be changalble
 -Customers, subcompanies and products must be editable.
 -epi pistosi must have options for how long, which is going to be presented in the invoice.
-another note for the activity
+-PaymentMethod must be passed with the readble type not the number that it corresponds

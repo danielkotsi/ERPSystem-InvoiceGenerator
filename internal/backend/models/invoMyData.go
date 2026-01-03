@@ -102,6 +102,7 @@ type OtherDeliveryNoteHeader struct {
 	StartShippingBranch    int         `json:"startShippingBranch" form:"startShippingBranch" xml:"startShippingBranch"`
 	CompleteShippingBranch int         `json:"completeShippingBranch" form:"completeShippingBranch" xml:"completeShippingBranch"`
 	DeliveryAddressCode    string      `json:"subcompanycode" form:"subcompanycode" xml:"-"`
+	DeliveryAddressName    string      `json:"branchName" form:"branchName" xml:"-"`
 }
 type PaymentMethods struct {
 	Details []PaymentMethodDetail `json:"paymentdatails" form:"paymentdetails" xml:"paymentMethodDetails"`
@@ -111,6 +112,7 @@ type PaymentMethodDetail struct {
 	Amount float64 `json:"amount" form:"amount" xml:"amount"`
 }
 type InvoiceRow struct {
+	CodeNumber             string                      `json:"" form:"codeNumber" xml:""`
 	LineNumber             int                         `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
 	ItemDescr              string                      `json:"itemDescr,omitempty" form:"itemDescr" xml:"itemDescr,omitempty"`
 	Quantity               float64                     `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
@@ -125,6 +127,7 @@ type InvoiceRow struct {
 }
 
 type InvoiceSummary struct {
+	Emptylines             []int                        `xml:"-"`
 	TotalNetValue          float64                      `json:"totalNetValue" form:"totalNetValue" xml:"totalNetValue"`
 	TotalVatAmount         float64                      `json:"totalVatAmount" form:"totalVatAmount" xml:"totalVatAmount"`
 	TotalWithheldAmount    float64                      `json:"totalWithheldAmount" form:"totalWithheldAmount" xml:"totalWithheldAmount"`

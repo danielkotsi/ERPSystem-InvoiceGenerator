@@ -63,6 +63,7 @@ const customers_fields = {
 
 
 const product_fields = {
+	codeNumber: document.getElementById('product_code_input-0'),
 	description: document.getElementById('product_description-0'),
 	measurementUnit: document.getElementById('product_measurementUnit-0'),
 	measurementUnitCode: document.getElementById('product_measurementUnitCode-0'),
@@ -91,6 +92,7 @@ function addLineItem() {
 	<button type="button" class="remove-line-item">Remove</button><br>
         <label>Product Name: <input type="text" id="product_name_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].name"></label><br>
 	<div id="product-suggestions-${lineItemIndex}" class="suggestions"></div>
+	<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off" id="product_code_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].codeNumber"></label><br>
         <label>Product Description: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr"></label><br>
         <label>Discount Option: <input type="text" id="discount-option-${lineItemIndex}" class="discount-option" name="invoiceDetails[${lineItemIndex}].discountOption"></label><br>
         <label>Quantity: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
@@ -170,6 +172,7 @@ addproductButton.addEventListener('click', () => {
 	const productwithIndexNameInput = document.getElementById('product_name_input-' + (lineItemIndex - 1));
 	const productwithIndexsuggestionsDiv = document.getElementById('product-suggestions-' + (lineItemIndex - 1));
 	const productwithIndexfields = {
+		codeNumber: document.getElementById('product_code_input-' + (lineItemIndex - 1)),
 		description: document.getElementById('product_description-' + (lineItemIndex - 1)),
 		measurementUnit: document.getElementById('product_measurementUnit-' + (lineItemIndex - 1)),
 		measurementUnitCode: document.getElementById('product_measurementUnitCode-' + (lineItemIndex - 1)),

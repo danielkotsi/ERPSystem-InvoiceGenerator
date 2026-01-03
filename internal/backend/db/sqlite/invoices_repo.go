@@ -52,7 +52,9 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 }
 
 func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
+	emptylines := 24
 	for i, line := range invoicelines {
+		emptylines--
 		line.LineNumber = i + 1
 		if invoicetype != "9.3" {
 			if err := r.CalculateInvoiceLinePrices(line); err != nil {
@@ -70,6 +72,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 	}
 	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalGrossValue)
+	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
 
