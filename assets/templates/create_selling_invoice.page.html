@@ -215,8 +215,13 @@
 				<div class="payment-method">
 					<label>Τρόπος : <input type="string" autocomplete="off"
 							id="paymentmethods-input"
-							name="paymentMethods.paymentdetails[0].type"></label><br>
+							name="paymentMethods.paymentdetails[0].name"
+							required></label><br>
 					<div id="paymentmethods-suggestions" class="suggestions"></div>
+					<label>Εξόφληση σε : <input type="string" autocomplete="off"
+							id="paymentdue-input"
+							name="paymentMethods.paymentdetails[0].due"></label><br>
+					<div id="paymentdue-suggestions" class="suggestions"></div>
 					<label>Ποσό: <input type="number" step="0.01"
 							name="paymentMethods.paymentdetails[0].amount"></label><br>
 				</div>

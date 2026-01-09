@@ -5,6 +5,7 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
+	"fmt"
 	"net/http"
 )
 
@@ -48,6 +49,8 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 		return nil, err
 	}
 
+	fmt.Println(invo.PaymentMethods.Details[0].Type)
+	fmt.Println(invo.PaymentMethods.Details[0].Name)
 	// pdf, err = xml.MarshalIndent(invo, "", "  ")
 	// if err != nil {
 	// 	return nil, err

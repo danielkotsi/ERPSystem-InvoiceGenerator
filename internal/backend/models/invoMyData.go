@@ -109,6 +109,8 @@ type PaymentMethods struct {
 }
 type PaymentMethodDetail struct {
 	Type   int     `json:"type" form:"type" xml:"type"`
+	Name   string  `json:"name" form:"name" xml:"-"`
+	Due    string  `json:"due" form:"due" xml:"-"`
 	Amount float64 `json:"amount" form:"amount" xml:"amount"`
 }
 type InvoiceRow struct {

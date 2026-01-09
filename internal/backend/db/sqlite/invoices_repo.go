@@ -24,21 +24,6 @@ func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
 	return &InvoiceRepo{DB: db, abspath: abspath, logo: logo}
 }
 
-func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
-	aaint, err := strconv.Atoi(aa)
-	if err != nil {
-		return err
-	}
-	aaint++
-	aa = fmt.Sprintf("%05d", aaint)
-	fmt.Println(aa)
-	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
-
-	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {
-		return err
-	}
-	return nil
-}
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
 	// invo.Seller.Address = nil
 	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
@@ -50,10 +35,30 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
 		return err
 	}
+	if err := r.CompletePaymentMethods(ctx, invo.PaymentMethods); err != nil {
+		return err
+	}
 
 	return nil
 }
 
+func (r *InvoiceRepo) CompletePaymentMethods(ctx context.Context, paymentmethods *models.PaymentMethods) error {
+	paymenttypes := map[string]int{
+		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
+		"Επαγ. Λογαριασμός Πληρωμών Αλλοδαπής": 2,
+		"Μετρητά":              3,
+		"Επιταγή":              4,
+		"Επί Πιστώσει":         5,
+		"Web Banking":          6,
+		"POS / e-POS":          7,
+		"Άμεσες Πληρωμές IRIS": 8,
+	}
+	for i, payment := range paymentmethods.Details {
+		paymentmethods.Details[i].Type = paymenttypes[payment.Name]
+	}
+
+	return nil
+}
 func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company) error {
 	query := `select PostalCellName, PostalCellNumber,PostalCellPostalCode, PostalCellCity from users where CodeNumber==?;`
 
@@ -139,6 +144,21 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 	return nil
 }
 
+func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
+	aaint, err := strconv.Atoi(aa)
+	if err != nil {
+		return err
+	}
+	aaint++
+	aa = fmt.Sprintf("%05d", aaint)
+	fmt.Println(aa)
+	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
+
+	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {
+		return err
+	}
+	return nil
+}
 func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error) {
 	query := `
 select users.CodeNumber, 

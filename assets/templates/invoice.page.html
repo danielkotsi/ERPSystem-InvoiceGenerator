@@ -188,7 +188,12 @@
                     <div class="BDdata-row">
                         <span class="BDdata-title">ΤΡΟΠΟΣ ΠΛΗΡΩΜΗΣ :</span>
                         <span class="BDdata-value">
-                            {{(index .Invoice.PaymentMethods.Details 0).Type}}
+                            {{(index .Invoice.PaymentMethods.Details 0).Name}}
+                            {{if ne (index .Invoice.PaymentMethods.Details
+                            0).Due ""}}
+                            ({{(index .Invoice.PaymentMethods.Details
+                            0).Due}})
+                            {{end}}
                         </span>
                     </div>
                 </td>
@@ -230,14 +235,14 @@
                 <td>{{.CodeNumber}}</td>
                 <td>{{.ItemDescr}}</td>
                 <td>kg</td>
-                <td>2</td>
-                <td>0.99</td>
+                <td>{{.Quantity}}</td>
+                <td>{{.UnitNetPrice}}</td>
                 <td>0.99</td>
                 <td>10</td>
                 <td>0.10</td>
                 <td>0.89</td>
                 <td>13</td>
-                <td>0.12</td>
+                <td>{{.VatAmount}}</td>
             </tr>
             {{end}}
             {{range .Invoice.InvoiceSummary.Emptylines}}

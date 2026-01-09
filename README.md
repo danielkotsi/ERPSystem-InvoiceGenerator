@@ -25,6 +25,7 @@ TO DO :
 -When a company with no subcompanies is chosen the fileds of the delivery must filled up
 -AA must be changalble
 -Customers, subcompanies and products must be editable.
--epi pistosi must have options for how long, which is going to be presented in the invoice.
--PaymentMethod must be passed with the readble type not the number that it corresponds
--make the add product in greek
+<!-- -epi pistosi must have options for how long, which is going to be presented in the invoice. -->
+<!-- -PaymentMethod must be passed with the readble type not the number that it corresponds -->
+<!-- -make the add product in greek -->
+-Pass the values about the products and the prices into the final invoice
