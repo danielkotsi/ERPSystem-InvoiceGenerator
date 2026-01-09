@@ -29,6 +29,9 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
 		return err
 	}
+	// if err := r.GetBuyerBalance(ctx, &invo.Byer); err != nil {
+	// 	return err
+	// }
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
@@ -101,14 +104,20 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 			if err := r.CalculateInvoiceLinePrices(line, discount); err != nil {
 				return err
 			}
-		}
-		line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
-		summary.TotalNetValue += line.NetValue
-		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
-		summary.TotalVatAmount += line.VatAmount
-		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
-			return err
+			line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
+
+			summary.TotalDiscount += line.DiscountAmount
+
+			summary.TotalNetBeforeDiscount += line.TotalNetBeforeDiscount
+			summary.TotalNetBeforeDiscount = utils.RoundTo2(summary.TotalNetBeforeDiscount)
+
+			summary.TotalNetValue += line.NetValue
+			summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
+			summary.TotalVatAmount += line.VatAmount
+			summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
+			if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+				return err
+			}
 		}
 	}
 	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
@@ -156,11 +165,11 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow, discou
 	totalNetPriceBeforeDiscount := line.Quantity * line.UnitNetPrice
 	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
 	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
-	vatBeforeDiscount := totalNetPriceBeforeDiscount * amount[line.VatCategory]
+	// vatBeforeDiscount := totalNetPriceBeforeDiscount * amount[line.VatCategory]
 	vatAfterDiscount := totalNetPriceAfterDiscount * amount[line.VatCategory]
-	line.TotalBeforeDiscount = totalNetPriceBeforeDiscount + vatBeforeDiscount
-	line.TotalAfterDiscount = totalNetPriceAfterDiscount + vatAfterDiscount
+	// line.TotalAfterDiscount = totalNetPriceAfterDiscount
 
+	line.TotalNetBeforeDiscount = utils.RoundTo2(totalNetPriceBeforeDiscount)
 	line.NetValue = utils.RoundTo2(totalNetPriceAfterDiscount)
 	line.VatAmount = utils.RoundTo2(vatAfterDiscount)
 
@@ -265,10 +274,10 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 }
 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
-	// finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
+	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
 	finalInvoice.LogoImage = r.logo
 	// fmt.Println("this is the image base 64", finalInvoice.LogoImage)
-	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64("http://localhost:8080")
+	// finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64("http://localhost:8080")
 	if err != nil {
 		return nil, err
 	}

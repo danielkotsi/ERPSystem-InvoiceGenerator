@@ -5,6 +5,7 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
+	"encoding/xml"
 	"net/http"
 )
 
@@ -48,19 +49,19 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 		return nil, err
 	}
 
-	// pdf, err = xml.MarshalIndent(invo, "", "  ")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// err = s.MyData.SendInvoice(ctx, &invo)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	pdf, err = xml.MarshalIndent(invo, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+	err = s.MyData.SendInvoice(ctx, &invo)
+	if err != nil {
+		return nil, err
+	}
 	//
-	// err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	if err != nil {
+		return nil, err
+	}
 	pdf, err = s.Invoice.MakePDF(ctx, &invo)
 	if err != nil {
 		return nil, err

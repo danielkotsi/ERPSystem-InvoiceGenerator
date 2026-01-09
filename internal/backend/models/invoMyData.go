@@ -115,17 +115,17 @@ type PaymentMethodDetail struct {
 	Amount float64 `json:"amount" form:"amount" xml:"amount"`
 }
 type InvoiceRow struct {
-	CodeNumber             string                      `json:"" form:"codeNumber" xml:""`
-	LineNumber             int                         `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
-	ItemDescr              string                      `json:"itemDescr,omitempty" form:"itemDescr" xml:"itemDescr,omitempty"`
-	Quantity               float64                     `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
-	MeasurementUnit        int                         `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
-	MeasurementUnitName    string                      `json:"measurementUnitName" form:"measurementUnitName" xml:"-"`
-	UnitNetPrice           float64                     `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
-	TotalBeforeDiscount    float64                     `xml:"-"`
-	Discount               float64                     `xml:"-"`
-	DiscountAmount         float64                     `xml:"-"`
-	TotalAfterDiscount     float64                     `xml:"-"`
+	CodeNumber             string  `json:"" form:"codeNumber" xml:"-"`
+	LineNumber             int     `json:"lineNumber" form:"lineNumber" xml:"lineNumber"`
+	ItemDescr              string  `json:"itemDescr,omitempty" form:"itemDescr" xml:"itemDescr,omitempty"`
+	Quantity               float64 `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
+	MeasurementUnit        int     `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
+	MeasurementUnitName    string  `json:"measurementUnitName" form:"measurementUnitName" xml:"-"`
+	UnitNetPrice           float64 `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
+	TotalNetBeforeDiscount float64 `xml:"-"`
+	Discount               float64 `xml:"-"`
+	DiscountAmount         float64 `xml:"-"`
+	// TotalAfterDiscount     float64                     `xml:"-"`
 	NetValue               float64                     `json:"netValue" form:"netValue" xml:"netValue"`
 	VatCategory            int                         `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
 	VatCategoryName        int                         `json:"vatCategoryName" form:"vatCategoryName" xml:"-"`

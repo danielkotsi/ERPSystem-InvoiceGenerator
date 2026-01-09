@@ -246,10 +246,10 @@
                 <td>{{.MeasurementUnitName}}</td>
                 <td>{{.Quantity}}</td>
                 <td>{{.UnitNetPrice}}</td>
-                <td>{{.TotalBeforeDiscount}}</td>
+                <td>{{.TotalNetBeforeDiscount}}</td>
                 <td>{{.Discount}}</td>
                 <td>{{.DiscountAmount}}</td>
-                <td>{{.TotalAfterDiscount}}</td>
+                <td>{{.NetValue}}</td>
                 <td>{{.VatCategoryName}}</td>
                 <td>{{.VatAmount}}</td>
             </tr>
@@ -301,7 +301,7 @@
                 </tr>
                 <tr>
                     <th class="balancehead">ΝΕΟ ΥΠΟΛΟΙΠΟ</th>
-                    <td class="balancedata end">{{.Invoice.Byer.NewBalance}}</td>
+                    <td class="balancedata end">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
                 </tr>
                 <tr>
                     <th class="balanceredhead">ΣΥΝΟΛΙΚΗ ΠΟΣΟΤΗΤΑ</th>
@@ -338,10 +338,10 @@
                     <th class="vathead">ΣΥΝΟΛΟ</th>
                 </tr>
                 <tr class="firstvatdata">
-                    <td class="vatdata">23</td>
-                    <td class="vatdata">89</td>
-                    <td class="vatdata">48</td>
-                    <td class="vatdata">86</td>
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalNetValue}}</td>
+                    <td class="vatdata">?</td>
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalVatAmount}}</td>
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
                 </tr>
                 <tr>
                     <td class="vatdata"></td>
@@ -363,23 +363,23 @@
                 </colgroup>
                 <tr>
                     <th class="balancehead">ΑΞΙΑ ΠΡΟ ΕΚΠΤΩΣΗΣ</th>
-                    <td class="balancedata first">{{.Invoice.Byer.OldBalance}}</td>
+                    <td class="balancedata first">{{.Invoice.InvoiceSummary.TotalNetBeforeDiscount}}</td>
                 </tr>
                 <tr>
                     <th class="balancehead">ΕΚΠΤΩΣΗ</th>
-                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalDiscount}}</td>
                 </tr>
                 <tr>
                     <th class="balancehead">ΣΥΝΟΛΙΚΗ ΑΞΙΑ</th>
-                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalNetValue}}</td>
                 </tr>
                 <tr>
                     <th class="balancehead">ΣΥΝΟΛΙΚΟ Φ.Π.Α.</th>
-                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalVatAmount}}</td>
                 </tr>
                 <tr class="balance-end">
                     <th class="balanceredhead">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>
-                    <td class="balancedata end">{{.Invoice.Byer.NewBalance}}</td>
+                    <td class="balancedata end">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
                 </tr>
             </table>
         </div>
