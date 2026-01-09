@@ -100,7 +100,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 		emptylines--
 		line.VatCategoryName = vatNames[line.VatCategory]
 		line.LineNumber = i + 1
-		if invoicetype != "9.3" {
+		if invoicetype != "9.3" && invoicetype != "6.1" {
 			if err := r.CalculateInvoiceLinePrices(line, discount); err != nil {
 				return err
 			}
@@ -115,9 +115,9 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 			summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 			summary.TotalVatAmount += line.VatAmount
 			summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
-			if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
-				return err
-			}
+		}
+		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+			return err
 		}
 	}
 	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount

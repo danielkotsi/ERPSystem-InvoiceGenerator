@@ -154,11 +154,16 @@
 							name="invoiceDetails[0].vatCategory" value="8"></label><br>
 					<div id="vatCategory-suggestions" class="suggestions"></div>
 					<!-- IncomeClassification -->
-					<!--        <label>Τύπος Κατάταξης Εσόδων:  <input type="text" autocomplete="off"id="income_classification_type" name="invoiceDetails[0].incomeClassification.classificationType" value="{{.Info.Invoiceinfo.IncomeClassificationType }}"></label><br> -->
+					<!-- <label>Τύπος Κατάταξης Εσόδων: <input type="text" autocomplete="off" id="income_classification_type" -->
+					<!-- 		name="invoiceDetails[0].incomeClassification.classificationType" -->
+					<!-- 		value="{{.Info.Invoiceinfo.IncomeClassificationType }}"></label><br> -->
 					<!-- <div id="income-classification-type-suggestions" class="suggestions"></div> -->
-					<!--        <label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category" name="invoiceDetails[0].incomeClassification.classificationCategory" value="{{.Info.Invoiceinfo.IncomeClassificationCat }}"></label><br> -->
-					<!-- <div id="income-classification-category-suggestions" class="suggestions"></div> -->
-					<!--        <label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01" name="invoiceDetails[0].incomeClassification.amount"></label><br> -->
+					<label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category"
+							name="invoiceDetails[0].incomeClassification.classificationCategory"
+							value="{{.Info.Invoiceinfo.IncomeClassificationCat }}"></label><br>
+					<div id="income-classification-category-suggestions" class="suggestions"></div>
+					<label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01"
+							name="invoiceDetails[0].incomeClassification.amount"></label><br>
 					<!-- it might need extra fields in the expenses classification in the case of a buying invoice IF if i have understood correctly -->
 				</div>
 			</div>

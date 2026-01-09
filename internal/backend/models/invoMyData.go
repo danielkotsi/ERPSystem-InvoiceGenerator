@@ -162,7 +162,7 @@ type ExpensesClassificationItem struct {
 }
 
 type ClassificationItem struct {
-	ClassificationType     string  `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationType"`
+	ClassificationType     *string `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationType"`
 	ClassificationCategory string  `json:"classificationCategory" form:"classificationCategory" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationCategory"`
 	Amount                 float64 `json:"amount" form:"amount" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 amount"`
 }
