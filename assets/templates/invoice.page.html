@@ -270,38 +270,158 @@
         </table>
     </section>
 
+    <section>
+        <div class="footer-tables">
+            <!-- this is a section it is going to be made up of 3 seperate tables  -->
+            <!-- one for balance, one for vat and one for the discount. FUCKING HELL -->
+            <!-- lets just incorporate the notice as well over here then  -->
+            <table class="balance-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tr>
+                    <th class="balancehead">ΠΡΟΗΓΟΥΜΕΝΟ ΥΠΟΛΟΙΠΟ</th>
+                    <td class="balancedata first">{{.Invoice.Byer.OldBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΝΕΟ ΥΠΟΛΟΙΠΟ</th>
+                    <td class="balancedata end">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balanceredhead">ΣΥΝΟΛΙΚΗ ΠΟΣΟΤΗΤΑ</th>
+                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr>
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr class="balance-end">
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+            </table>
 
-
-
-
-
-
-
-
-
-
-
-    <p>Date: </p>
-    <p>Series: {{.Invoice.InvoiceHeader.Series}}</p>
-    <p>AA: {{.Invoice.InvoiceHeader.Aa}}</p>
-    <p>{{.Invoice.InvoiceHeader.MovePurpose}}</p>
-    <p>UID: {{.Invoice.UID}}</p>
-    <p>MARK: {{.Invoice.MARK}}</p>
-
-
-    <section class="costs">
-        <p>TotalNet: {{.Invoice.InvoiceSummary.TotalNetValue}}</p>
-        <p>TotalVat: {{.Invoice.InvoiceSummary.TotalVatAmount}}</p>
-        <p>TotalGross: {{.Invoice.InvoiceSummary.TotalGrossValue}}</p>
+            <table class="vat-table">
+                <colgroup>
+                    <col style="width: 28%;">
+                    <col style="width: 16%;">
+                    <col style="width: 28%;">
+                    <col style="width: 28%;">
+                </colgroup>
+                <tr>
+                    <th colspan="4" class="vathead first">ΑΝΑΛΥΣΗ Φ.Π.Α.</th>
+                </tr>
+                <tr>
+                    <th class="vathead">ΑΞΙΑ</th>
+                    <th class="vathead">% Φ.Π.Α.</th>
+                    <th class="vathead">Φ.Π.Α.</th>
+                    <th class="vathead">ΣΥΝΟΛΟ</th>
+                </tr>
+                <tr class="firstvatdata">
+                    <td class="vatdata">23</td>
+                    <td class="vatdata">89</td>
+                    <td class="vatdata">48</td>
+                    <td class="vatdata">86</td>
+                </tr>
+                <tr>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                </tr>
+                <tr>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                </tr>
+            </table>
+            <table class="discount-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tr>
+                    <th class="balancehead">ΑΞΙΑ ΠΡΟ ΕΚΠΤΩΣΗΣ</th>
+                    <td class="balancedata first">{{.Invoice.Byer.OldBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΕΚΠΤΩΣΗ</th>
+                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΣΥΝΟΛΙΚΗ ΑΞΙΑ</th>
+                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΣΥΝΟΛΙΚΟ Φ.Π.Α.</th>
+                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr class="balance-end">
+                    <th class="balanceredhead">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>
+                    <td class="balancedata end">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+            </table>
+        </div>
+        <table class="notes-table">
+            <tr>
+                <th class="noteshead">ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+            </tr>
+            <tr>
+                <td class="notesdata"></td>
+            </tr>
+        </table>
+        <div class="terms">
+            <strong>ΟΡΟΙ ΠΩΛΗΣΗΣ:</strong>Παρακαλούμε να ελέγχετε τον αριθμό φορολογικού μητρώου (ΑΦΜ) σας και σε
+            περιπτωση διαφωνίας ενημερώστε μας εγγράφως - Τα εμπορεύματα ταξιδεύουν για λογαριασμό & κίνδυνο του
+            αγοραστή - Για κάθε διαφορά από την παρούσα συνναλαγή αρμόδια είναι τα Δικαστήρια Αθηνών - Τα εμπορεύματα
+            παραμένουν στην κυριότητα του πωλητή μέχρι την πλήρη εξόφλησή τους. Εξόφληση του παρόντος μόνο με απόδειξη
+            της Εταιρείας εκτός τιμολογίου μετρητοίς - Τα εμπορεύματα παραδίδονται στο πεζοδρόμιο μπροστά στην πόρτα του
+            παραλήπτη - Σε περίπτωση ελλιπούς παράδοσης ζητήστε από τον μεταφορέα να σας υπογράψει για την διαφορά -
+            Επιστροφές δεν γίνονται δεκτές.
+        </div>
     </section>
-
 
 
     <section class="footer">
+        <table class="bank-accounts">
+            <colgroup>
+                <col style="width: 30%;">
+                <col style="width: 80%;">
+            </colgroup>
+            <tr>
+                <th class="BAhead first" colspan="2">ΤΡΑΠΕΖΙΚΟΙ ΛΟΓΑΡΙΑΣΜΟΙ</th>
+            </tr>
+            <tr>
+                <th class="BAhead">ΠΕΙΡΑΙΩΣ</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">EUROBANK</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">ALPHA BANK</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">OPTIMA</th>
+                <td class="BAdata"></td>
+            </tr>
+        </table>
+        <div class="signature">
+            Ο ΕΚΔΟΣΑΣ
+        </div>
+        <div class="signature buyer">
+            (ΕΛΑΒΑ ΓΝΩΣΗ ΤΩΝ ΠΑΡΑΠΑΝΩ ΟΡΩΝ)<br>
+            Ο ΠΑΡΑΛΑΒΩΝ
+        </div>
     </section>
-
-
-
 
 </body>
 
@@ -362,14 +482,18 @@
         height: 140px;
     }
 
+    td {
+        border: 1px solid black;
+    }
+
     .Hhead {
-        background: red;
+        background: rgb(245, 15, 45);
         color: white;
     }
 
     .Hhead th {
-        border-left: 1px solid red;
-        border-right: 1px solid red;
+        border-left: 1px solid rgb(245, 15, 45);
+        border-right: 1px solid rgb(245, 15, 45);
         font-weight: 100;
         font-size: 9px;
         padding: 8px;
@@ -474,8 +598,183 @@
         height: 12px;
     }
 
-    td {
+    .footer-tables {
+        height: 120px;
+        margin-top: 5px;
+        display: flex;
+    }
+
+    .balance-table {
+        width: 33%;
+        border-collapse: collapse;
+    }
+
+    .balancehead {
+        text-align: left;
+        background: black;
+        color: white;
         border: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        padding-left: 4px;
+        height: 12px;
+    }
+
+    .balancedata {
+        border: none;
+        border-right: 1px solid black;
+        text-align: right;
+        font-size: 10px;
+        padding-right: 2px;
+    }
+
+    .balancedata.end {
+        border-bottom: 1px solid black;
+    }
+
+    .balancedata.first {
+        border-top: 1px solid black;
+    }
+
+    .balanceredhead {
+        text-align: left;
+        background: rgb(245, 15, 45);
+        color: white;
+        border: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        padding-left: 4px;
+        height: 12px;
+    }
+
+    .balancewhitehead {
+        border: none;
+        border-left: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        height: 12px;
+    }
+
+    .balance-end {
+        border-bottom: 1px solid black;
+    }
+
+
+    .vat-table {
+        width: 40%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+
+    .vathead {
+        background: rgb(235, 15, 45);
+        color: white;
+        border: none;
+        border-bottom: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        height: 20px;
+    }
+
+    .vathead.first {
+        border: 1px solid black;
+    }
+
+    .vatdata {
+        border: none;
+        border-right: 1px solid black;
+        text-align: center;
+        padding: 0px 2px;
+        font-size: 10px;
+    }
+
+    .firstvatdata {
+        height: 23px;
+    }
+
+    .discount-table {
+        width: 27%;
+        border-collapse: collapse;
+    }
+
+    .notes-table {
+        height: 50px;
+        border: 1px solid black;
+        border-top: none;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .noteshead {
+        border: none;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 6px;
+        height: 20px;
+        text-align: left;
+    }
+
+    .notesdata {
+        border: none;
+    }
+
+    .terms {
+        margin: 5px 0px;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 6.7px;
+        letter-spacing: -0.4px;
+    }
+
+    .footer {
+        display: flex;
+    }
+
+    .bank-accounts {
+        width: 45%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .BAhead {
+        font-size: 9px;
+        font-weight: 100;
+        text-align: left;
+        border-top: 1px solid black;
+        border-left: 1px solid black;
+        border-bottom: 1px solid black;
+        padding-bottom: 0px;
+        margin: none;
+        padding-left: 5px;
+    }
+
+    .BAhead.first {
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .BAdata {
+        margin: none;
+        padding: 0px;
+        border: none;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .signature {
+        font-size: 9px;
+        text-align: center;
+        padding: 5px 0px;
+        padding-left: 70px;
+        height: 20px;
+    }
+
+    .signature.buyer {
+        padding-left: 50px;
     }
 </style>
 

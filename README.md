@@ -27,3 +27,4 @@ TO DO :
 -Customers, subcompanies and products must be editable.
 -epi pistosi must have options for how long, which is going to be presented in the invoice.
 -PaymentMethod must be passed with the readble type not the number that it corresponds
+-make the add product in greek
