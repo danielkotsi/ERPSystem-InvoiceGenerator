@@ -32,7 +32,7 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
+	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary, invo.Byer.Discount); err != nil {
 		return err
 	}
 	if invo.PaymentMethods != nil {
@@ -79,13 +79,26 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company)
 	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
 	return nil
 }
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
+func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, discount int) error {
+	vatNames := map[int]int{
+		1:  24,
+		2:  13,
+		3:  6,
+		4:  17,
+		5:  9,
+		6:  4,
+		7:  0,
+		8:  0,
+		9:  3,
+		10: 4,
+	}
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
+		line.VatCategoryName = vatNames[line.VatCategory]
 		line.LineNumber = i + 1
 		if invoicetype != "9.3" {
-			if err := r.CalculateInvoiceLinePrices(line); err != nil {
+			if err := r.CalculateInvoiceLinePrices(line, discount); err != nil {
 				return err
 			}
 		}
@@ -106,7 +119,6 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 
 func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *models.ClassificationItem, summary *models.InvoiceSummary) error {
 	index, exists := r.ClassificationCategoryExists(*classificationItem, summary.IncomeClassification)
-	fmt.Println(classificationItem)
 	if exists {
 		summary.IncomeClassification[index].Amount += classificationItem.Amount
 	} else {
@@ -125,7 +137,7 @@ func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.Cla
 	return 0, false
 }
 
-func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error {
+func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow, discount int) error {
 	amount := map[int]float64{
 		1:  0.24,
 		2:  0.13,
@@ -138,11 +150,20 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error 
 		9:  0.03,
 		10: 0.04,
 	}
-	line.NetValue = line.Quantity * line.UnitNetPrice
-	line.VatAmount = line.Quantity * line.UnitNetPrice * amount[line.VatCategory]
+	line.Discount = float64(discount)
+	floatdiscount := float64(discount) / 100
 
-	line.NetValue = utils.RoundTo2(line.NetValue)
-	line.VatAmount = utils.RoundTo2(line.VatAmount)
+	totalNetPriceBeforeDiscount := line.Quantity * line.UnitNetPrice
+	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
+	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
+	vatBeforeDiscount := totalNetPriceBeforeDiscount * amount[line.VatCategory]
+	vatAfterDiscount := totalNetPriceAfterDiscount * amount[line.VatCategory]
+	line.TotalBeforeDiscount = totalNetPriceBeforeDiscount + vatBeforeDiscount
+	line.TotalAfterDiscount = totalNetPriceAfterDiscount + vatAfterDiscount
+
+	line.NetValue = utils.RoundTo2(totalNetPriceAfterDiscount)
+	line.VatAmount = utils.RoundTo2(vatAfterDiscount)
+
 	return nil
 }
 

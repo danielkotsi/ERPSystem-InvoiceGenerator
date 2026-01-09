@@ -96,7 +96,7 @@ function addLineItem() {
         <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr"></label><br>
         <label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-${lineItemIndex}" class="discount-option" name="invoiceDetails[${lineItemIndex}].discountOption"></label><br>
         <label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
-        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="product.measurementUnit"></label><br>
+        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnitName"></label><br>
         <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit"></label><br>
         <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice"></label><br>
 	<label>Έκπτωση: <input type="number" id="customersDiscount-${lineItemIndex}" class="discount" step="1" name="buyer.discount"></label><br>

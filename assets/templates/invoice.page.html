@@ -243,14 +243,14 @@
             <tr class="Ddata">
                 <td>{{.CodeNumber}}</td>
                 <td>{{.ItemDescr}}</td>
-                <td>kg</td>
+                <td>{{.MeasurementUnitName}}</td>
                 <td>{{.Quantity}}</td>
                 <td>{{.UnitNetPrice}}</td>
-                <td>0.99</td>
-                <td>10</td>
-                <td>0.10</td>
-                <td>0.89</td>
-                <td>13</td>
+                <td>{{.TotalBeforeDiscount}}</td>
+                <td>{{.Discount}}</td>
+                <td>{{.DiscountAmount}}</td>
+                <td>{{.TotalAfterDiscount}}</td>
+                <td>{{.VatCategoryName}}</td>
                 <td>{{.VatAmount}}</td>
             </tr>
             {{end}}

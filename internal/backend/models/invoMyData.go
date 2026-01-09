@@ -120,9 +120,15 @@ type InvoiceRow struct {
 	ItemDescr              string                      `json:"itemDescr,omitempty" form:"itemDescr" xml:"itemDescr,omitempty"`
 	Quantity               float64                     `json:"quantity,omitempty" form:"quantity" xml:"quantity"`
 	MeasurementUnit        int                         `json:"measurementUnit" form:"measurementUnit" xml:"measurementUnit"`
+	MeasurementUnitName    string                      `json:"measurementUnitName" form:"measurementUnitName" xml:"-"`
 	UnitNetPrice           float64                     `json:"unitPrice,omitempty" form:"unitNetPrice" xml:"-"`
+	TotalBeforeDiscount    float64                     `xml:"-"`
+	Discount               float64                     `xml:"-"`
+	DiscountAmount         float64                     `xml:"-"`
+	TotalAfterDiscount     float64                     `xml:"-"`
 	NetValue               float64                     `json:"netValue" form:"netValue" xml:"netValue"`
 	VatCategory            int                         `json:"vatCategory" form:"vatCategory" xml:"vatCategory"`
+	VatCategoryName        int                         `json:"vatCategoryName" form:"vatCategoryName" xml:"-"`
 	VatAmount              float64                     `json:"vatAmount" form:"vatAmount" xml:"vatAmount"`
 	DiscountOption         bool                        `json:"discountOption" form:"discountOption" xml:"discountOption,omitempty"`
 	IncomeClassification   *ClassificationItem         `json:"incomeClassification" form:"incomeClassification" xml:"incomeClassification,omitempty"`
@@ -131,6 +137,8 @@ type InvoiceRow struct {
 
 type InvoiceSummary struct {
 	Emptylines             []int                        `xml:"-"`
+	TotalNetBeforeDiscount float64                      `xml:"-"`
+	TotalDiscount          float64                      `xml:"-"`
 	TotalNetValue          float64                      `json:"totalNetValue" form:"totalNetValue" xml:"totalNetValue"`
 	TotalVatAmount         float64                      `json:"totalVatAmount" form:"totalVatAmount" xml:"totalVatAmount"`
 	TotalWithheldAmount    float64                      `json:"totalWithheldAmount" form:"totalWithheldAmount" xml:"totalWithheldAmount"`
