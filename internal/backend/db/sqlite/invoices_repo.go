@@ -41,6 +41,9 @@ func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error
 }
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
 	// invo.Seller.Address = nil
+	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
+		return err
+	}
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
@@ -51,6 +54,24 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	return nil
 }
 
+func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company) error {
+	query := `select PostalCellName, PostalCellNumber,PostalCellPostalCode, PostalCellCity from users where CodeNumber==?;`
+
+	rows, err := r.DB.QueryContext(ctx, query, seller.CodeNumber)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&seller.PostalAddress.Naming, &seller.PostalAddress.Cellnumber, &seller.PostalAddress.PostalCode, &seller.PostalAddress.City); err != nil {
+			return err
+		}
+	}
+
+	fmt.Println("hello this is the code", seller.CodeNumber)
+	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
+	return nil
+}
 func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
 	emptylines := 24
 	for i, line := range invoicelines {
@@ -197,7 +218,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
 	// finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
 	finalInvoice.LogoImage = r.logo
-	fmt.Println("this is the image base 64", finalInvoice.LogoImage)
+	// fmt.Println("this is the image base 64", finalInvoice.LogoImage)
 	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64("http://localhost:8080")
 	if err != nil {
 		return nil, err
@@ -215,7 +236,7 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 		log.Println(err)
 	}
 
-	fmt.Println(buf.String())
+	// fmt.Println(buf.String())
 	pdf, err = utils.HTMLtoPDF2(buf.String())
 	if err != nil {
 		return nil, err
