@@ -35,8 +35,10 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
 		return err
 	}
-	if err := r.CompletePaymentMethods(ctx, invo.PaymentMethods); err != nil {
-		return err
+	if invo.PaymentMethods != nil {
+		if err := r.CompletePaymentMethods(ctx, invo.PaymentMethods); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -230,8 +232,14 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 }
 
 func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {
+	movepurpses := map[int]string{
+		1: "Πώληση",
+		3: "Δειγματισμός",
+		9: "Αγορά",
+	}
 	header.IssueDate = time.Now().Format("2006-01-02")
 	header.Time = time.Now().Format("15:04")
+	header.MovePurposeName = movepurpses[header.MovePurpose]
 	return nil
 }
 

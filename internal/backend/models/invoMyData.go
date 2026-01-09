@@ -92,6 +92,7 @@ type InvoiceHeader struct {
 	DispatchTime            string                  `json:"dispatchTime" form:"dispatchTime" xml:"dispatchTime,omitempty"`
 	VehicleNumber           string                  `json:"vehicleNumber" form:"vehicleNumber" xml:"vehicleNumber,omitempty"`
 	MovePurpose             int                     `json:"movePurpose" form:"movePurpose" xml:"movePurpose,omitempty"`
+	MovePurposeName         string                  `json:"movePurposeName" form:"movePurposeName" xml:"-"`
 	OtherDeliveryNoteHeader OtherDeliveryNoteHeader `json:"otherDeliveryNoteHeader" form:"otherDeliveryNoteHeader" xml:"otherDeliveryNoteHeader"`
 	IsDeliveryNote          bool                    `json:"isDeliveryNote" form:"isDeliveryNote" xml:"isDeliveryNote,omitempty"`
 }

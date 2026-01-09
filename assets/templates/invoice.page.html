@@ -98,7 +98,14 @@
             </tr>
             <tr class="BDdata work">
                 <td>ΕΠΑΓΓΕΛΜΑ :</td>
-                <td>ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ :</td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.InvoiceHeader.MovePurposeName}}
+                        </span>
+                    </div>
+                </td>
             </tr>
             <tr class="BDdata address">
                 <td>
@@ -188,11 +195,13 @@
                     <div class="BDdata-row">
                         <span class="BDdata-title">ΤΡΟΠΟΣ ΠΛΗΡΩΜΗΣ :</span>
                         <span class="BDdata-value">
+                            {{if ne .Invoice.PaymentMethods nil}}
                             {{(index .Invoice.PaymentMethods.Details 0).Name}}
                             {{if ne (index .Invoice.PaymentMethods.Details
                             0).Due ""}}
                             ({{(index .Invoice.PaymentMethods.Details
                             0).Due}})
+                            {{end}}
                             {{end}}
                         </span>
                     </div>
