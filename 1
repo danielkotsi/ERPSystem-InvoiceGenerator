@@ -35,7 +35,7 @@ type Company struct {
 	VatNumber     string        `json:"vatNumber" form:"vatNumber" xml:"vatNumber,omitempty"`
 	Country       string        `json:"country" form:"country" xml:"country,omitempty"`
 	Branch        int           `json:"branch" form:"branch" xml:"branch"`
-	Name          *string       `json:"name" form:"name" xml:"name"`
+	Name          string        `json:"name" form:"name" xml:"name"`
 	Address       *AddressType  `json:"address" form:"address" xml:"address,omitempty"`
 	Discount      int           `json:"discount" form:"discount" xml:"-"`
 	OldBalance    float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
@@ -86,15 +86,15 @@ type InvoiceHeader struct {
 	IssueDate   string `json:"issueDate" form:"issueDate" xml:"issueDate"`
 	InvoiceType string `json:"invoiceType" form:"invoiceType" xml:"invoiceType"`
 	//Unesseccary values might need an omit empty in the xml naming, we'll see later
-	VatPaymentSuspension    bool                     `json:"vatPaymentSuspension" form:"vatPaymentSuspension" xml:"vatPaymentSuspension"`
-	Currency                string                   `json:"currency" form:"currency" xml:"currency,omitempty"`
-	DispatchDate            string                   `json:"dispatchDate" form:"dispatchDate" xml:"dispatchDate,omitempty"`
-	DispatchTime            string                   `json:"dispatchTime" form:"dispatchTime" xml:"dispatchTime,omitempty"`
-	VehicleNumber           string                   `json:"vehicleNumber" form:"vehicleNumber" xml:"vehicleNumber,omitempty"`
-	MovePurpose             int                      `json:"movePurpose" form:"movePurpose" xml:"movePurpose,omitempty"`
-	MovePurposeName         string                   `json:"movePurposeName" form:"movePurposeName" xml:"-"`
-	OtherDeliveryNoteHeader *OtherDeliveryNoteHeader `json:"otherDeliveryNoteHeader" form:"otherDeliveryNoteHeader" xml:"otherDeliveryNoteHeader"`
-	IsDeliveryNote          bool                     `json:"isDeliveryNote" form:"isDeliveryNote" xml:"isDeliveryNote,omitempty"`
+	VatPaymentSuspension    bool                    `json:"vatPaymentSuspension" form:"vatPaymentSuspension" xml:"vatPaymentSuspension"`
+	Currency                string                  `json:"currency" form:"currency" xml:"currency,omitempty"`
+	DispatchDate            string                  `json:"dispatchDate" form:"dispatchDate" xml:"dispatchDate,omitempty"`
+	DispatchTime            string                  `json:"dispatchTime" form:"dispatchTime" xml:"dispatchTime,omitempty"`
+	VehicleNumber           string                  `json:"vehicleNumber" form:"vehicleNumber" xml:"vehicleNumber,omitempty"`
+	MovePurpose             int                     `json:"movePurpose" form:"movePurpose" xml:"movePurpose,omitempty"`
+	MovePurposeName         string                  `json:"movePurposeName" form:"movePurposeName" xml:"-"`
+	OtherDeliveryNoteHeader OtherDeliveryNoteHeader `json:"otherDeliveryNoteHeader" form:"otherDeliveryNoteHeader" xml:"otherDeliveryNoteHeader"`
+	IsDeliveryNote          bool                    `json:"isDeliveryNote" form:"isDeliveryNote" xml:"isDeliveryNote,omitempty"`
 }
 
 type OtherDeliveryNoteHeader struct {

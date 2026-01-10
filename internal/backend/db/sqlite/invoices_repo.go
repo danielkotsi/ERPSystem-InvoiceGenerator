@@ -100,7 +100,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 		emptylines--
 		line.VatCategoryName = vatNames[line.VatCategory]
 		line.LineNumber = i + 1
-		if invoicetype != "9.3" && invoicetype != "6.1" {
+		if invoicetype != "9.3" && invoicetype != "8.1" {
 			if err := r.CalculateInvoiceLinePrices(line, discount); err != nil {
 				return err
 			}
@@ -115,6 +115,11 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 			summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 			summary.TotalVatAmount += line.VatAmount
 			summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
+		}
+		if invoicetype == "8.1" {
+			line.NetValue = 2.0
+			line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
+			summary.TotalNetValue = 2.0
 		}
 		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
@@ -162,7 +167,7 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow, discou
 	line.Discount = float64(discount)
 	floatdiscount := float64(discount) / 100
 
-	totalNetPriceBeforeDiscount := line.Quantity * line.UnitNetPrice
+	totalNetPriceBeforeDiscount := *line.Quantity * line.UnitNetPrice
 	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
 	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
 	// vatBeforeDiscount := totalNetPriceBeforeDiscount * amount[line.VatCategory]
@@ -245,8 +250,8 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 		invoiceinfo.Invoiceinfo.MovePurpose = "1"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
 	case "8.1":
-		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
-		invoiceinfo.Invoiceinfo.IncomeClassificationCat = ""
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_2"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
 	case "9.3":
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
