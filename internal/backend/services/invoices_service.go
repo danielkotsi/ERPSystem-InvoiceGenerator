@@ -43,13 +43,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-
 	err = s.Invoice.CompleteInvoice(ctx, &invo)
-	if err != nil {
-		return nil, err
-	}
-
-	pdf, err = xml.MarshalIndent(invo, "", "  ")
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +51,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	//
-	err = s.Invoice.AddToAA(ctx, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	err = s.Invoice.UpdateDB(ctx, invo.Byer.NewBalance, invo.Byer.CodeNumber, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
 	if err != nil {
 		return nil, err
 	}

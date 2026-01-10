@@ -29,9 +29,9 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
 		return err
 	}
-	// if err := r.GetBuyerBalance(ctx, &invo.Byer); err != nil {
-	// 	return err
-	// }
+	if err := r.GetBuyerBalance(ctx, &invo.Byer); err != nil {
+		return err
+	}
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
@@ -47,6 +47,21 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	return nil
 }
 
+func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *models.Company) error {
+	query := "select Balance from customers where CodeNumber=?;"
+	rows, err := r.DB.QueryContext(ctx, query, buyer.CodeNumber)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&buyer.OldBalance); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 func (r *InvoiceRepo) CompletePaymentMethods(ctx context.Context, paymentmethods *models.PaymentMethods) error {
 	paymenttypes := map[string]int{
 		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
@@ -181,6 +196,22 @@ func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow, discou
 	return nil
 }
 
+func (r *InvoiceRepo) UpdateDB(ctx context.Context, buyerNewBalance float64, buyerCodeNumber, invoicetype, aa string) error {
+	if err := r.UpdateBalance(ctx, buyerCodeNumber, buyerNewBalance); err != nil {
+		return err
+	}
+	if err := r.AddToAA(ctx, invoicetype, aa); err != nil {
+		return err
+	}
+	return nil
+}
+func (r *InvoiceRepo) UpdateBalance(ctx context.Context, buyerCodeNumber string, buyerNewBalance float64) error {
+	query := "update customers set Balance=? where CodeNumber==?;"
+	if _, err := r.DB.ExecContext(ctx, query, buyerNewBalance, buyerCodeNumber); err != nil {
+		return err
+	}
+	return nil
+}
 func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
 	aaint, err := strconv.Atoi(aa)
 	if err != nil {

@@ -14,6 +14,6 @@ type Invoice_repo interface {
 	// CreateMAPK_QRcode(ctx context.Context, search string) (int, error)
 	GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error)
 	CompleteInvoice(ctx context.Context, invo *models.Invoice) error
-	AddToAA(ctx context.Context, invoicetype, aa string) error
+	UpdateDB(ctx context.Context, buyerNewBalance float64, buyerCodeNumber, invoicetype, aa string) error
 	MakePDF(ctx context.Context, invo *models.Invoice) (pdf []byte, err error)
 }
