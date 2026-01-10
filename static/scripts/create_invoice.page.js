@@ -90,22 +90,22 @@ function addLineItem() {
 	div.classList.add('line-item');
 	div.innerHTML = `
 	<button type="button" class="remove-line-item">Remove</button><br>
-        <label>Όνομα Προϊόντος: <input type="text" id="product_name_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].name"></label><br>
+        <label>Όνομα Προϊόντος: <input type="text" id="product_name_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].name" required></label><br>
 	<div id="product-suggestions-${lineItemIndex}" class="suggestions"></div>
-	<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off" id="product_code_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].codeNumber"></label><br>
-        <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr"></label><br>
+	<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off" id="product_code_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].codeNumber" required></label><br>
+        <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr" required></label><br>
         <label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-${lineItemIndex}" class="discount-option" name="invoiceDetails[${lineItemIndex}].discountOption"></label><br>
-        <label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity"></label><br>
-        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnitName"></label><br>
-        <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit"></label><br>
-        <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice"></label><br>
+        <label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity" required></label><br>
+        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnitName" required></label><br>
+        <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit" required></label><br>
+        <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice" required></label><br>
 	<label>Έκπτωση: <input type="number" id="customersDiscount-${lineItemIndex}" class="discount" step="1" name="buyer.discount"></label><br>
-        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory"></label><br>
+        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory" required></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
-        <label>Τύπος Κατάταξης Εσόδων <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationType" value="E3_561_001"></label><br>
+        <label>Τύπος Κατάταξης Εσόδων <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationType" value="E3_561_001" required></label><br>
 	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category1_2"></label><br>
+        <label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category1_2" required></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
         <label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].incomeClassification.amount"></label><br>
   `;

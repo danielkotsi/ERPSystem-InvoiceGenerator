@@ -62,15 +62,15 @@
 		<!-- ===== Buyer (Counterpart) ===== -->
 		<fieldset>
 			<legend>Αγοραστής</legend>
-			<label>Κωδικός: <input type="text" id="customersCode" name="buyer.codeNumber"></label><br>
-			<label>Όνομα: <input type="text" id="customersName" name="buyer.name"></label><br>
+			<label>Κωδικός: <input type="text" id="customersCode" name="buyer.codeNumber" required></label><br>
+			<label>Όνομα: <input type="text" id="customersName" name="buyer.name" required></label><br>
 			<div id="customers-suggestions" class="suggestions"></div>
 			<label>ΔΟΗ: <input type="text" id="customersDOI" name="buyer.doi"></label><br>
 			<label>ΓΕΜΗ: <input type="text" id="customersGEMI" name="buyer.gemi"></label><br>
 			<label>Τηλέφωνο: <input type="text" id="customersPhone" name="buyer.phone"></label><br>
 			<label>Κινητό_Τηλέφωνο: <input type="text" id="customersMobile_Phone" name="buyer.mobile_phone"></label><br>
 			<label>Email: <input type="text" id="customersEmail" name="buyer.email"></label><br>
-			<label>ΑΦΜ: <input type="text" id="customersVatNumber" name="buyer.vatNumber"></label><br>
+			<label>ΑΦΜ: <input type="text" id="customersVatNumber" name="buyer.vatNumber" required></label><br>
 			<label>Χώρα: <input type="text" id="customersCountry" name="buyer.country"></label><br>
 			<label>Παρακλάδι: <input type="number" id="customersBranch" name="buyer.branch"></label><br>
 			<label>Τύπος Οντότητας: <input type="number" id="customersEntityType" name="buyer.entityType"></label><br>
@@ -136,31 +136,31 @@
 			<div id="invoiceDetails">
 				<div class="line-item">
 					<label>Όνομα Προϊόντος: <input type="text" id="product_name_input-0"
-							name="invoiceDetails[0].name"></label><br>
+							name="invoiceDetails[0].name" required></label><br>
 					<div id="product-suggestions-0" class="suggestions"></div>
+					<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off"
+							id="product_code_input-0"
+							name="invoiceDetails[0].codeNumber" required></label><br>
 					<label>Περιγραφή Προϊόντος: <input type="text" id="product_description-0"
-							name="invoiceDetails[0].itemDescr"></label><br>
-					<label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-0" name="invoiceDetails[0].discountOption"
-							class="discount-option"></label><br>
-					<label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[0].quantity"></label><br>
+							name="invoiceDetails[0].itemDescr" required></label><br>
+					<label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[0].quantity" required></label><br>
 					<label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-0" step="1"
-							name="product.measurementUnit"></label><br>
+							name="invoiceDetails[0].measurementUnitName"></label><br>
 					<label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-0" step="1"
-							name="invoiceDetails[0].measurementUnit"></label><br>
+							name="invoiceDetails[0].measurementUnit" required></label><br>
 					<label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-0" step="0.01"
 							name="invoiceDetails[0].unitNetPrice"></label><br>
-					<label>Έκπτωση: <input type="number" id="customersDiscount" step="1" name="buyer.discount"></label><br>
 					<label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-0"
-							name="invoiceDetails[0].vatCategory" value="8"></label><br>
+							name="invoiceDetails[0].vatCategory" value="8" required></label><br>
 					<div id="vatCategory-suggestions" class="suggestions"></div>
 					<!-- IncomeClassification -->
 					<!-- <label>Τύπος Κατάταξης Εσόδων: <input type="text" autocomplete="off" id="income_classification_type" -->
 					<!-- 		name="invoiceDetails[0].incomeClassification.classificationType" -->
 					<!-- 		value="{{.Info.Invoiceinfo.IncomeClassificationType }}"></label><br> -->
 					<!-- <div id="income-classification-type-suggestions" class="suggestions"></div> -->
-					<label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category"
+					<label>Κατηγορία Κατάταξης Εσόδων :<input type="text" id="income_classification_category"
 							name="invoiceDetails[0].incomeClassification.classificationCategory"
-							value="{{.Info.Invoiceinfo.IncomeClassificationCat }}"></label><br>
+							value="{{.Info.Invoiceinfo.IncomeClassificationCat }}" required></label><br>
 					<div id="income-classification-category-suggestions" class="suggestions"></div>
 					<label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01"
 							name="invoiceDetails[0].incomeClassification.amount"></label><br>
