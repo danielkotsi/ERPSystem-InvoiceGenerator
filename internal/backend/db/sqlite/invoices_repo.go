@@ -35,7 +35,7 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice)
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary, invo.Byer.Discount); err != nil {
+	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.InvoiceDetails, &invo.InvoiceSummary, &invo.Byer); err != nil {
 		return err
 	}
 	if invo.PaymentMethods != nil {
@@ -97,7 +97,7 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company)
 	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
 	return nil
 }
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, discount int) error {
+func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
 	vatNames := map[int]int{
 		1:  24,
 		2:  13,
@@ -116,7 +116,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 		line.VatCategoryName = vatNames[line.VatCategory]
 		line.LineNumber = i + 1
 		if invoicetype != "9.3" && invoicetype != "8.1" {
-			if err := r.CalculateInvoiceLinePrices(line, discount); err != nil {
+			if err := r.CalculateInvoiceLinePrices(line, buyer.Discount); err != nil {
 				return err
 			}
 			line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
@@ -140,8 +140,8 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 			return err
 		}
 	}
-	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
-	summary.TotalGrossValue = utils.RoundTo2(summary.TotalGrossValue)
+	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
+	buyer.NewBalance = buyer.OldBalance + summary.TotalGrossValue
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
@@ -282,8 +282,9 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
 	case "8.1":
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
-		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_2"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_8"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
+		invoiceinfo.Invoiceinfo.VatCategory = 8
 	case "9.3":
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
 		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category3"
@@ -312,13 +313,17 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
 	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
 	finalInvoice.LogoImage = r.logo
-	// fmt.Println("this is the image base 64", finalInvoice.LogoImage)
-	// finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64("http://localhost:8080")
 	if err != nil {
 		return nil, err
 	}
 
-	invoicehtmltemp := filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	var invoicehtmltemp string
+	switch finalInvoice.InvoiceHeader.InvoiceType {
+	case "8.1":
+		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "reciept_invoice.page.html")
+	default:
+		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	}
 	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)
@@ -330,7 +335,6 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 		log.Println(err)
 	}
 
-	// fmt.Println(buf.String())
 	pdf, err = utils.HTMLtoPDF2(buf.String())
 	if err != nil {
 		return nil, err

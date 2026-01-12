@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice PDF</title>
+</head>
+
+<body>
+
+    <section class="header">
+        <img class="logo" src="data:image/png;base64,{{ .Invoice.LogoImage }}" />
+        <div class="seller">
+            <p class="seller-name">{{- .Invoice.Seller.Name -}}</p>
+            <p class="seller-address">
+                <strong> {{.Invoice.Seller.Address2.Street}}
+                    {{.Invoice.Seller.Address2.Number}}
+                </strong>
+                {{.Invoice.Seller.Address2.PostalCode}}
+                {{.Invoice.Seller.Address2.City}}
+            </p>
+            <p class="postal-address"><strong>ΔΙΕΥΘΥΝΣΗ ΑΛΛΗΛΟΓΡΑΦΙΑΣ :</strong>{{.Invoice.Seller.PostalAddress.Naming}}
+                {{.Invoice.Seller.PostalAddress.Cellnumber}}
+                {{.Invoice.Seller.PostalAddress.PostalCode}}
+                {{.Invoice.Seller.PostalAddress.City}}
+            </p>
+            <p class="seller-phone"><strong>ΤΗΛ. :</strong> {{.Invoice.Seller.Phone}} Whats App :
+                {{.Invoice.Seller.Mobile_Phone}}</p>
+            <p class="seller-email"><strong> E-MAIL :</strong> {{.Invoice.Seller.Email}} www.pastry.blogspot.com
+            </p>
+            <p class="seller-Vat"><strong>Α.Φ.Μ. :</strong> {{.Invoice.Seller.VatNumber}} <strong>Δ.Ο.Υ. :</strong>
+                {{.Invoice.Seller.DOI}}</p>
+            <p class="seller-GEMI"><strong>ΓΕΜΗ :</strong> {{.Invoice.Seller.GEMI}}</p>
+        </div>
+        <img class="qr" src="data:image/png;base64,{{ .Invoice.QrBase64 }}">
+    </section>
+
+
+    <section class="invoice-header">
+        <table class="invoice-header-table">
+            <colgroup>
+                <col style="width: 50%;">
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 8%;">
+            </colgroup>
+            <tr class="Hhead">
+                <th class="Hempty"></th>
+                <th class="series">ΣΕΙΡΑ - ΑΡΙΘΜΟΣ</th>
+                <th class="date">ΗΜΕΡΟΜΗΝΙΑ</th>
+                <th class="time">ΩΡΑ</th>
+            </tr>
+            <tr class="Hdata">
+                <td></td>
+                <td>{{.Invoice.InvoiceHeader.IssueDate}}</td>
+                <td>{{.Invoice.InvoiceHeader.Series}}-{{.Invoice.InvoiceHeader.Aa}}</td>
+                <td>{{.Invoice.InvoiceHeader.Time}}</td>
+            </tr>
+        </table>
+
+    </section>
+
+
+
+
+
+    <section class="customer-delivery">
+        <table class="byer-delivery-table">
+            <colgroup>
+                <col style="width: 45%;">
+                <col style="width: 55%;">
+            </colgroup>
+            <tr class="BDhead">
+                <th class="byer">ΣΤΟΙΧΕΙΑ ΠΕΛΑΤΗ</th>
+                <th class="delivery">ΣΧΕΤΙΚΑ ΠΑΡΑΣΤΑΤΙΚΑ</th>
+            </tr>
+            <tr class="BDdata">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΚΩΔΙΚΟΣ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.CodeNumber}}
+                        </span>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="BDdata name">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΕΠΩΝΥΜΙΑ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.Name}}
+                        </span>
+                    </div>
+                </td>
+                <td class="empty"></td>
+            </tr>
+            <tr class="BDdata work">
+                <td>ΕΠΑΓΓΕΛΜΑ :</td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.InvoiceHeader.MovePurposeName}}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="BDdata address">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΟΔΟΣ / ΑΡΙΘΜ. :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.Address.Street}}
+                            {{.Invoice.Byer.Address.Number}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΤΟΠΟΣ ΑΠΟΣΤΟΛΗΣ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Seller.Address2.Street}}
+                            {{.Invoice.Seller.Address2.Number}}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="BDdata city">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΠΟΛΗ / Τ.Κ. :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.Address.City}}
+                            {{.Invoice.Byer.Address.PostalCode}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΤΟΠΟΣ ΠΡΟΟΡΙΣΜΟΥ :</span>
+                        <span class="BDdata-value">
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="BDdata phone">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΤΗΛΕΦΩΝΟ :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.Phone}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΠΟΛΗ :</span>
+                        <span class="BDdata-value">
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="BDdata vat">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">Α.Φ.Μ. :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.VatNumber}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΤΡΟΠΟΣ ΑΠΟΣΤΟΛΗΣ :</span>
+                        <span class="BDdata-value">
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr class="BDdata doi">
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">Δ.Ο.Υ. :</span>
+                        <span class="BDdata-value">
+                            {{.Invoice.Byer.DOI}}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="BDdata-row">
+                        <span class="BDdata-title">ΤΡΟΠΟΣ ΠΛΗΡΩΜΗΣ :</span>
+                        <span class="BDdata-value">
+                            {{if ne .Invoice.PaymentMethods nil}}
+                            {{(index .Invoice.PaymentMethods.Details 0).Name}}
+                            {{if ne (index .Invoice.PaymentMethods.Details
+                            0).Due ""}}
+                            ({{(index .Invoice.PaymentMethods.Details
+                            0).Due}})
+                            {{end}}
+                            {{end}}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    </section>
+
+    <section class="invoice-details">
+        <table class="invoice-details-table">
+            <colgroup>
+                <col style="width: 7%;">
+                <col style="width: 30%;">
+                <col style="width: 2%;">
+                <col style="width: 10%;">
+                <col style="width: 11%;">
+                <col style="width: 10%;">
+                <col style="width: 1%;">
+                <col style="width: 5%;">
+                <col style="width: 10%;">
+                <col style="width: 1%;">
+                <col style="width: 7%;">
+            </colgroup>
+            <tr class="Dhead">
+                <th class="Hempty">ΚΩΔΙΚΟΣ</th>
+                <th class="Hempty">ΠΕΡΙΓΡΑΦΗ</th>
+                <th class="Hempty">Μ.Μ.</th>
+                <th class="Hempty">ΠΟΣΟΤΗΤΑ</th>
+                <th class="Hempty">ΤΙΜΗ ΜΟΝΑΔΟΣ</th>
+                <th class="Hempty">ΑΞΙΑ ΠΡΙΝ</th>
+                <th class="Hempty">ΕΚΠ%</th>
+                <th class="Hempty">ΕΚΠΤΩΣΗ</th>
+                <th class="series">ΑΞΙΑ</th>
+                <th class="date">ΦΠΑ%</th>
+                <th class="time">ΦΠΑ</th>
+            </tr>
+            {{range .Invoice.InvoiceDetails}}
+            <tr class="Ddata">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{.NetValue}}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {{end}}
+            {{range .Invoice.InvoiceSummary.Emptylines}}
+            <tr class="Ddata">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {{end}}
+            <tr class="Ddata last">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <div class="footer-tables">
+            <!-- this is a section it is going to be made up of 3 seperate tables  -->
+            <!-- one for balance, one for vat and one for the discount. FUCKING HELL -->
+            <!-- lets just incorporate the notice as well over here then  -->
+            <table class="balance-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tr>
+                    <th class="balancehead">ΠΡΟΗΓΟΥΜΕΝΟ ΥΠΟΛΟΙΠΟ</th>
+                    <td class="balancedata first">{{.Invoice.Byer.OldBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΝΕΟ ΥΠΟΛΟΙΠΟ</th>
+                    <td class="balancedata end">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
+                </tr>
+                <tr>
+                    <th class="balanceredhead">ΣΥΝΟΛΙΚΗ ΠΟΣΟΤΗΤΑ</th>
+                    <td class="balancedata">{{.Invoice.Byer.NewBalance}}</td>
+                </tr>
+                <tr>
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr>
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr class="balance-end">
+                    <th class="balancewhitehead"></th>
+                    <td class="balancedata"></td>
+                </tr>
+            </table>
+
+            <table class="vat-table">
+                <colgroup>
+                    <col style="width: 28%;">
+                    <col style="width: 16%;">
+                    <col style="width: 28%;">
+                    <col style="width: 28%;">
+                </colgroup>
+                <tr>
+                    <th colspan="4" class="vathead first">ΑΝΑΛΥΣΗ Φ.Π.Α.</th>
+                </tr>
+                <tr>
+                    <th class="vathead">ΑΞΙΑ</th>
+                    <th class="vathead">% Φ.Π.Α.</th>
+                    <th class="vathead">Φ.Π.Α.</th>
+                    <th class="vathead">ΣΥΝΟΛΟ</th>
+                </tr>
+                <tr class="firstvatdata">
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalNetValue}}</td>
+                    <td class="vatdata">?</td>
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalVatAmount}}</td>
+                    <td class="vatdata">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
+                </tr>
+                <tr>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                </tr>
+                <tr>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                    <td class="vatdata"></td>
+                </tr>
+            </table>
+            <table class="discount-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tr>
+                    <th class="balancehead">ΑΞΙΑ ΠΡΟ ΕΚΠΤΩΣΗΣ</th>
+                    <td class="balancedata first"></td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΕΚΠΤΩΣΗ</th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΣΥΝΟΛΙΚΗ ΑΞΙΑ</th>
+                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalNetValue}}</td>
+                </tr>
+                <tr>
+                    <th class="balancehead">ΣΥΝΟΛΙΚΟ Φ.Π.Α.</th>
+                    <td class="balancedata"></td>
+                </tr>
+                <tr class="balance-end">
+                    <th class="balanceredhead">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>
+                    <td class="balancedata end">{{.Invoice.InvoiceSummary.TotalGrossValue}}</td>
+                </tr>
+            </table>
+        </div>
+        <table class="notes-table">
+            <tr>
+                <th class="noteshead">ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+            </tr>
+            <tr>
+                <td class="notesdata"></td>
+            </tr>
+        </table>
+        <div class="terms">
+            <strong>ΟΡΟΙ ΠΩΛΗΣΗΣ:</strong>Παρακαλούμε να ελέγχετε τον αριθμό φορολογικού μητρώου (ΑΦΜ) σας και σε
+            περιπτωση διαφωνίας ενημερώστε μας εγγράφως - Τα εμπορεύματα ταξιδεύουν για λογαριασμό & κίνδυνο του
+            αγοραστή - Για κάθε διαφορά από την παρούσα συνναλαγή αρμόδια είναι τα Δικαστήρια Αθηνών - Τα εμπορεύματα
+            παραμένουν στην κυριότητα του πωλητή μέχρι την πλήρη εξόφλησή τους. Εξόφληση του παρόντος μόνο με απόδειξη
+            της Εταιρείας εκτός τιμολογίου μετρητοίς - Τα εμπορεύματα παραδίδονται στο πεζοδρόμιο μπροστά στην πόρτα του
+            παραλήπτη - Σε περίπτωση ελλιπούς παράδοσης ζητήστε από τον μεταφορέα να σας υπογράψει για την διαφορά -
+            Επιστροφές δεν γίνονται δεκτές.
+        </div>
+    </section>
+
+
+    <section class="footer">
+        <table class="bank-accounts">
+            <colgroup>
+                <col style="width: 30%;">
+                <col style="width: 80%;">
+            </colgroup>
+            <tr>
+                <th class="BAhead first" colspan="2">ΤΡΑΠΕΖΙΚΟΙ ΛΟΓΑΡΙΑΣΜΟΙ</th>
+            </tr>
+            <tr>
+                <th class="BAhead">ΠΕΙΡΑΙΩΣ</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">EUROBANK</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">ALPHA BANK</th>
+                <td class="BAdata"></td>
+            </tr>
+            <tr>
+                <th class="BAhead">OPTIMA</th>
+                <td class="BAdata"></td>
+            </tr>
+        </table>
+        <div class="signature">
+            Ο ΕΚΔΟΣΑΣ
+        </div>
+        <div class="signature buyer">
+            (ΕΛΑΒΑ ΓΝΩΣΗ ΤΩΝ ΠΑΡΑΠΑΝΩ ΟΡΩΝ)<br>
+            Ο ΠΑΡΑΛΑΒΩΝ
+        </div>
+    </section>
+
+</body>
+
+<style>
+    html,
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 3px 13px;
+    }
+
+    * {}
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+    }
+
+    .seller {
+        margin-top: 27px;
+        font-size: 9px;
+    }
+
+
+    .seller p {
+        margin: 0%;
+    }
+
+
+    .seller p strong {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        margin: 0%;
+        display: inline-block;
+    }
+
+    .seller-name {
+        font-weight: 600;
+        margin: 0%;
+        display: inline-block;
+        font-size: 13px;
+    }
+
+    .seller-name strong {
+        margin: 0%;
+        display: inline-block;
+        font-size: 13px;
+    }
+
+    .logo {
+        margin-top: 12px;
+        height: 127px;
+        width: auto;
+    }
+
+    .qr {
+        width: 140px;
+        height: 140px;
+    }
+
+    td {
+        border: 1px solid black;
+    }
+
+    .Hhead {
+        background: rgb(245, 15, 45);
+        color: white;
+    }
+
+    .Hhead th {
+        border-left: 1px solid rgb(245, 15, 45);
+        border-right: 1px solid rgb(245, 15, 45);
+        font-weight: 100;
+        font-size: 9px;
+        padding: 4px;
+        padding-bottom: 3px;
+    }
+
+    .Hdata td {
+        font-weight: 100;
+        font-size: 12px;
+        padding: 4px;
+        text-align: right;
+    }
+
+    .invoice-header-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .BDhead {
+        background: black;
+        color: white;
+    }
+
+    .BDhead .delivery {
+        padding-left: 13px;
+        text-align: left;
+    }
+
+    .BDhead th {
+        border-left: 1px solid black;
+        font-weight: 100;
+        font-size: 9px;
+        padding: 8px;
+        padding-bottom: 5px;
+    }
+
+    .BDdata td {
+        font-weight: 100;
+        font-size: 8.7px;
+        text-align: left;
+        padding: 2px;
+    }
+
+    .BDdata.name .empty {
+        border-bottom: 1px solid black;
+    }
+
+    .byer-delivery-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+    .byer-delivery-table td {
+        border: none;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+
+    .BDdata-row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .BDdata.doi td {
+        border-bottom: 1px solid black;
+    }
+
+    .invoice-details-table {
+        margin-top: 5px;
+        width: 100%;
+        height: 460px;
+        border-collapse: collapse;
+    }
+
+    .Dhead {
+        background: black;
+        color: white;
+    }
+
+    .Ddata td {
+        font-size: 8px;
+        text-align: right;
+        height: 12px;
+        margin: 0px;
+        border: none;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        padding: 0px 2px;
+    }
+
+    .Ddata.last td {
+        border-bottom: 1px solid black;
+    }
+
+    .Dhead th {
+        border-left: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        height: 12px;
+    }
+
+    .footer-tables {
+        height: 120px;
+        margin-top: 5px;
+        display: flex;
+    }
+
+    .balance-table {
+        width: 33%;
+        border-collapse: collapse;
+    }
+
+    .balancehead {
+        text-align: left;
+        background: black;
+        color: white;
+        border: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        padding-left: 4px;
+        height: 12px;
+    }
+
+    .balancedata {
+        border: none;
+        border-right: 1px solid black;
+        text-align: right;
+        font-size: 10px;
+        padding-right: 2px;
+    }
+
+    .balancedata.end {
+        border-bottom: 1px solid black;
+    }
+
+    .balancedata.first {
+        border-top: 1px solid black;
+    }
+
+    .balanceredhead {
+        text-align: left;
+        background: rgb(245, 15, 45);
+        color: white;
+        border: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        padding-left: 4px;
+        height: 12px;
+    }
+
+    .balancewhitehead {
+        border: none;
+        border-left: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        height: 12px;
+    }
+
+    .balance-end {
+        border-bottom: 1px solid black;
+    }
+
+
+    .vat-table {
+        width: 40%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+
+    .vathead {
+        background: rgb(235, 15, 45);
+        color: white;
+        border: none;
+        border-bottom: 1px solid black;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 2px;
+        height: 20px;
+    }
+
+    .vathead.first {
+        border: 1px solid black;
+    }
+
+    .vatdata {
+        border: none;
+        border-right: 1px solid black;
+        text-align: center;
+        padding: 0px 2px;
+        font-size: 10px;
+    }
+
+    .firstvatdata {
+        height: 23px;
+    }
+
+    .discount-table {
+        width: 27%;
+        border-collapse: collapse;
+    }
+
+    .notes-table {
+        height: 50px;
+        border: 1px solid black;
+        border-top: none;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .noteshead {
+        border: none;
+        font-weight: 100;
+        font-size: 8.4px;
+        padding: 2px 6px;
+        height: 20px;
+        text-align: left;
+    }
+
+    .notesdata {
+        border: none;
+    }
+
+    .terms {
+        margin: 5px 0px;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 7.3px;
+        letter-spacing: -0.4px;
+    }
+
+    .footer {
+        display: flex;
+    }
+
+    .bank-accounts {
+        width: 45%;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .BAhead {
+        font-size: 9px;
+        font-weight: 100;
+        text-align: left;
+        border-top: 1px solid black;
+        border-left: 1px solid black;
+        border-bottom: 1px solid black;
+        padding-bottom: 0px;
+        margin: none;
+        padding-left: 5px;
+    }
+
+    .BAhead.first {
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .BAdata {
+        margin: none;
+        padding: 0px;
+        border: none;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+
+    .signature {
+        font-size: 9px;
+        text-align: center;
+        padding: 5px 0px;
+        padding-left: 70px;
+        height: 20px;
+    }
+
+    .signature.buyer {
+        padding-left: 50px;
+    }
+</style>
+
+
+</html>

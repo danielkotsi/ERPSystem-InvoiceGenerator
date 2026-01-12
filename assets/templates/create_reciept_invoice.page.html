@@ -59,6 +59,16 @@
 			<label>Τύπος Οντότητας: <input type="number" name="seller.entityType"
 					value="{{.Info.User}}"></label><br>
 
+			<fieldset>
+				<legend>Διεύθηνση Πωλητή</legend>
+				<label>Δρόμος: <input type="text" name="seller.address2.street"
+						value="{{.Info.User.Address.Street}}"></label><br>
+				<label>Αριθμός: <input type="text" name="seller.address2.number"
+						value="{{.Info.User.Address.Number}}"></label><br>
+				<label>Πόλη: <input type="text" name="seller.address2.city" value="{{.Info.User.Address.City}}"></label><br>
+				<label>Τ.Κ.: <input type="text" name="seller.address2.postalCode"
+						value="{{.Info.User.Address.PostalCode}}"></label><br>
+			</fieldset>
 		</fieldset>
 
 		<!-- ===== Buyer (Counterpart) ===== -->
@@ -98,23 +108,11 @@
 			<legend>Λεπτομέρειες Παραστατικού</legend>
 			<div id="invoiceDetails">
 				<div class="line-item">
-					<label>Όνομα Προϊόντος: <input type="text" autocomplete="off"
-							id="product_name_input-0"
-							name="invoiceDetails[0].name"></label><br>
-					<div id="product-suggestions-0" class="suggestions"></div>
-					<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off"
-							id="product_code_input-0"
-							name="invoiceDetails[0].codeNumber"></label><br>
-					<label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-0"
-							name="invoiceDetails[0].discountOption"
-							class="discount-option"></label><br>
-					<label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-0"
-							step="0.01" name="invoiceDetails[0].unitNetPrice"></label><br>
-					<label>Έκπτωση: <input type="number" id="customersDiscount" step="1"
-							name="buyer.discount"></label><br>
+					<label>Αξία: <input type="number" id="product_unit_net_price-0"
+							step="0.01" name="invoiceDetails[0].netValue"></label><br>
 					<label>Κατηγορία Φορολόγησης: <input type="text" autocomplete="off"
 							id="product_vatCategory-0"
-							name="invoiceDetails[0].vatCategory"></label><br>
+							name="invoiceDetails[0].vatCategory" value="{{.Info.Invoiceinfo.VatCategory }}"></label><br>
 					<div id="vatCategory-suggestions" class="suggestions"></div>
 					<!-- IncomeClassification -->
 					<label>Τύπος Κατάταξης Εσόδων: <input type="text" autocomplete="off"

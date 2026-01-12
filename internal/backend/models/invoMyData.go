@@ -25,23 +25,25 @@ type Invoice struct {
 }
 
 type Company struct {
-	CodeNumber    string        `json:"codeNumber" form:"codeNumber" xml:"-"`
-	DOI           string        `json:"doi" form:"doi" xml:"-"`
-	GEMI          string        `json:"gemi" form:"gemi" xml:"-"`
-	Phone         string        `json:"phone" form:"phone" xml:"-"`
-	Mobile_Phone  string        `json:"mobile_phone" form:"mobile_phone" xml:"-"`
-	Email         string        `json:"email" form:"email" xml:"-"`
-	PostalAddress PostalCell    `json:"postalAddress" form:"postalAddress" xml:"-"`
-	VatNumber     string        `json:"vatNumber" form:"vatNumber" xml:"vatNumber,omitempty"`
-	Country       string        `json:"country" form:"country" xml:"country,omitempty"`
-	Branch        int           `json:"branch" form:"branch" xml:"branch"`
-	Name          *string       `json:"name" form:"name" xml:"name"`
-	Address       *AddressType  `json:"address" form:"address" xml:"address,omitempty"`
-	Discount      int           `json:"discount" form:"discount" xml:"-"`
-	OldBalance    float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
-	NewBalance    float64       `json:"newBalance" form:"newBalance" xml:"-"`
-	TotalBalance  float64       `json:"totalBalance" form:"totalBalance" xml:"-"`
-	BankAccounts  []BankAccount `json:"bankAccounts" form:"bankAccounts" xml:"-"`
+	CodeNumber    string       `json:"codeNumber" form:"codeNumber" xml:"-"`
+	DOI           string       `json:"doi" form:"doi" xml:"-"`
+	GEMI          string       `json:"gemi" form:"gemi" xml:"-"`
+	Phone         string       `json:"phone" form:"phone" xml:"-"`
+	Mobile_Phone  string       `json:"mobile_phone" form:"mobile_phone" xml:"-"`
+	Email         string       `json:"email" form:"email" xml:"-"`
+	PostalAddress PostalCell   `json:"postalAddress" form:"postalAddress" xml:"-"`
+	VatNumber     string       `json:"vatNumber" form:"vatNumber" xml:"vatNumber,omitempty"`
+	Country       string       `json:"country" form:"country" xml:"country,omitempty"`
+	Branch        int          `json:"branch" form:"branch" xml:"branch"`
+	Name          *string      `json:"name" form:"name" xml:"name"`
+	Address       *AddressType `json:"address" form:"address" xml:"address,omitempty"`
+	Address2      *AddressType `json:"address2" form:"address2" xml:"-"`
+	// this is going to be needed if we want to keep the address in reciept and generally when we dont want to marshall it to the xml
+	Discount     int           `json:"discount" form:"discount" xml:"-"`
+	OldBalance   float64       `json:"oldBalance" form:"oldBalance" xml:"-"`
+	NewBalance   float64       `json:"newBalance" form:"newBalance" xml:"-"`
+	TotalBalance float64       `json:"totalBalance" form:"totalBalance" xml:"-"`
+	BankAccounts []BankAccount `json:"bankAccounts" form:"bankAccounts" xml:"-"`
 }
 
 // BankAccounts for cusotmers and branchcompanies might not be needed

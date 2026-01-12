@@ -29,3 +29,7 @@ TO DO :
 <!-- -PaymentMethod must be passed with the readble type not the number that it corresponds -->
 <!-- -make the add product in greek -->
 -Pass the values about the products and the prices into the final invoice
+-fix(calculate) payment amount
+-need a different pdf generating html for the reciept and probably for the selling invoice as well
+reciept invoice vat cat. 8
+inc cat 1_8

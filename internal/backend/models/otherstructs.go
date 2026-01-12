@@ -19,4 +19,5 @@ type invoforminfo struct {
 	IncomeClassificationType string
 	IncomeClassificationCat  string
 	IsDeliveryNote           bool
+	VatCategory              int
 }

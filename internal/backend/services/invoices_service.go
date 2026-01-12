@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"encoding/xml"
 	"net/http"
 )
 
