@@ -132,9 +132,8 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 			summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
 		}
 		if invoicetype == "8.1" {
-			line.NetValue = 2.0
 			line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
-			summary.TotalNetValue = 2.0
+			summary.TotalNetValue = line.NetValue
 		}
 		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
