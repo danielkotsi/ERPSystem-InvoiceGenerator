@@ -32,5 +32,6 @@ TO DO :
 -fix(calculate) payment amount
 -need a different pdf generating html for the reciept and probably for the selling invoice as well
 -need to calculate the new balance differently for the reciepts and also check whether it is epi pistosi or not in order to highten it
+-need to calculate expenses classification seperately for buying invoice
 reciept invoice vat cat. 8
 inc cat 1_8
