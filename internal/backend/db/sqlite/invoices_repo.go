@@ -117,26 +117,38 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 }
 
 func (r *InvoiceRepo) CalculateBuyingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+	emptylines := 24
+	for i, line := range invoicelines {
+		emptylines--
+		line.VatCategoryName = utils.VatNames(line.VatCategory)
+		line.LineNumber = i + 1
+		//this should be changed in order to calculate the expense classification instead
+		if err := r.CalculateSellingInvoiceLinePrices(line, buyer.Discount); err != nil {
+			return err
+		}
+		line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
+		summary.TotalDiscount += line.DiscountAmount
+		summary.TotalNetBeforeDiscount += line.TotalNetBeforeDiscount
+		summary.TotalNetBeforeDiscount = utils.RoundTo2(summary.TotalNetBeforeDiscount)
+		summary.TotalNetValue += line.NetValue
+		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
+		summary.TotalVatAmount += line.VatAmount
+		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
+		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+			return err
+		}
+	}
+	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
+	// buyer.NewBalance = buyer.OldBalance + summary.TotalGrossValue
+	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
 
 func (r *InvoiceRepo) CalculateSellingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
-	vatNames := map[int]int{
-		1:  24,
-		2:  13,
-		3:  6,
-		4:  17,
-		5:  9,
-		6:  4,
-		7:  0,
-		8:  0,
-		9:  3,
-		10: 4,
-	}
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
-		line.VatCategoryName = vatNames[line.VatCategory]
+		line.VatCategoryName = utils.VatNames(line.VatCategory)
 		line.LineNumber = i + 1
 		if err := r.CalculateSellingInvoiceLinePrices(line, buyer.Discount); err != nil {
 			return err
@@ -182,25 +194,13 @@ func (r *InvoiceRepo) CalculateRecieptInvoiceLines(invoicetype string, invoiceli
 // }
 
 func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow, discount int) error {
-	amount := map[int]float64{
-		1:  0.24,
-		2:  0.13,
-		3:  0.06,
-		4:  0.17,
-		5:  0.09,
-		6:  0.04,
-		7:  0.00,
-		8:  0.00,
-		9:  0.03,
-		10: 0.04,
-	}
 	line.Discount = float64(discount)
 	floatdiscount := float64(discount) / 100
 
 	totalNetPriceBeforeDiscount := *line.Quantity * line.UnitNetPrice
 	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
 	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
-	vatAfterDiscount := totalNetPriceAfterDiscount * amount[line.VatCategory]
+	vatAfterDiscount := totalNetPriceAfterDiscount * utils.Vat(line.VatCategory)
 
 	line.TotalNetBeforeDiscount = utils.RoundTo2(totalNetPriceBeforeDiscount)
 	line.NetValue = utils.RoundTo2(totalNetPriceAfterDiscount)
@@ -230,27 +230,13 @@ func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.Cla
 }
 
 func (r *InvoiceRepo) CalculateSellingInvoiceLinePrices(line *models.InvoiceRow, discount int) error {
-	amount := map[int]float64{
-		1:  0.24,
-		2:  0.13,
-		3:  0.06,
-		4:  0.17,
-		5:  0.09,
-		6:  0.04,
-		7:  0.00,
-		8:  0.00,
-		9:  0.03,
-		10: 0.04,
-	}
 	line.Discount = float64(discount)
 	floatdiscount := float64(discount) / 100
 
 	totalNetPriceBeforeDiscount := *line.Quantity * line.UnitNetPrice
 	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
 	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
-	// vatBeforeDiscount := totalNetPriceBeforeDiscount * amount[line.VatCategory]
-	vatAfterDiscount := totalNetPriceAfterDiscount * amount[line.VatCategory]
-	// line.TotalAfterDiscount = totalNetPriceAfterDiscount
+	vatAfterDiscount := totalNetPriceAfterDiscount * utils.Vat(line.VatCategory)
 
 	line.TotalNetBeforeDiscount = utils.RoundTo2(totalNetPriceBeforeDiscount)
 	line.NetValue = utils.RoundTo2(totalNetPriceAfterDiscount)
