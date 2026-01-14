@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/backend/repos"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -21,14 +20,28 @@ func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo
 	}
 }
 
+func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, r *http.Request) (invoiceinfo models.InvoiceHTMLinfo, invoiceHTML string, err error) {
+	invoicetype := r.URL.Query().Get("invoice_type")
+
+	invoiceTypes := map[string]string{
+		"1.1":  "create_selling_invoice.page.html",
+		"13.1": "create_buying_invoice.page.html",
+		"9.3":  "create_deliverynote_invoice.page.html",
+		"8.1":  "create_reciept_invoice.page.html",
+	}
+	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
+	if err != nil {
+		return invoiceinfo, invoiceTypes[invoicetype], err
+	}
+	return invoiceinfo, invoiceTypes[invoicetype], nil
+}
+
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
 	var invo models.Invoice
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("hello this is the invo from the form", invo)
-
 	err = s.Invoice.CompleteInvoice(ctx, &invo)
 	if err != nil {
 		return nil, err
@@ -37,8 +50,10 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("\n\n\nthis is the invo QrCodeURL \n\n", invo.QrURL)
-
+	err = s.Invoice.UpdateDB(ctx, invo.Byer.NewBalance, invo.Byer.CodeNumber, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	if err != nil {
+		return nil, err
+	}
 	pdf, err = s.Invoice.MakePDF(ctx, &invo)
 	if err != nil {
 		return nil, err

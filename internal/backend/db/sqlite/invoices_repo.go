@@ -6,110 +6,117 @@ import (
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"html/template"
 	"log"
-	"time"
+	"path/filepath"
 )
 
 type InvoiceRepo struct {
-	DB *sql.DB
+	DB      *sql.DB
+	abspath string
+	logo    string
 }
 
-func NewInvoiceRepo(db *sql.DB) *InvoiceRepo {
-	return &InvoiceRepo{DB: db}
+func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
+	return &InvoiceRepo{DB: db, abspath: abspath, logo: logo}
 }
 
 func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
-	invo.Seller.Address = nil
+	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
+		return err
+	}
+	if err := r.GetBuyerBalance(ctx, &invo.Byer); err != nil {
+		return err
+	}
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceDetails, &invo.InvoiceSummary); err != nil {
+	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.PaymentMethods, invo.InvoiceDetails, &invo.InvoiceSummary, &invo.Byer); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary) error {
-	for i, line := range invoicelines {
-		line.LineNumber = i + 1
-		if err := r.CalculateInvoiceLinePrices(line); err != nil {
-			return err
-		}
-		summary.TotalNetValue += line.NetValue
-		summary.TotalVatAmount += line.VatAmount
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
-			return err
-		}
-	}
-	summary.TotalGrossValue = summary.TotalNetValue + summary.TotalVatAmount
-	return nil
-}
-
-func (r *InvoiceRepo) CalculateInvoiceLinePrices(line *models.InvoiceRow) error {
-	amount := map[int]float64{
-		1: 0.24,
-		2: 0.13,
-	}
-	line.NetValue = line.Quantity * line.UnitNetPrice
-	line.VatAmount = line.Quantity * line.UnitNetPrice * amount[line.VatCategory]
-
-	return nil
-}
-
-func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem models.ClassificationItem, summary *models.InvoiceSummary) error {
-	index, exists := r.ClassificationCategoryExists(classificationItem, summary.IncomeClassification)
-	if exists {
-		summary.IncomeClassification[index].Amount += classificationItem.Amount
-	} else {
-		summary.IncomeClassification = append(summary.IncomeClassification, classificationItem)
-	}
-	return nil
-}
-
-func (r *InvoiceRepo) ClassificationCategoryExists(classificationitem models.ClassificationItem, summary []models.ClassificationItem) (int, bool) {
-	for index, category := range summary {
-		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
-			return index, true
-		}
-	}
-
-	return 0, false
-}
-
-func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {
-	if err := r.CalculateAA(header); err != nil {
+func (r *InvoiceRepo) UpdateDB(ctx context.Context, buyerNewBalance float64, buyerCodeNumber, invoicetype, aa string) error {
+	if err := r.UpdateBalance(ctx, buyerCodeNumber, buyerNewBalance); err != nil {
 		return err
 	}
-	header.IssueDate = time.Now().Format("2006-01-02")
+	if err := r.AddToAA(ctx, invoicetype, aa); err != nil {
+		return err
+	}
 	return nil
 }
-func (r *InvoiceRepo) CalculateAA(header *models.InvoiceHeader) error {
-	header.Aa = "12"
-	return nil
+func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error) {
+	query := `
+select users.CodeNumber, 
+	NAME,
+	DOI,
+	GEMI,
+	Phone,
+	Mobile_Phone,
+	Email,
+	PostalCellName,
+	PostalCellNumber,
+	PostalCellPostalCode,
+	PostalCellCity,
+	AddStreet,
+	AddNumber, 
+	AddPostalCode,
+	AddCity,
+	VatNumber,
+	Country,
+	Branch,
+	series,
+	aa
+from users join user_invoice_types_series on users.CodeNumber==user_invoice_types_series.codeNumber where users.CodeNumber== ? and invoice_type==?;
+`
+	rows, err := r.DB.QueryContext(ctx, query, "COMP01", invoicetype)
+	if err != nil {
+		return invoiceinfo, err
+	}
+	defer rows.Close()
+
+	invoiceinfo.User.Address = &models.AddressType{}
+	for rows.Next() {
+		if err := rows.Scan(&invoiceinfo.User.CodeNumber, &invoiceinfo.User.Name, &invoiceinfo.User.DOI, &invoiceinfo.User.GEMI, &invoiceinfo.User.Phone, &invoiceinfo.User.Mobile_Phone, &invoiceinfo.User.Email, &invoiceinfo.User.PostalAddress.Naming, &invoiceinfo.User.PostalAddress.Cellnumber, &invoiceinfo.User.PostalAddress.PostalCode, &invoiceinfo.User.PostalAddress.City, &invoiceinfo.User.Address.Street, &invoiceinfo.User.Address.Number, &invoiceinfo.User.Address.PostalCode, &invoiceinfo.User.Address.City, &invoiceinfo.User.VatNumber, &invoiceinfo.User.Country, &invoiceinfo.User.Branch, &invoiceinfo.Invoiceinfo.Series, &invoiceinfo.Invoiceinfo.Aa); err != nil {
+			return invoiceinfo, err
+		}
+	}
+
+	err = r.CompleteHTMLinfo(&invoiceinfo, invoicetype)
+	if err != nil {
+		return invoiceinfo, err
+	}
+	return invoiceinfo, nil
 }
 
 func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
 	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
+	finalInvoice.LogoImage = r.logo
 	if err != nil {
 		return nil, err
 	}
 
-	tmpl, err := template.ParseFiles("../../assets/templates/invoice.page.html")
+	var invoicehtmltemp string
+	switch finalInvoice.InvoiceHeader.InvoiceType {
+	case "8.1":
+		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "reciept_invoice.page.html")
+	default:
+		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	}
+	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)
 	}
 
 	var buf bytes.Buffer
-	fmt.Println("this is the finalinvoice MARK", finalInvoice.MARK)
 	err = tmpl.Execute(&buf, map[string]models.Invoice{"Invoice": *finalInvoice})
 	if err != nil {
 		log.Println(err)
 	}
 
-	pdf, err = utils.HTMLtoPDF(buf.String())
+	pdf, err = utils.HTMLtoPDF2(buf.String())
 	if err != nil {
 		return nil, err
 	}

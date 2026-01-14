@@ -1,10 +1,8 @@
-import { vatCategories, measurementUnitCodes } from "./data.js"
-import { attachAutocomplete } from "./autocompletions.js"
-
-
-const form = document.getElementById('create-product-form');
+const form = document.getElementById('create-branch-form');
 const invoiceLink = document.querySelector(".invoice");
 const suggestionsBox = document.querySelector(".invoice-suggestions");
+
+// Example suggestions
 const suggestions = [
 	{ label: "Τιμολόγιο Πώλησης", href: "/makeaninvoice?invoice_type=1.1" },
 	{ label: "Τιμολογιο Αγοράς", href: "/makeaninvoice?invoice_type=13.1" },
@@ -36,13 +34,6 @@ document.addEventListener("click", (e) => {
 		suggestionsBox.style.display = "none";
 	}
 });
-
-
-
-attachAutocomplete('vat_category_input', vatCategories, 'vatCategoriesSuggestions');
-attachAutocomplete('measurementUnitInput', measurementUnitCodes, 'measurementUnitsSuggestions');
-
-
 
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();

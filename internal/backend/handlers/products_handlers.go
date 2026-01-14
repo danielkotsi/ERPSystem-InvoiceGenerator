@@ -26,9 +26,21 @@ func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "products.page.html", map[string]models.Products{"Products": resp}); err != nil {
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "products.page.html", map[string][]models.Product{"Products": resp}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
+}
+
+func (h *ProductsHandler) GetProductSuggestions(w http.ResponseWriter, r *http.Request) {
+
+	resp, err := h.ProductsService.ListProducts(r.Context(), r)
+	if err != nil {
+		log.Println(err)
+		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
 }
 
 func (h *ProductsHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {

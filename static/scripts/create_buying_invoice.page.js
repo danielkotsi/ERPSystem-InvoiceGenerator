@@ -1,13 +1,11 @@
 import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories, paymentMethodCodes, paymentDueCodes } from "./data.js"
-import { addAutocompletion, attachAutocomplete, addBranchCompletion } from "./autocompletions.js"
+import { addAutocompletion, attachAutocomplete } from "./autocompletions.js"
 
 
 const customersNameInput = document.getElementById('customersName')
 const productNameInput = document.getElementById('product_name_input-0')
-const branchesCodeInput = document.getElementById('branchCode')
 const customer_suggestionsDiv = document.getElementById("customers-suggestions");
 const product_suggestionsDiv = document.getElementById("product-suggestions-0");
-const branches_suggestionsDiv = document.getElementById("branchcompany-suggestions");
 
 const invoiceLink = document.querySelector(".invoice");
 const suggestionsBox = document.querySelector(".invoice-suggestions");
@@ -71,15 +69,6 @@ const product_fields = {
 	vatCategory: document.getElementById('product_vatCategory-0'),
 };
 
-const branches_fieldsmap = {
-	branchCode: document.getElementById('branchCode'),
-	name: document.getElementById('branchName'),
-	'address.street': document.getElementById('branchAddStreet'),
-	'address.number': document.getElementById('branchAddNumber'),
-	'address.postalCode': document.getElementById('branchAddPostalCode'),
-	'address.city': document.getElementById('branchCity'),
-
-};
 
 const addproductButton = document.getElementById('addrowbutton');
 //this is where it starts
@@ -103,11 +92,11 @@ function addLineItem() {
         <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory" required></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
-        <label>Τύπος Κατάταξης Εσόδων <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationType" value="E3_561_001" required></label><br>
+        <label>Τύπος Κατάταξης Εξόδων  <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].expensesClassification.classificationType" value="E3_561_001" required></label><br>
 	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category1_2" required></label><br>
+        <label>Κατηγορία Κατάταξης Εξόδων   <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].expensesClassification.classificationCategory" value="category1_2" required></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
-        <label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].incomeClassification.amount"></label><br>
+        <label>Ποσότητα Κατάταξης Εξόδων    : <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].expensesClassification.amount"></label><br>
   `;
 	document.getElementById('invoiceDetails').appendChild(div);
 
@@ -185,7 +174,6 @@ addproductButton.addEventListener('click', () => {
 
 
 
-addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies", branches_fieldsmap);
 addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields);
 addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields);
 

@@ -4,100 +4,156 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>InvoiceManager</title>
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/home.page.css" />
+  <link rel="stylesheet" href="/static/styles/styles.css" />
+  <link rel="stylesheet" href="/static/styles/customers.page.css" />
   </head>
 
 
   <body>
 
-    <nav class="navbar">
-			<a href="/customers" class="customers">Customers
-			</a>
-			<a href="/products" class="products">Products
-			</a>
-			<a href="/makeaninvoice" class="invoice">Make an invoice
-			</a>
-    </nav>
+<nav class="navbar">
+  <a href="/customers" class="customers">Αγοραστές</a>
+  <a href="/products" class="products">Προϊόντα</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Έκδοση Παραστατικού</a>
+    <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
+  </div>
+</nav>
+    <div class="search-container">
+    <form class="search-form" action="/customers" id="search-customers-form" method="GET" enctype="multipart/form/data">
+              <input type="text" name="search" id="customersearch" placeholder="Αναζήτηση Εταιρίας Πελάτη">
+        <button class="submit-btn" type="submit">Αναζήτηση</button>
+    </form>
+	<div id="customer-search-suggestions" class="suggestions"></div>
+    </div>
 
-    <form class="form" action="/customers/create" id="create-customer-form" method="POST" enctype="multipart/form-data">
+    <div class="line"></div>
+    <h3>Προσθήκη Εταιρίας Πελάτη</h3>
+    <form class="form create-form" action="/create/customer" id="create-customer-form" method="POST" enctype="multipart/form-data">
 
-              <input type="text" name="name" id="name" placeholder="Customer Name">
-              <input type="text" name="address.street" id="address.street" placeholder="Address_line1"></input> 
-              <input type="text" name="address.number" id="address.number" placeholder="Address_num1"></input> 
-              <input type="text" name="address.city" id="address.city" placeholder="City"></input> 
-              <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Postal_code"></input> 
-              <input type="text" name="country" id="country" placeholder="Country"></input> 
+              <input type="text" name="codeNumber" id="codeNumber" placeholder="Κωδικός Εταιρίας Πελάτη">
+              <input type="text" name="name" id="name" placeholder="Όνομα Εταιρίας Πελάτη">
+              <input type="text" name="doi" id="doi" placeholder="ΔΟΗ Εταιρίας Πελάτη">
+              <input type="text" name="gemi" id="gemi" placeholder="ΓΕΜΗ Εταιρίας Πελάτη">
+              <input type="text" name="address.street" id="address.street" placeholder="Οδός"></input> 
+              <input type="text" name="address.number" id="address.number" placeholder="Αριθμός"></input> 
+              <input type="text" name="address.city" id="address.city" placeholder="Πόλη"></input> 
+              <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Τ.Κ."></input> 
+              <input type="text" name="country" id="country" placeholder="Χώρα"></input> 
               <input type="email" name="email" id="email" placeholder="Email"></input> 
-              <input type="text" name="phone" id="phone" placeholder="Phone"></input> 
-              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Mobile_phone"></input> 
-              <input type="text" name="branch" id="branch" placeholder="Branch: 0 for basic branch"></input> 
-              <input type="text" name="entityType" id="entityType" placeholder="Entity Type"></input> 
-              <input type="text" name="vatNumber" id="vatNumber" placeholder="VAT"></input> 
-        <button class="submit-btn" type="submit">Add Customer</button>
+              <input type="text" name="phone" id="phone" placeholder="Τηλέφωνο"></input> 
+              <input type="text" name="discount" id="discount" placeholder="Έκπτωση"></input> 
+              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Κινητό Τηλέφφωνο"></input> 
+              <input type="text" name="branch" id="branch" placeholder="Παρακλάδι: 0 για κεντρική εταιρία"></input>
+              <input type="text" name="vatNumber" id="vatNumber" placeholder="ΑΦΜ"></input> 
+              <input type="number" step="0.01" name="oldBalance" id="oldBalance" placeholder="Υπολοιπο"></input> 
+        <button class="submit-btn" type="submit">Προσθήκη Εταιρίας Πελάτη</button>
 
     </form>
     <div class="line"></div>
-    {{range .Customers }}
-    <div class="customer-name">
-      ONOMA:{{.Name}}
-    </div>
-    {{if ne .Address nil}}
+    <h3>Αγοραστές</h3>
+{{range .Customers }}
+<div class="whole">
+      <form class="form edit-form" action="/edit/customer/{{.CodeNumber}}" id="edit-customer-form" method="POST" enctype="multipart/form-data">
+        <h3 class="edit-header">{{.Name}}</h3>
+
+              <input type="text" name="codeNumber" id="codeNumber" placeholder="Κωδικός Εταιρίας Πελάτη" value="{{.CodeNumber}}">
+              <input type="text" name="name" id="name" placeholder="Όνομα Εταιρίας Πελάτη" value="{{.Name}}">
+        <input type="text" name="doi" id="doi" placeholder="ΔΟΗ Εταιρίας Πελάτη" value="{{.DOI}}">
+        <input type="text" name="gemi" id="gemi" placeholder="ΓΕΜΗ Εταιρίας Πελάτη" value="{{.GEMI}}">
+              <input type="text" name="address.street" id="address.street" placeholder="Οδός" value="{{.Address.Street}}"></input> 
+              <input type="text" name="address.number" id="address.number" placeholder="Αριθμός" value="{{.Address.Number}}"></input> 
+        <input type="text" name="address.city" id="address.city" placeholder="Πόλη" value="{{.Address.City}}"></input> 
+              <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Τ.Κ." value="{{.Address.PostalCode}}"></input> 
+              <input type="text" name="country" id="country" placeholder="Χώρα" value="{{.Country}}"></input> 
+              <input type="email" name="email" id="email" placeholder="Email" value="{{.Email}}"></input> 
+              <input type="text" name="phone" id="phone" placeholder="Τηλέφωνο" value="{{.Phone}}"></input> 
+        <input type="text" name="discount" id="discount" placeholder="Έκπτωση" value="{{.Discount}}"></input> 
+              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Κινητό Τηλέφωνο" value="{{.Mobile_Phone}}"></input> 
+        <input type="text" name="branch" id="branch" placeholder="Παρακλάδι: 0 για κεντρική εταιρία" value="{{.Branch}}"></input>
+        <input type="text" name="vatNumber" id="vatNumber" placeholder="ΑΦΜ" value="{{.VatNumber}}"></input> 
+        <input type="number" step="0.01" name="oldBalance" id="oldBalance" placeholder="Υπολοιπο" value="{{.OldBalance}}"></input> 
+        <button class="submit-btn" type="submit">Επεξεργασία Εταιρίας Πελάτη</button>
+
+    </form>
+<a href="customers/byid/{{.CodeNumber}}" class="customer-card">
+      
+  <div class="Name">
+    <span class="customer-value">{{.Name}}</span>
+  </div>
+
+      <div class="info">
+  {{if ne .Address nil}}
     {{if and (ne .Address.Street nil) (ne .Address.Number nil)}}
-    <div class="customer-add1">
-      ODOS 1:{{.Address.Street}}
-      ARITHMOS:{{.Address.Number}}
-    </div>
+      <div class="customer-row">
+        <span class="customer-title">Οδός:</span>
+        <span class="customer-value">{{.Address.Street}} {{.Address.Number}}</span>
+      </div>
     {{end}}
     {{if ne .Address.City nil}}
-    <div class="customer-city">
-      POLI:{{.Address.City}}
-    </div>
+      <div class="customer-row">
+        <span class="customer-title">Πόλη:</span>
+        <span class="customer-value">{{.Address.City}}</span>
+      </div>
     {{end}}
     {{if ne .Address.PostalCode nil }}
-    <div class="customer-postal-code">
-      T.K.:{{.Address.PostalCode}}
-    </div>
+      <div class="customer-row">
+        <span class="customer-title">T.K.:</span>
+        <span class="customer-value">{{.Address.PostalCode}}</span>
+      </div>
     {{end}}
-    {{end}}
-    <div class="customer-country">
-      XORA:{{.Country}}
+  {{end}}
+
+  <div class="customer-row">
+    <span class="customer-title">Χώρα:</span>
+    <span class="customer-value">{{.Country}}</span>
+  </div>
+
+  {{if ne .Email nil}}
+    <div class="customer-row">
+      <span class="customer-title">Email:</span>
+      <span class="customer-value">{{.Email}}</span>
     </div>
-    {{if ne .Email nil}}
-    <div class="customer-email">
-      E-MAIL:{{.Email}}
+  {{end}}
+
+  {{if ne .Phone nil}}
+    <div class="customer-row">
+      <span class="customer-title">Τηλέφωνο:</span>
+      <span class="customer-value">{{.Phone}}</span>
     </div>
-    {{end}}
-    {{if ne .Phone nil}}
-    <div class="customer-phone">
-      TILEFONO:{{.Phone}}
+  {{end}}
+
+  {{if ne .Mobile_Phone nil}}
+    <div class="customer-row">
+      <span class="customer-title">Κινητό Τηλέφωνο:</span>
+      <span class="customer-value">{{.Mobile_Phone}}</span>
     </div>
-    {{end}}
-    {{if ne .Mobile_Phone nil}}
-    <div class="customer-mobile-phone">
-      KINITO TILEFONO:{{.Mobile_Phone}}
+  {{end}}
+
+  <div class="customer-row">
+    <span class="customer-title">ΑΦΜ:</span>
+    <span class="customer-value">{{.VatNumber}}</span>
+  </div>
+      </div>
+</a>
+                  <div class="delete-edit-container">
+                  <div name="delete-btn-container" class="delete-btn-container" id="{{.CodeNumber}}">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-btn">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+</svg>
+                  </div>
+
+                  <div name="edit-btn-container" class="edit-btn-container" id="{{.CodeNumber}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" name="edit-post-btn" class="edit-button"  id="{{.CodeNumber}}">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+</svg>
+                  </div>
+                  </div>
     </div>
-    {{end}}
-    <div class="customer-VAT">
-      AFM:{{.VatNumber}}
-    </div>
-    <div class="line">
-    </div>
-    {{end}}
+
+{{end}}
 
 
-<style>
-    .form{
-    margin:10px;
-    }
-.line{
-    margin:10px;
-    height:2px;
-    color:black;
-    background-color:black;
-    width:vw;
-}
-    </style>
 
  <script src="/static/scripts/customer.page.js"></script>
 	</body>

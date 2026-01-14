@@ -1,4 +1,4 @@
-import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories, paymentMethodCodes, paymentDueCodes } from "./data.js"
+import { descriptions, invoiceTypes, vatCategories, incomeClassificationTypes, incomeClassificationCategories, paymentMethodCodes } from "./data.js"
 import { addAutocompletion, attachAutocomplete, addBranchCompletion } from "./autocompletions.js"
 
 
@@ -68,7 +68,6 @@ const product_fields = {
 	measurementUnit: document.getElementById('product_measurementUnit-0'),
 	measurementUnitCode: document.getElementById('product_measurementUnitCode-0'),
 	unitNetPrice: document.getElementById('product_unit_net_price-0'),
-	vatCategory: document.getElementById('product_vatCategory-0'),
 };
 
 const branches_fieldsmap = {
@@ -82,7 +81,6 @@ const branches_fieldsmap = {
 };
 
 const addproductButton = document.getElementById('addrowbutton');
-//this is where it starts
 function addLineItem() {
 	const div = document.createElement('div');
 	const container = document.getElementById('invoiceDetails');
@@ -94,18 +92,14 @@ function addLineItem() {
 	<div id="product-suggestions-${lineItemIndex}" class="suggestions"></div>
 	<label>Κωδικός Προϊόντος: <input type="text" autocomplete="off" id="product_code_input-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].codeNumber" required></label><br>
         <label>Περιγραφή Προϊόντος: <input type="text" id="product_description-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].itemDescr" required></label><br>
-        <label>Επιλογή Έκπτωσης: <input type="text" id="discount-option-${lineItemIndex}" class="discount-option" name="invoiceDetails[${lineItemIndex}].discountOption"></label><br>
         <label>Ποσότητα: <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].quantity" required></label><br>
-        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnitName" required></label><br>
+        <label>Μονάδα Μέτρησης: <input type="text" id="product_measurementUnit-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnitName"></label><br>
         <label>Κωδικός Μον.Μέτρησης: <input type="number" id="product_measurementUnitCode-${lineItemIndex}" step="1" name="invoiceDetails[${lineItemIndex}].measurementUnit" required></label><br>
-        <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice" required></label><br>
-	<label>Έκπτωση: <input type="number" id="customersDiscount-${lineItemIndex}" class="discount" step="1" name="buyer.discount"></label><br>
-        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory" required></label><br>
+        <label>Καθαρή Αξία Μονάδας: <input type="number" id="product_unit_net_price-${lineItemIndex}" step="0.01" name="invoiceDetails[${lineItemIndex}].unitNetPrice"></label><br>
+        <label>Κατηγορία Φορολόγησης: <input type="text" id="product_vatCategory-${lineItemIndex}" name="invoiceDetails[${lineItemIndex}].vatCategory" value="8" required></label><br>
 	<div id="vatCategory-suggestions" class="suggestions"></div>
 	    <!-- IncomeClassification -->
-        <label>Τύπος Κατάταξης Εσόδων <input type="text" id="income_classification_type" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationType" value="E3_561_001" required></label><br>
-	<div id="income-classification-type-suggestions" class="suggestions"></div>
-        <label>Κατηγορία Κατάταξης Εσόδων <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category1_2" required></label><br>
+        <label>Κατηγορία Κατάταξης Εσόδων : <input type="text" id="income_classification_category" name="invoiceDetails[${lineItemIndex}].incomeClassification.classificationCategory" value="category3" required></label><br>
 	<div id="income-classification-category-suggestions" class="suggestions"></div>
         <label>Ποσότητα Κατάταξης Εσόδων : <input type="number" step="0.01" name="invoiceDetails[${lineItemIndex}].incomeClassification.amount"></label><br>
   `;
@@ -162,7 +156,6 @@ function reIndexLineItems() {
 		});
 	});
 }
-//this is where it ends
 
 addproductButton.addEventListener('click', () => {
 	addLineItem();
@@ -177,7 +170,6 @@ addproductButton.addEventListener('click', () => {
 		measurementUnit: document.getElementById('product_measurementUnit-' + (lineItemIndex - 1)),
 		measurementUnitCode: document.getElementById('product_measurementUnitCode-' + (lineItemIndex - 1)),
 		unitNetPrice: document.getElementById('product_unit_net_price-' + (lineItemIndex - 1)),
-		vatCategory: document.getElementById('product_vatCategory-' + (lineItemIndex - 1)),
 	};
 	addAutocompletion(productwithIndexNameInput, productwithIndexsuggestionsDiv, 'suggestions/products?search=', productwithIndexfields);
 
@@ -190,49 +182,8 @@ addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/cust
 addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields);
 
 
-attachAutocomplete('paymentdue-input', paymentDueCodes, 'paymentdue-suggestions');
 
 attachAutocomplete('paymentmethods-input', paymentMethodCodes, 'paymentmethods-suggestions');
 attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
 attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
 attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');
-
-
-
-
-
-const discountelement = document.getElementById('customersDiscount');
-
-discountelement.addEventListener("change", () => {
-	const value = discountelement.value
-	console.log(value)
-	const discountoptions = document.querySelectorAll('#invoiceDetails .discount-option');
-	discountoptions.forEach(option => {
-		if (Number(value) > 0) {
-			option.value = 'true'
-		} else {
-			option.value = 'false'
-		}
-	});
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

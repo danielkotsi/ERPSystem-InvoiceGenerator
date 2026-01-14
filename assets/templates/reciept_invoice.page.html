@@ -13,11 +13,11 @@
         <div class="seller">
             <p class="seller-name">{{- .Invoice.Seller.Name -}}</p>
             <p class="seller-address">
-                <strong> {{.Invoice.Seller.Address.Street}}
-                    {{.Invoice.Seller.Address.Number}}
+                <strong> {{.Invoice.Seller.Address2.Street}}
+                    {{.Invoice.Seller.Address2.Number}}
                 </strong>
-                {{.Invoice.Seller.Address.PostalCode}}
-                {{.Invoice.Seller.Address.City}}
+                {{.Invoice.Seller.Address2.PostalCode}}
+                {{.Invoice.Seller.Address2.City}}
             </p>
             <p class="postal-address"><strong>ΔΙΕΥΘΥΝΣΗ ΑΛΛΗΛΟΓΡΑΦΙΑΣ :</strong>{{.Invoice.Seller.PostalAddress.Naming}}
                 {{.Invoice.Seller.PostalAddress.Cellnumber}}
@@ -121,8 +121,8 @@
                     <div class="BDdata-row">
                         <span class="BDdata-title">ΤΟΠΟΣ ΑΠΟΣΤΟΛΗΣ :</span>
                         <span class="BDdata-value">
-                            {{.Invoice.Seller.Address.Street}}
-                            {{.Invoice.Seller.Address.Number}}
+                            {{.Invoice.Seller.Address2.Street}}
+                            {{.Invoice.Seller.Address2.Number}}
                         </span>
                     </div>
                 </td>
@@ -141,8 +141,6 @@
                     <div class="BDdata-row">
                         <span class="BDdata-title">ΤΟΠΟΣ ΠΡΟΟΡΙΣΜΟΥ :</span>
                         <span class="BDdata-value">
-                            {{.Invoice.InvoiceHeader.OtherDeliveryNoteHeader.DeliveryAddress.Street}}
-                            {{.Invoice.InvoiceHeader.OtherDeliveryNoteHeader.DeliveryAddress.Number}}
                         </span>
                     </div>
                 </td>
@@ -160,7 +158,6 @@
                     <div class="BDdata-row">
                         <span class="BDdata-title">ΠΟΛΗ :</span>
                         <span class="BDdata-value">
-                            {{.Invoice.InvoiceHeader.OtherDeliveryNoteHeader.DeliveryAddress.City}}
                         </span>
                     </div>
                 </td>
@@ -241,17 +238,17 @@
             </tr>
             {{range .Invoice.InvoiceDetails}}
             <tr class="Ddata">
-                <td>{{.CodeNumber}}</td>
-                <td>{{.ItemDescr}}</td>
-                <td>{{.MeasurementUnitName}}</td>
-                <td>{{.Quantity}}</td>
-                <td>{{.UnitNetPrice}}</td>
-                <td>{{.TotalNetBeforeDiscount}}</td>
-                <td>{{.Discount}}</td>
-                <td>{{.DiscountAmount}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>{{.NetValue}}</td>
-                <td>{{.VatCategoryName}}</td>
-                <td>{{.VatAmount}}</td>
+                <td></td>
+                <td></td>
             </tr>
             {{end}}
             {{range .Invoice.InvoiceSummary.Emptylines}}
@@ -363,11 +360,11 @@
                 </colgroup>
                 <tr>
                     <th class="balancehead">ΑΞΙΑ ΠΡΟ ΕΚΠΤΩΣΗΣ</th>
-                    <td class="balancedata first">{{.Invoice.InvoiceSummary.TotalNetBeforeDiscount}}</td>
+                    <td class="balancedata first"></td>
                 </tr>
                 <tr>
                     <th class="balancehead">ΕΚΠΤΩΣΗ</th>
-                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalDiscount}}</td>
+                    <td class="balancedata"></td>
                 </tr>
                 <tr>
                     <th class="balancehead">ΣΥΝΟΛΙΚΗ ΑΞΙΑ</th>
@@ -375,7 +372,7 @@
                 </tr>
                 <tr>
                     <th class="balancehead">ΣΥΝΟΛΙΚΟ Φ.Π.Α.</th>
-                    <td class="balancedata">{{.Invoice.InvoiceSummary.TotalVatAmount}}</td>
+                    <td class="balancedata"></td>
                 </tr>
                 <tr class="balance-end">
                     <th class="balanceredhead">ΓΕΝΙΚΟ ΣΥΝΟΛΟ</th>

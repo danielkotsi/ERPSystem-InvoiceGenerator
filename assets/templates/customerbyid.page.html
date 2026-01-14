@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/styles/styles.css" />
+  <link rel="stylesheet" href="/static/styles/customerbyid.page.css" />
+  </head>
+
+
+  <body>
+
+<nav class="navbar">
+  <a href="/customers" class="customers">Αγοραστές</a>
+  <a href="/products" class="products">Προϊόντα</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Έκδοση Παραστατικού</a>
+    <div class="invoice-suggestions"></div> <!-- suggestions will appear here -->
+  </div>
+</nav>
+
+
+    <div class="companyandform">
+<div class="customer-card">
+  <div class="Name">
+    <span class="customer-value">{{.Resp.Customer.Name}}</span>
+  </div>
+
+  <div class="info">
+    {{if ne .Resp.Customer.Address nil}}
+      {{if and (ne .Resp.Customer.Address.Street nil) (ne .Resp.Customer.Address.Number nil)}}
+        <div class="customer-row">
+          <span class="customer-title">Οδός:</span>
+          <span class="customer-value">{{.Resp.Customer.Address.Street}} {{.Resp.Customer.Address.Number}}</span>
+        </div>
+      {{end}}
+
+      {{if ne .Resp.Customer.Address.City nil}}
+        <div class="customer-row">
+          <span class="customer-title">Πόλη:</span>
+          <span class="customer-value">{{.Resp.Customer.Address.City}}</span>
+        </div>
+      {{end}}
+
+      {{if ne .Resp.Customer.Address.PostalCode nil}}
+        <div class="customer-row">
+          <span class="customer-title">T.K.:</span>
+          <span class="customer-value">{{.Resp.Customer.Address.PostalCode}}</span>
+        </div>
+      {{end}}
+    {{end}}
+
+    <div class="customer-row">
+      <span class="customer-title">Χώρα:</span>
+      <span class="customer-value">{{.Resp.Customer.Country}}</span>
+    </div>
+
+    {{if ne .Resp.Customer.Email nil}}
+      <div class="customer-row">
+        <span class="customer-title">Email:</span>
+        <span class="customer-value">{{.Resp.Customer.Email}}</span>
+      </div>
+    {{end}}
+
+    {{if ne .Resp.Customer.Phone nil}}
+      <div class="customer-row">
+        <span class="customer-title">Τηλέφωνο:</span>
+        <span class="customer-value">{{.Resp.Customer.Phone}}</span>
+      </div>
+    {{end}}
+
+    {{if ne .Resp.Customer.Mobile_Phone nil}}
+      <div class="customer-row">
+        <span class="customer-title">Κινητό Τηλέφωνο:</span>
+        <span class="customer-value">{{.Resp.Customer.Mobile_Phone}}</span>
+      </div>
+    {{end}}
+
+    <div class="customer-row">
+      <span class="customer-title">ΑΦΜ:</span>
+      <span class="customer-value">{{.Resp.Customer.VatNumber}}</span>
+    </div>
+  </div>
+
+</div>
+
+
+    
+    <form class="form" action="/create/branchcompany" id="create-branch-form" method="POST" enctype="multipart/form-data">
+      <h3>Προσθήκη Υποκαταστήματος </h3>
+
+      <input type="text" name="companyCode" id="companyCode" placeholder="Κωδικός Κεντρικής Εταιρίας" value="{{.Resp.Customer.CodeNumber}}">
+              <input type="text" name="branchCode" id="branchCode" placeholder="Κωδικός Υποκαταστήματος">
+              <input type="text" name="name" id="name" placeholder="Όνομα Υποκαταστήματος">
+              <input type="text" name="address.street" id="address.street" placeholder="Οδός"></input> 
+              <input type="text" name="address.number" id="address.number" placeholder="Αριθμός"></input> 
+              <input type="text" name="address.city" id="address.city" placeholder="Πόλη"></input> 
+              <input type="text" name="address.postalCode" id="address.postalCode" placeholder="Τ.Κ."></input> 
+              <input type="text" name="country" id="country" placeholder="Χώρα"></input> 
+              <input type="email" name="email" id="email" placeholder="Email"></input> 
+              <input type="text" name="phone" id="phone" placeholder="Τηλέφωνο"></input> 
+              <input type="text" name="mobile_phone" id="mobile_phone" placeholder="Κινητό Τηλέφωνο"></input> 
+              <input type="number" step="0.01" name="oldBalance" id="oldBalance" placeholder="Υπόλοιπο"></input> 
+        <button class="submit-btn" type="submit">Προσθήκη</button>
+
+    </form>
+    </div>
+    <div class="line">
+    </div>
+
+    <section class="subcopmanies-list">
+      <h3>Υποκαταστήματα </h3>
+
+    {{range .Resp.BranchCompanies }}
+
+      <div class="customer-card">
+<div class="Name">
+  <span class="customer-value">{{.Name}}</span>
+</div>
+
+<div class="info">
+  {{if ne .Address nil}}
+    {{if and (ne .Address.Street nil) (ne .Address.Number nil)}}
+      <div class="customer-row">
+        <span class="customer-title">Οδός:</span>
+        <span class="customer-value">
+          {{.Address.Street}} {{.Address.Number}}
+        </span>
+      </div>
+    {{end}}
+
+    {{if ne .Address.City nil}}
+      <div class="customer-row">
+        <span class="customer-title">Πόλη:</span>
+        <span class="customer-value">{{.Address.City}}</span>
+      </div>
+    {{end}}
+
+    {{if ne .Address.PostalCode nil}}
+      <div class="customer-row">
+        <span class="customer-title">T.K.:</span>
+        <span class="customer-value">{{.Address.PostalCode}}</span>
+      </div>
+    {{end}}
+  {{end}}
+
+  <div class="customer-row">
+    <span class="customer-title">Χώρα:</span>
+    <span class="customer-value">{{.Country}}</span>
+  </div>
+
+  {{if ne .Email nil}}
+    <div class="customer-row">
+      <span class="customer-title">Email:</span>
+      <span class="customer-value">{{.Email}}</span>
+    </div>
+  {{end}}
+
+  {{if ne .Phone nil}}
+    <div class="customer-row">
+      <span class="customer-title">Τηλέφωνο:</span>
+      <span class="customer-value">{{.Phone}}</span>
+    </div>
+  {{end}}
+
+  {{if ne .Mobile_Phone nil}}
+    <div class="customer-row">
+      <span class="customer-title">Κινητό Τηλέφωνο:</span>
+      <span class="customer-value">{{.Mobile_Phone}}</span>
+    </div>
+  {{end}}
+</div>
+</div>
+
+      {{end}}
+
+
+
+    </section>
+
+
+
+
+ <script src="/static/scripts/customerbyid.page.js"></script>
+  </body>

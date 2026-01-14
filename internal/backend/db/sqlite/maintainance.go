@@ -15,20 +15,18 @@ type Database struct {
 	Config *models.Config
 }
 
-func NewDatabase(conf *models.Config) *sql.DB {
-	db := &Database{Config: conf}
-	db.Initialize()
+func NewDatabase(abspath string) *sql.DB {
+	db := &Database{}
+	db.Initialize(abspath)
 	return db.DB
 }
 
-func (db *Database) Initialize() {
-	dbPath := db.Config.DbPath
-	if dbPath == "" {
-		dbPath = "../../invoice_manager.db"
-	}
+func (db *Database) Initialize(abspath string) {
+	dbPath := filepath.Join(abspath, "newdata.db")
 
 	isNewDB := false
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		log.Println("this is a new instance")
 		file, err := os.Create(dbPath)
 		if err != nil {
 			log.Fatalf("failed to create database file: %v", err)
@@ -46,7 +44,7 @@ func (db *Database) Initialize() {
 	db.DB = newdb
 
 	if isNewDB {
-		migrationPath := "../../assets/migrations/invoice_product_tracker.sql"
+		migrationPath := filepath.Join(abspath, "assets", "migrations", "newmigration.sql")
 		if err := db.runMigration(migrationPath); err != nil {
 			log.Fatalf("migration failed: %v", err)
 		}

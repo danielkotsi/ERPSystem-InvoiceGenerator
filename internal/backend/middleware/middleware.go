@@ -2,17 +2,15 @@ package middleware
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/models"
 	"net/http"
 	"time"
 )
 
 type Middleware struct {
-	Config *models.Config
 }
 
-func NewMiddleware(conf *models.Config) *Middleware {
-	return &Middleware{Config: conf}
+func NewMiddleware() *Middleware {
+	return &Middleware{}
 }
 
 func (m *Middleware) Handler(next http.Handler) http.Handler {

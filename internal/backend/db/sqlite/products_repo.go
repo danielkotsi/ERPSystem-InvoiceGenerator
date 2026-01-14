@@ -4,11 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/utils"
 	"errors"
 	"fmt"
 	"log"
-
-	"github.com/gofrs/uuid"
 )
 
 type ProductsRepo struct {
@@ -22,7 +21,21 @@ func NewProductsRepo(db *sql.DB) *ProductsRepo {
 func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]models.Product, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
-	query := "SELECT products.name,products.description,products.sku,products.unit_price,categoriesforproducts.name from products join product_categories on products.id==product_categories.product_id join categoriesforproducts on product_categories.category_id==categoriesforproducts.id where sku LIKE ? and active==1;"
+	var productCat sql.NullString
+	query := `SELECT 
+	products.CodeNumber,
+	products.name,
+	products.description,
+	products.unit_net_price,
+	products.measurmentUnit,
+	measurementUnits.unit,
+	products.vat_category,
+	categoriesforproducts.name 
+	from products 
+	left join product_categories on products.CodeNumber==product_categories.product_id 
+	left join categoriesforproducts on product_categories.category_id==categoriesforproducts.id
+	left join measurementUnits on products.measurmentUnit==measurementUnits.id 
+	where products.name LIKE ? ;`
 
 	rows, err := r.DB.QueryContext(ctx, query, search)
 	if err != nil {
@@ -33,26 +46,19 @@ func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]model
 	var out []models.Product
 	for rows.Next() {
 		var p models.Product
-		if err := rows.Scan(&p.Name, &p.Description, &p.Product_code, &p.Unit_price, &p.Category); err != nil {
+		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.Description, &p.Unit_Net_Price, &p.MeasurementUnitCode, &p.MeasurementUnit, &p.VatCategory, &productCat); err != nil {
 			return nil, err
 		}
+		p.ProductCategory = utils.NullableString(productCat)
 		out = append(out, p)
 	}
 	return out, nil
 }
 
 func (r *ProductsRepo) CreateProduct(ctx context.Context, product_data models.Product) error {
-	product_id, err := uuid.NewV4()
-	if err != nil {
-		return err
-	}
-	query := "insert into products(id,name,description,sku,unit_price,vat_category) values(?,?,?,?,?,?)"
+	query := "insert into products(CodeNumber,name,description,unit_net_price,measurmentUnit,vat_category) values(?,?,?,?,?,?)"
 
-	_, err = r.DB.ExecContext(ctx, query, product_id, product_data.Name, product_data.Description, product_data.Product_code, product_data.Unit_price, product_data.Vat_Category)
-	if err != nil {
-		return err
-	}
-	err = r.InsertProductIntoCategories(ctx, product_id.String(), product_data.Category)
+	_, err := r.DB.ExecContext(ctx, query, product_data.CodeNumber, product_data.Name, product_data.Description, product_data.Unit_Net_Price, product_data.MeasurementUnitCode, product_data.VatCategory)
 	if err != nil {
 		return err
 	}
