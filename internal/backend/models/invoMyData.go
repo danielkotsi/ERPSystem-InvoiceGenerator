@@ -157,10 +157,10 @@ type ExpensesClassificationItem struct {
 	ClassificationType     string  `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 classificationType"`
 	ClassificationCategory string  `json:"classificationCategory" form:"classificationCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 classificationCategory"`
 	Amount                 float64 `json:"amount" form:"amount" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 amount"`
-	VatAmount              float64 `json:"vatAmount" form:"vatAmount" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatAmount"`
-	VatCategory            int     `json:"vatCategory" form:"vatCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatCategory"`
-	VatExemptionCategory   int     `json:"vatExemptionCategory" form:"vatExemptionCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatExemptionCategory"`
-	Id                     int     `json:"id" form:"id" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 id"`
+	// VatAmount              float64 `json:"vatAmount" form:"vatAmount" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatAmount"`
+	// VatCategory            int     `json:"vatCategory" form:"vatCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatCategory"`
+	// VatExemptionCategory   int     `json:"vatExemptionCategory" form:"vatExemptionCategory" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 vatExemptionCategory"`
+	// Id                     int     `json:"id" form:"id" xml:"https://www.aade.gr/myDATA/expensesClassificaton/v1.0 id"`
 }
 
 type ClassificationItem struct {
