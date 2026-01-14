@@ -3,6 +3,7 @@ package sqlite
 import (
 	"context"
 	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/utils"
 	"fmt"
 	"strconv"
 	"time"
@@ -41,7 +42,7 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company)
 	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
 	return nil
 }
-func (r *InvoiceRepo) CompletePaymentMethods(ctx context.Context, paymentmethods *models.PaymentMethods) error {
+func (r *InvoiceRepo) CompletePaymentMethods(paymentmethods *models.PaymentMethods, buyer *models.Company, totalgrossamount float64) error {
 	paymenttypes := map[string]int{
 		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
 		"Επαγ. Λογαριασμός Πληρωμών Αλλοδαπής": 2,
@@ -54,6 +55,10 @@ func (r *InvoiceRepo) CompletePaymentMethods(ctx context.Context, paymentmethods
 	}
 	for i, payment := range paymentmethods.Details {
 		paymentmethods.Details[i].Type = paymenttypes[payment.Name]
+		paymentmethods.Details[i].Amount = totalgrossamount
+		if paymentmethods.Details[i].Type == 5 {
+			buyer.NewBalance = utils.RoundTo2(buyer.OldBalance + totalgrossamount)
+		}
 	}
 
 	return nil

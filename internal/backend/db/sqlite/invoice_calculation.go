@@ -5,22 +5,22 @@ import (
 	"-invoice_manager/internal/utils"
 )
 
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *models.PaymentMethods, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
 	switch invoicetype {
 	case "1.1":
-		if err := r.SellingInvoiceLines(invoicetype, invoicelines, summary, buyer); err != nil {
+		if err := r.SellingInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 			return err
 		}
 	case "8.1":
-		if err := r.RecieptInvoiceLines(invoicetype, invoicelines, summary, buyer); err != nil {
+		if err := r.RecieptInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 			return err
 		}
 	case "13.1":
-		if err := r.BuyingInvoiceLines(invoicetype, invoicelines, summary, buyer); err != nil {
+		if err := r.BuyingInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 			return err
 		}
 	case "9.3":
-		if err := r.DeliveryNoteInvoiceLines(invoicetype, invoicelines, summary, buyer); err != nil {
+		if err := r.DeliveryNoteInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 			return err
 		}
 	default:
@@ -28,7 +28,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, invoicelin
 	return nil
 }
 
-func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -50,12 +50,17 @@ func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*mo
 		}
 	}
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
-	buyer.NewBalance = buyer.OldBalance + summary.TotalGrossValue
+	buyer.NewBalance = buyer.OldBalance
+
+	if err := r.CompletePaymentMethods(paymentmethods, buyer, summary.TotalGrossValue); err != nil {
+		return err
+	}
+
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
 
-func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -64,10 +69,11 @@ func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines 
 			return err
 		}
 	}
+	buyer.NewBalance = buyer.OldBalance
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
-func (r *InvoiceRepo) BuyingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) BuyingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -108,7 +114,7 @@ func (r *InvoiceRepo) InvoiceLinePrices(line *models.InvoiceRow, discount int) e
 
 	return nil
 }
-func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -120,7 +126,10 @@ func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*mo
 		}
 	}
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
-	buyer.NewBalance = buyer.OldBalance + summary.TotalGrossValue
+	buyer.NewBalance = buyer.OldBalance - summary.TotalGrossValue
+	if err := r.CompletePaymentMethods(paymentmethods, buyer, summary.TotalGrossValue); err != nil {
+		return err
+	}
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
