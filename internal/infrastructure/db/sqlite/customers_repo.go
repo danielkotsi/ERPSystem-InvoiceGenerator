@@ -2,12 +2,9 @@ package sqlite
 
 import (
 	"context"
-	// "crypto/rand"
 	"database/sql"
-	"-invoice_manager/internal/backend/models"
-	// "-invoice_manager/internal/utils"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"fmt"
-	// "math/big"
 )
 
 type CustomersRepo struct {
@@ -18,7 +15,7 @@ func NewCustomersRepo(db *sql.DB) *CustomersRepo {
 	return &CustomersRepo{DB: db}
 }
 
-func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]models.Company, error) {
+func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]payload.Company, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
 	query := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where NAME LIKE ? "
@@ -29,10 +26,10 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]mod
 	}
 	defer rows.Close()
 
-	var customers []models.Company
+	var customers []payload.Company
 	for rows.Next() {
-		var p models.Company
-		p.Address = &models.AddressType{}
+		var p payload.Company
+		p.Address = &payload.AddressType{}
 		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return nil, err
 		}
@@ -42,7 +39,7 @@ func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]mod
 	return customers, nil
 }
 
-func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (customer models.Company, err error) {
+func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (customer payload.Company, err error) {
 	query := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where CodeNumber== ? "
 
 	rows, err := r.DB.QueryContext(ctx, query, code)
@@ -51,8 +48,8 @@ func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (custo
 	}
 	defer rows.Close()
 
-	var p models.Company
-	p.Address = &models.AddressType{}
+	var p payload.Company
+	p.Address = &payload.AddressType{}
 	for rows.Next() {
 		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
 			return customer, err
@@ -61,7 +58,7 @@ func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (custo
 	return p, nil
 }
 
-func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models.Company) error {
+func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data payload.Company) error {
 
 	query := `insert into customers(
 	CodeNumber,
@@ -93,7 +90,7 @@ func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data models
 	return nil
 }
 
-func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]models.BranchCompany, error) {
+func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]payload.BranchCompany, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)
 	query := `SELECT 
@@ -118,9 +115,9 @@ func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search
 	}
 	defer rows.Close()
 
-	var branchcompanies []models.BranchCompany
+	var branchcompanies []payload.BranchCompany
 	for rows.Next() {
-		var p models.BranchCompany
+		var p payload.BranchCompany
 		if err := rows.Scan(&p.BranchCode, &p.CompanyCode, &p.Name, &p.Phone, &p.Mobile_Phone, &p.Email, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.Country, &p.OldBalance); err != nil {
 			return nil, err
 		}
@@ -129,7 +126,7 @@ func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search
 	return branchcompanies, nil
 }
 
-func (r *CustomersRepo) CreateBranchCompany(ctx context.Context, branch_data models.BranchCompany) error {
+func (r *CustomersRepo) CreateBranchCompany(ctx context.Context, branch_data payload.BranchCompany) error {
 
 	query := `insert into BranchCompanies(
 	BranchCode,

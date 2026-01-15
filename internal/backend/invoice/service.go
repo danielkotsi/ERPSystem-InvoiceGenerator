@@ -1,19 +1,19 @@
-package services
+package invoice
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/models"
-	"-invoice_manager/internal/backend/repos"
+	"-invoice_manager/internal/backend/invoice/models"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
 	"net/http"
 )
 
 type InvoiceService struct {
-	Invoice repository.Invoice_repo
-	MyData  repository.MyData_repo
+	Invoice Invoice_repo
+	MyData  MyData_repo
 }
 
-func NewInvoiceService(in repository.Invoice_repo, mydata repository.MyData_repo) *InvoiceService {
+func NewInvoiceService(in Invoice_repo, mydata MyData_repo) *InvoiceService {
 	return &InvoiceService{
 		Invoice: in,
 		MyData:  mydata,
@@ -37,7 +37,7 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, r *http.Request) (i
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
-	var invo models.Invoice
+	var invo payload.Invoice
 	err = utils.ParseFormData(r, &invo)
 	if err != nil {
 		return nil, err

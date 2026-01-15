@@ -1,19 +1,18 @@
-package services
+package product
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/models"
-	"-invoice_manager/internal/backend/repos"
+	"-invoice_manager/internal/backend/product/models"
 	"-invoice_manager/internal/utils"
 	"fmt"
 	"net/http"
 )
 
 type ProductsService struct {
-	Products repository.Products_repo
+	Products Products_repo
 }
 
-func NewProductsService(in repository.Products_repo) *ProductsService {
+func NewProductsService(in Products_repo) *ProductsService {
 	return &ProductsService{Products: in}
 }
 

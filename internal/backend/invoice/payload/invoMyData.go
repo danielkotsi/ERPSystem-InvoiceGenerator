@@ -1,4 +1,4 @@
-package models
+package payload
 
 import (
 	"encoding/xml"
@@ -167,15 +167,4 @@ type ClassificationItem struct {
 	ClassificationType     *string `json:"classificationType" form:"classificationType" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationType"`
 	ClassificationCategory string  `json:"classificationCategory" form:"classificationCategory" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 classificationCategory"`
 	Amount                 float64 `json:"amount" form:"amount" xml:"https://www.aade.gr/myDATA/incomeClassificaton/v1.0 amount"`
-}
-
-type Product struct {
-	CodeNumber          string  `json:"codeNumber" form:"codeNumber"`
-	Name                string  `json:"name" form:"name"`
-	Description         string  `json:"description" form:"description"`
-	Unit_Net_Price      float64 `json:"unitNetPrice" form:"unitNetPrice"`
-	MeasurementUnitCode int     `json:"measurementUnitCode" form:"measurementUnitCode"`
-	MeasurementUnit     string  `json:"measurementUnit" form:"measurementUnit"`
-	VatCategory         int     `json:"vatCategory" form:"vatCategory"`
-	ProductCategory     *string `json:"productCategory,omitempty" form:"productCategory"`
 }

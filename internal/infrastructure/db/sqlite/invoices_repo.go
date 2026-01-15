@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/invoice/models"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
 	"html/template"
 	"log"
@@ -21,7 +22,7 @@ func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
 	return &InvoiceRepo{DB: db, abspath: abspath, logo: logo}
 }
 
-func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *models.Invoice) error {
+func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *payload.Invoice) error {
 	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
 		return err
 	}
@@ -77,7 +78,7 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 	}
 	defer rows.Close()
 
-	invoiceinfo.User.Address = &models.AddressType{}
+	invoiceinfo.User.Address = &payload.AddressType{}
 	for rows.Next() {
 		if err := rows.Scan(&invoiceinfo.User.CodeNumber, &invoiceinfo.User.Name, &invoiceinfo.User.DOI, &invoiceinfo.User.GEMI, &invoiceinfo.User.Phone, &invoiceinfo.User.Mobile_Phone, &invoiceinfo.User.Email, &invoiceinfo.User.PostalAddress.Naming, &invoiceinfo.User.PostalAddress.Cellnumber, &invoiceinfo.User.PostalAddress.PostalCode, &invoiceinfo.User.PostalAddress.City, &invoiceinfo.User.Address.Street, &invoiceinfo.User.Address.Number, &invoiceinfo.User.Address.PostalCode, &invoiceinfo.User.Address.City, &invoiceinfo.User.VatNumber, &invoiceinfo.User.Country, &invoiceinfo.User.Branch, &invoiceinfo.Invoiceinfo.Series, &invoiceinfo.Invoiceinfo.Aa); err != nil {
 			return invoiceinfo, err
@@ -91,7 +92,7 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 	return invoiceinfo, nil
 }
 
-func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice) (pdf []byte, err error) {
+func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *payload.Invoice) (pdf []byte, err error) {
 	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
 	finalInvoice.LogoImage = r.logo
 	if err != nil {
@@ -111,7 +112,7 @@ func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *models.Invoice)
 	}
 
 	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]models.Invoice{"Invoice": *finalInvoice})
+	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *finalInvoice})
 	if err != nil {
 		log.Println(err)
 	}

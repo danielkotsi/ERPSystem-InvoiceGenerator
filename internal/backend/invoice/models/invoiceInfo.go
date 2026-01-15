@@ -1,12 +1,11 @@
 package models
 
-type CustomerById struct {
-	Customer        Company
-	BranchCompanies []BranchCompany
-}
+import (
+	"-invoice_manager/internal/backend/invoice/payload"
+)
 
 type InvoiceHTMLinfo struct {
-	User        Company
+	User        payload.Company
 	Invoiceinfo invoforminfo
 }
 

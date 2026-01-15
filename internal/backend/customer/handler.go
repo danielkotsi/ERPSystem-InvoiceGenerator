@@ -1,7 +1,8 @@
-package handlers
+package customer
 
 import (
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/customer/models"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
 	"log"
@@ -9,11 +10,11 @@ import (
 )
 
 type CustomersHandler struct {
-	CustomersService *services.CustomersService
+	CustomersService *CustomersService
 	Excecutor        *services.Excecutor
 }
 
-func NewCustomersHandler(invoserv *services.CustomersService, executor *services.Excecutor) *CustomersHandler {
+func NewCustomersHandler(invoserv *CustomersService, executor *services.Excecutor) *CustomersHandler {
 	return &CustomersHandler{CustomersService: invoserv, Excecutor: executor}
 }
 
@@ -26,7 +27,7 @@ func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string][]models.Company{"Customers": resp}); err != nil {
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "customers.page.html", map[string][]payload.Company{"Customers": resp}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
 }

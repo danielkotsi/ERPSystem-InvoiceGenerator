@@ -1,11 +1,11 @@
 package sqlite
 
 import (
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
 )
 
-func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *models.PaymentMethods, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company) error {
+func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
 	switch invoicetype {
 	case "1.1":
 		if err := r.SellingInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
@@ -28,7 +28,7 @@ func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, paymentmet
 	return nil
 }
 
-func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
+func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -60,7 +60,7 @@ func (r *InvoiceRepo) SellingInvoiceLines(invoicetype string, invoicelines []*mo
 	return nil
 }
 
-func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
+func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -73,7 +73,7 @@ func (r *InvoiceRepo) DeliveryNoteInvoiceLines(invoicetype string, invoicelines 
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
-func (r *InvoiceRepo) BuyingInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
+func (r *InvoiceRepo) BuyingInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -99,7 +99,7 @@ func (r *InvoiceRepo) BuyingInvoiceLines(invoicetype string, invoicelines []*mod
 	return nil
 }
 
-func (r *InvoiceRepo) InvoiceLinePrices(line *models.InvoiceRow, discount int) error {
+func (r *InvoiceRepo) InvoiceLinePrices(line *payload.InvoiceRow, discount int) error {
 	line.Discount = float64(discount)
 	floatdiscount := float64(discount) / 100
 
@@ -114,7 +114,7 @@ func (r *InvoiceRepo) InvoiceLinePrices(line *models.InvoiceRow, discount int) e
 
 	return nil
 }
-func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*models.InvoiceRow, summary *models.InvoiceSummary, buyer *models.Company, paymentmethods *models.PaymentMethods) error {
+func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
 	emptylines := 24
 	for i, line := range invoicelines {
 		emptylines--
@@ -134,7 +134,7 @@ func (r *InvoiceRepo) RecieptInvoiceLines(invoicetype string, invoicelines []*mo
 	return nil
 }
 
-func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *models.ClassificationItem, summary *models.InvoiceSummary) error {
+func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *payload.ClassificationItem, summary *payload.InvoiceSummary) error {
 	index, exists := r.IncomeCategoryExists(*classificationItem, summary.IncomeClassification)
 	if exists {
 		summary.IncomeClassification[index].Amount += classificationItem.Amount
@@ -144,7 +144,7 @@ func (r *InvoiceRepo) AddIncomeClassificationInSummary(classificationItem *model
 	return nil
 }
 
-func (r *InvoiceRepo) AddExpenseClassificationInSummary(classificationItem *models.ExpensesClassificationItem, summary *models.InvoiceSummary) error {
+func (r *InvoiceRepo) AddExpenseClassificationInSummary(classificationItem *payload.ExpensesClassificationItem, summary *payload.InvoiceSummary) error {
 	index, exists := r.ExpenseCategoryExists(*classificationItem, summary.ExpensesClassification)
 	if exists {
 		summary.ExpensesClassification[index].Amount += classificationItem.Amount
@@ -154,7 +154,7 @@ func (r *InvoiceRepo) AddExpenseClassificationInSummary(classificationItem *mode
 	return nil
 }
 
-func (r *InvoiceRepo) IncomeCategoryExists(classificationitem models.ClassificationItem, summary []models.ClassificationItem) (int, bool) {
+func (r *InvoiceRepo) IncomeCategoryExists(classificationitem payload.ClassificationItem, summary []payload.ClassificationItem) (int, bool) {
 	for index, category := range summary {
 		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
 			return index, true
@@ -164,7 +164,7 @@ func (r *InvoiceRepo) IncomeCategoryExists(classificationitem models.Classificat
 	return 0, false
 }
 
-func (r *InvoiceRepo) ExpenseCategoryExists(classificationitem models.ExpensesClassificationItem, summary []models.ExpensesClassificationItem) (int, bool) {
+func (r *InvoiceRepo) ExpenseCategoryExists(classificationitem payload.ExpensesClassificationItem, summary []payload.ExpensesClassificationItem) (int, bool) {
 	for index, category := range summary {
 		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
 			return index, true

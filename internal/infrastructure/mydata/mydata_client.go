@@ -3,7 +3,8 @@ package mydata
 import (
 	"bytes"
 	"context"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/invoice/payload"
+	"-invoice_manager/internal/models"
 	"encoding/xml"
 	"fmt"
 	"io"
@@ -34,9 +35,9 @@ func NewMyDataClient(base, userID, subscriptionKey string) *Client {
 
 }
 
-func (c *Client) SendInvoice(ctx context.Context, invoice *models.Invoice) (models.ResponseDoc, error) {
+func (c *Client) SendInvoice(ctx context.Context, invoice *payload.Invoice) (models.ResponseDoc, error) {
 
-	var invoicePayload models.InvoicePayload
+	var invoicePayload payload.InvoicePayload
 	invoicePayload.Invoices = append(invoicePayload.Invoices, *invoice)
 	invo, err := xml.MarshalIndent(invoicePayload, "", "  ")
 	if err != nil {

@@ -2,14 +2,15 @@ package sqlite
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/invoice/models"
+	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
 	"fmt"
 	"strconv"
 	"time"
 )
 
-func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *models.Company) error {
+func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *payload.Company) error {
 	query := "select Balance from customers where CodeNumber=?;"
 	rows, err := r.DB.QueryContext(ctx, query, buyer.CodeNumber)
 	if err != nil {
@@ -24,7 +25,7 @@ func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *models.Company
 
 	return nil
 }
-func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company) error {
+func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company) error {
 	query := `select PostalCellName, PostalCellNumber,PostalCellPostalCode, PostalCellCity from users where CodeNumber==?;`
 
 	rows, err := r.DB.QueryContext(ctx, query, seller.CodeNumber)
@@ -42,7 +43,7 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *models.Company)
 	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
 	return nil
 }
-func (r *InvoiceRepo) CompletePaymentMethods(paymentmethods *models.PaymentMethods, buyer *models.Company, totalgrossamount float64) error {
+func (r *InvoiceRepo) CompletePaymentMethods(paymentmethods *payload.PaymentMethods, buyer *payload.Company, totalgrossamount float64) error {
 	paymenttypes := map[string]int{
 		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
 		"Επαγ. Λογαριασμός Πληρωμών Αλλοδαπής": 2,
@@ -113,7 +114,7 @@ func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invo
 	return nil
 }
 
-func (r *InvoiceRepo) CompleteInvoiceHeader(header *models.InvoiceHeader) error {
+func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error {
 	movepurpses := map[int]string{
 		1: "Πώληση",
 		3: "Δειγματισμός",

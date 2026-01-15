@@ -1,7 +1,7 @@
-package handlers
+package product
 
 import (
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/product/models"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
 	"log"
@@ -9,11 +9,11 @@ import (
 )
 
 type ProductsHandler struct {
-	ProductsService *services.ProductsService
+	ProductsService *ProductsService
 	Excecutor       *services.Excecutor
 }
 
-func NewProductsHandler(invoserv *services.ProductsService, executor *services.Excecutor) *ProductsHandler {
+func NewProductsHandler(invoserv *ProductsService, executor *services.Excecutor) *ProductsHandler {
 	return &ProductsHandler{ProductsService: invoserv, Excecutor: executor}
 }
 

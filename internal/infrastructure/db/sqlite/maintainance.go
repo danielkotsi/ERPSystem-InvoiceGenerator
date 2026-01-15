@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/models"
 	"fmt"
 	"log"
 	"os"

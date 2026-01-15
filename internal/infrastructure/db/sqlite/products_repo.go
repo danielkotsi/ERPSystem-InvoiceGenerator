@@ -3,7 +3,7 @@ package sqlite
 import (
 	"context"
 	"database/sql"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/product/models"
 	"-invoice_manager/internal/utils"
 	"errors"
 	"fmt"

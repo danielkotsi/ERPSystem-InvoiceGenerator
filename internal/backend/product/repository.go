@@ -1,8 +1,8 @@
-package repository
+package product
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/models"
+	"-invoice_manager/internal/backend/product/models"
 )
 
 type Products_repo interface {
