@@ -3,7 +3,6 @@ package invoice
 import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/models"
-	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/backend/invoice/types"
 	"-invoice_manager/internal/utils"
 	"errors"
@@ -71,8 +70,7 @@ func (s *InvoiceService) ParseFormIntoInvoiceType(r *http.Request) (invoice Invo
 	switch r.FormValue("invoiceHeader.invoiceType") {
 	case "1.1":
 		invoice := &types.SellingInvoice{}
-		invoice.Payload = &payload.InvoicePayload{}
-		invoice.Payload.Invoices = make([]payload.Invoice, 1)
+		invoice.Initialize()
 		err = utils.ParseFormData(r, &invoice.Payload.Invoices[0])
 		if err != nil {
 			return nil, err
