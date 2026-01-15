@@ -4,7 +4,6 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/utils"
 	"fmt"
 	"strconv"
 	"time"
@@ -38,30 +37,6 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company
 			return err
 		}
 	}
-
-	fmt.Println("hello this is the code", seller.CodeNumber)
-	fmt.Println("hello this is the postall cell name", seller.PostalAddress.Naming)
-	return nil
-}
-func (r *InvoiceRepo) CompletePaymentMethods(paymentmethods *payload.PaymentMethods, buyer *payload.Company, totalgrossamount float64) error {
-	paymenttypes := map[string]int{
-		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
-		"Επαγ. Λογαριασμός Πληρωμών Αλλοδαπής": 2,
-		"Μετρητά":              3,
-		"Επιταγή":              4,
-		"Επί Πιστώσει":         5,
-		"Web Banking":          6,
-		"POS / e-POS":          7,
-		"Άμεσες Πληρωμές IRIS": 8,
-	}
-	for i, payment := range paymentmethods.Details {
-		paymentmethods.Details[i].Type = paymenttypes[payment.Name]
-		paymentmethods.Details[i].Amount = totalgrossamount
-		if paymentmethods.Details[i].Type == 5 {
-			buyer.NewBalance = utils.RoundTo2(buyer.OldBalance + totalgrossamount)
-		}
-	}
-
 	return nil
 }
 func (r *InvoiceRepo) UpdateBalance(ctx context.Context, buyerCodeNumber string, buyerNewBalance float64) error {
@@ -78,7 +53,6 @@ func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error
 	}
 	aaint++
 	aa = fmt.Sprintf("%05d", aaint)
-	fmt.Println(aa)
 	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
 
 	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {

@@ -19,14 +19,11 @@ func (r *SellingInvoice) GetInvoice() (payload *payload.Invoice) {
 }
 
 func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
-	if err := r.SellingInvoiceLines(r.Payload.Invoices[0].InvoiceHeader.InvoiceType, r.Payload.Invoices[0].InvoiceDetails, &r.Payload.Invoices[0].InvoiceSummary, &r.Payload.Invoices[0].Byer, r.Payload.Invoices[0].PaymentMethods); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *SellingInvoice) SellingInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
 	emptylines := 24
+	invoicelines := r.GetInvoice().InvoiceDetails
+	buyer := r.GetInvoice().Byer
+	summary := r.GetInvoice().InvoiceSummary
+	paymentmethods := r.GetInvoice().PaymentMethods
 	for i, line := range invoicelines {
 		emptylines--
 		line.VatCategoryName = utils.VatNames(line.VatCategory)
@@ -42,14 +39,14 @@ func (r *SellingInvoice) SellingInvoiceLines(invoicetype string, invoicelines []
 		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 		summary.TotalVatAmount += line.VatAmount
 		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, &summary); err != nil {
 			return err
 		}
 	}
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
 	buyer.NewBalance = buyer.OldBalance
 
-	if err := r.CompletePaymentMethods(paymentmethods, buyer, summary.TotalGrossValue); err != nil {
+	if err := r.CompletePaymentMethods(paymentmethods, &buyer, summary.TotalGrossValue); err != nil {
 		return err
 	}
 

@@ -13,19 +13,21 @@ func (r *Reciept) GetInvoice() (payload *payload.Invoice) {
 	return &r.Payload.Invoices[0]
 }
 
-func (r *Reciept) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
-	if err := r.RecieptInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
-		return err
-	}
-	return nil
+func (r *Reciept) Initialize() {
+	r.Payload = &payload.InvoicePayload{}
+	r.Payload.Invoices = make([]payload.Invoice, 1)
 }
 
-func (r *Reciept) RecieptInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
+func (r *Reciept) CalculateAlltheInvoiceLines() error {
 	emptylines := 24
+	invoicelines := r.GetInvoice().InvoiceDetails
+	buyer := r.GetInvoice().Byer
+	summary := r.GetInvoice().InvoiceSummary
+	paymentmethods := r.GetInvoice().PaymentMethods
 	for i, line := range invoicelines {
 		emptylines--
 		line.LineNumber = i + 1
-		line.IncomeClassification.Amount = line.NetValue /* + line.VatAm unt */
+		line.IncomeClassification.Amount = line.NetValue
 		summary.TotalNetValue = line.NetValue
 		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
@@ -37,32 +39,6 @@ func (r *Reciept) RecieptInvoiceLines(invoicetype string, invoicelines []*payloa
 		return err
 	}
 	summary.Emptylines = make([]int, emptylines)
-	return nil
-}
-
-func (r *Reciept) InvoiceLinePrices(line *payload.InvoiceRow, discount int) error {
-	line.Discount = float64(discount)
-	floatdiscount := float64(discount) / 100
-
-	totalNetPriceBeforeDiscount := *line.Quantity * line.UnitNetPrice
-	line.DiscountAmount = utils.RoundTo2(totalNetPriceBeforeDiscount * floatdiscount)
-	totalNetPriceAfterDiscount := totalNetPriceBeforeDiscount - line.DiscountAmount
-	vatAfterDiscount := totalNetPriceAfterDiscount * utils.Vat(line.VatCategory)
-
-	line.TotalNetBeforeDiscount = utils.RoundTo2(totalNetPriceBeforeDiscount)
-	line.NetValue = utils.RoundTo2(totalNetPriceAfterDiscount)
-	line.VatAmount = utils.RoundTo2(vatAfterDiscount)
-
-	return nil
-}
-
-func (r *Reciept) AddIncomeClassificationInSummary(classificationItem *payload.ClassificationItem, summary *payload.InvoiceSummary) error {
-	index, exists := IncomeCategoryExists(*classificationItem, summary.IncomeClassification)
-	if exists {
-		summary.IncomeClassification[index].Amount += classificationItem.Amount
-	} else {
-		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
-	}
 	return nil
 }
 

@@ -21,3 +21,13 @@ func ExpenseCategoryExists(classificationitem payload.ExpensesClassificationItem
 
 	return 0, false
 }
+
+func AddIncomeClassificationInSummary(classificationItem *payload.ClassificationItem, summary *payload.InvoiceSummary) error {
+	index, exists := IncomeCategoryExists(*classificationItem, summary.IncomeClassification)
+	if exists {
+		summary.IncomeClassification[index].Amount += classificationItem.Amount
+	} else {
+		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
+	}
+	return nil
+}
