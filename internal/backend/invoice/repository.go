@@ -7,10 +7,12 @@ import (
 )
 
 type Invoice_repo interface {
-	// ListInvoices(ctx context.Context, search string) ([]models.Invoice, error)
-	// CreateMAPK_QRcode(ctx context.Context, search string) (int, error)
 	GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error)
 	CompleteInvoice(ctx context.Context, invo *payload.Invoice) error
 	UpdateDB(ctx context.Context, buyerNewBalance float64, buyerCodeNumber, invoicetype, aa string) error
 	MakePDF(ctx context.Context, invo *payload.Invoice) (pdf []byte, err error)
+}
+
+type Invoice_type interface {
+	CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error
 }

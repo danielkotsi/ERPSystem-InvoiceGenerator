@@ -4,7 +4,9 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/payload"
+	"-invoice_manager/internal/backend/invoice/types"
 	"-invoice_manager/internal/utils"
+	"errors"
 	"net/http"
 )
 
@@ -37,8 +39,7 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, r *http.Request) (i
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pdf []byte, err error) {
-	var invo payload.Invoice
-	err = utils.ParseFormData(r, &invo)
+	invo, err := s.ParseFormIntoInvoiceType(r)
 	if err != nil {
 		return nil, err
 	}
@@ -60,4 +61,22 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	}
 
 	return pdf, nil
+}
+
+func (s *InvoiceService) ParseFormIntoInvoiceType(r *http.Request) (invoice Invoice_type, err error) {
+	switch r.FormValue("invoiceHeader.invoiceType") {
+	case "1.1":
+		var invoice *types.SellingInvoice
+		err = utils.ParseFormData(r, &invoice.Payload)
+		if err != nil {
+			return nil, err
+		}
+		return invoice, nil
+	case "13.1":
+	case "9.3":
+	case "8.1":
+	default:
+
+	}
+	return nil, errors.New("Invalid Invoice Type")
 }

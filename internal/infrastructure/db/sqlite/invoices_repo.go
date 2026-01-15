@@ -32,9 +32,9 @@ func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *payload.Invoice
 	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
 		return err
 	}
-	if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.PaymentMethods, invo.InvoiceDetails, &invo.InvoiceSummary, &invo.Byer); err != nil {
-		return err
-	}
+	// if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.PaymentMethods, invo.InvoiceDetails, &invo.InvoiceSummary, &invo.Byer); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
