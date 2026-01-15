@@ -9,8 +9,12 @@ type SellingInvoice struct {
 	Payload *payload.InvoicePayload
 }
 
-func (r *SellingInvoice) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
-	if err := r.SellingInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
+func (r *SellingInvoice) GetInvoice() (payload *payload.Invoice) {
+	return &r.Payload.Invoices[0]
+}
+
+func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
+	if err := r.SellingInvoiceLines(r.Payload.Invoices[0].InvoiceHeader.InvoiceType, r.Payload.Invoices[0].InvoiceDetails, &r.Payload.Invoices[0].InvoiceSummary, &r.Payload.Invoices[0].Byer, r.Payload.Invoices[0].PaymentMethods); err != nil {
 		return err
 	}
 	return nil

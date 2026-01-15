@@ -1,8 +1,8 @@
 package sqlite
 
 import (
-	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/utils"
+// "-invoice_manager/internal/backend/invoice/payload"
+// "-invoice_manager/internal/utils"
 )
 
 // func (r *InvoiceRepo) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {

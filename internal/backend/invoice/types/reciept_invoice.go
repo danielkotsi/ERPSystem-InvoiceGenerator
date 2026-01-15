@@ -9,6 +9,10 @@ type Reciept struct {
 	Payload *payload.InvoicePayload
 }
 
+func (r *Reciept) GetInvoice() (payload *payload.Invoice) {
+	return &r.Payload.Invoices[0]
+}
+
 func (r *Reciept) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
 	if err := r.RecieptInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 		return err

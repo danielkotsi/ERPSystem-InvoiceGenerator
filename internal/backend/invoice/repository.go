@@ -14,5 +14,6 @@ type Invoice_repo interface {
 }
 
 type Invoice_type interface {
-	CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error
+	CalculateAlltheInvoiceLines() error
+	GetInvoice() (payload *payload.Invoice)
 }

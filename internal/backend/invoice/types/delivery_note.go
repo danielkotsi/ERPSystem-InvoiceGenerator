@@ -9,6 +9,10 @@ type DeliveryNote struct {
 	Payload *payload.InvoicePayload
 }
 
+func (r *DeliveryNote) GetInvoice() (payload *payload.Invoice) {
+	return &r.Payload.Invoices[0]
+}
+
 func (r *DeliveryNote) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
 	if err := r.RecieptInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
 		return err

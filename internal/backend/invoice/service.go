@@ -43,19 +43,23 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 	if err != nil {
 		return nil, err
 	}
-	err = s.Invoice.CompleteInvoice(ctx, &invo)
+	err = s.Invoice.CompleteInvoice(ctx, invo.GetInvoice())
 	if err != nil {
 		return nil, err
 	}
-	err = s.MyData.SendInvoice(ctx, &invo)
+	err = invo.CalculateAlltheInvoiceLines()
 	if err != nil {
 		return nil, err
 	}
-	err = s.Invoice.UpdateDB(ctx, invo.Byer.NewBalance, invo.Byer.CodeNumber, invo.InvoiceHeader.InvoiceType, invo.InvoiceHeader.Aa)
+	err = s.MyData.SendInvoice(ctx, invo.GetInvoice())
 	if err != nil {
 		return nil, err
 	}
-	pdf, err = s.Invoice.MakePDF(ctx, &invo)
+	err = s.Invoice.UpdateDB(ctx, invo.GetInvoice().Byer.NewBalance, invo.GetInvoice().Byer.CodeNumber, invo.GetInvoice().InvoiceHeader.InvoiceType, invo.GetInvoice().InvoiceHeader.Aa)
+	if err != nil {
+		return nil, err
+	}
+	pdf, err = s.Invoice.MakePDF(ctx, invo.GetInvoice())
 	if err != nil {
 		return nil, err
 	}
@@ -66,8 +70,10 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, r *http.Request) (pd
 func (s *InvoiceService) ParseFormIntoInvoiceType(r *http.Request) (invoice Invoice_type, err error) {
 	switch r.FormValue("invoiceHeader.invoiceType") {
 	case "1.1":
-		var invoice *types.SellingInvoice
-		err = utils.ParseFormData(r, &invoice.Payload)
+		invoice := &types.SellingInvoice{}
+		invoice.Payload = &payload.InvoicePayload{}
+		invoice.Payload.Invoices = make([]payload.Invoice, 1)
+		err = utils.ParseFormData(r, &invoice.Payload.Invoices[0])
 		if err != nil {
 			return nil, err
 		}
