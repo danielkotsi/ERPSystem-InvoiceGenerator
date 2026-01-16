@@ -5,7 +5,6 @@ import (
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
-	"net/http"
 )
 
 type InvoiceService struct {
@@ -20,17 +19,18 @@ func NewInvoiceService(in reposinterfaces.Invoice_repo, mydata MyData_repo) *Inv
 	}
 }
 
-func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, invoiceHTML string, err error) {
+func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, err error) {
 
 	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
 	if err != nil {
-		return invoiceinfo, string(types.InvoiceHTML(string(invoicetype))), err
+		return invoiceinfo, err
 	}
-	return invoiceinfo, string(types.InvoiceHTML(string(invoicetype))), nil
+	return invoiceinfo, nil
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) (pdf []byte, err error) {
-	err = s.Invoice.CompleteInvoice(ctx, invo.GetInvoice())
+	//this one i dont know if it should be a pointer or not
+	err = s.Invoice.CompleteInvoice(ctx, invo)
 	if err != nil {
 		return nil, err
 	}
@@ -38,15 +38,15 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err != nil {
 		return nil, err
 	}
-	err = s.MyData.SendInvoice(ctx, invo.GetInvoice())
+	err = s.MyData.SendInvoice(ctx, invo)
 	if err != nil {
 		return nil, err
 	}
-	err = s.Invoice.UpdateDB(ctx, invo.GetInvoice().Byer.NewBalance, invo.GetInvoice().Byer.CodeNumber, invo.GetInvoice().InvoiceHeader.InvoiceType, invo.GetInvoice().InvoiceHeader.Aa)
+	err = s.Invoice.UpdateDB(ctx, invo)
 	if err != nil {
 		return nil, err
 	}
-	pdf, err = s.Invoice.MakePDF(ctx, invo.GetInvoice())
+	pdf, err = invo.MakePDF()
 	if err != nil {
 		return nil, err
 	}

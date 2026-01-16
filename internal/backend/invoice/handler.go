@@ -3,6 +3,7 @@ package invoice
 import (
 	"-invoice_manager/internal/backend/invoice/adapter"
 	"-invoice_manager/internal/backend/invoice/models"
+	"-invoice_manager/internal/backend/invoice/types"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
 	"log"
@@ -27,12 +28,14 @@ func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
 func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Request) {
 
 	invoiceType := h.Adapter.GetInvoiceTypeFromParameter(r)
-	invoiceinfo, invoicehtml, err := h.InvoiceService.GetInvoiceInfo(r.Context(), invoiceType)
+
+	invoiceinfo, err := h.InvoiceService.GetInvoiceInfo(r.Context(), invoiceType)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err, 500)
 	}
-	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, invoicehtml, map[string]models.InvoiceHTMLinfo{"Info": invoiceinfo}); err != nil {
+
+	if err := h.Excecutor.Tmpl.ExecuteTemplate(w, string(types.InvoiceHTML(string(invoiceType))), map[string]models.InvoiceHTMLinfo{"Info": invoiceinfo}); err != nil {
 		h.Excecutor.ServeErrorwithHTML(w, err, 500)
 	}
 }

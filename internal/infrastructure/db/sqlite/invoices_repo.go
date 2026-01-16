@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/payload"
+	"-invoice_manager/internal/backend/invoice/types"
 	"-invoice_manager/internal/utils"
 	"html/template"
 	"log"
@@ -48,7 +49,7 @@ func (r *InvoiceRepo) UpdateDB(ctx context.Context, buyerNewBalance float64, buy
 	}
 	return nil
 }
-func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype string) (invoiceinfo models.InvoiceHTMLinfo, err error) {
+func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, err error) {
 	query := `
 select users.CodeNumber, 
 	NAME,
@@ -72,7 +73,7 @@ select users.CodeNumber,
 	aa
 from users join user_invoice_types_series on users.CodeNumber==user_invoice_types_series.codeNumber where users.CodeNumber== ? and invoice_type==?;
 `
-	rows, err := r.DB.QueryContext(ctx, query, "COMP01", invoicetype)
+	rows, err := r.DB.QueryContext(ctx, query, "COMP01", string(invoicetype))
 	if err != nil {
 		return invoiceinfo, err
 	}
