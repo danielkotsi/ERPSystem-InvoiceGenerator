@@ -4,6 +4,7 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/payload"
+	"-invoice_manager/internal/backend/invoice/types"
 	"fmt"
 	"strconv"
 	"time"
@@ -61,26 +62,26 @@ func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error
 	return nil
 }
 
-func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invoicetype string) error {
+func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invoicetype types.InvoiceType) error {
 	invoiceinfo.Invoiceinfo.Currency = "EUR"
-	invoiceinfo.Invoiceinfo.Invoicetype = invoicetype
+	invoiceinfo.Invoiceinfo.Invoicetype = string(invoicetype)
 	switch invoicetype {
-	case "1.1":
+	case types.SellingInvoiceType:
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
 		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_2"
 		invoiceinfo.Invoiceinfo.MovePurpose = "1"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
-	case "8.1":
+	case types.RecieptInvoiceType:
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
 		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_8"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
 		invoiceinfo.Invoiceinfo.VatCategory = 8
-	case "9.3":
+	case types.DeliveryNoteInvoiceType:
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
 		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category3"
 		invoiceinfo.Invoiceinfo.MovePurpose = "3"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
-	case "13.1":
+	case types.BuyingInvoiceType:
 		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_201"
 		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category2_2"
 		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
