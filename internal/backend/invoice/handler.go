@@ -1,6 +1,7 @@
 package invoice
 
 import (
+	"-invoice_manager/internal/backend/invoice/adapter"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/services"
 	"-invoice_manager/internal/utils"
@@ -11,10 +12,11 @@ import (
 type InvoiceHandler struct {
 	InvoiceService *InvoiceService
 	Excecutor      *services.Excecutor
+	Adapter        *adapter.InvoiceParser
 }
 
-func NewInvoiceHandler(invoserv *InvoiceService, executor *services.Excecutor) *InvoiceHandler {
-	return &InvoiceHandler{InvoiceService: invoserv, Excecutor: executor}
+func NewInvoiceHandler(invoserv *InvoiceService, executor *services.Excecutor, adapter *adapter.InvoiceParser) *InvoiceHandler {
+	return &InvoiceHandler{InvoiceService: invoserv, Excecutor: executor, Adapter: adapter}
 }
 
 func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +26,8 @@ func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
 
 func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Request) {
 
-	invoiceinfo, invoicehtml, err := h.InvoiceService.GetInvoiceInfo(r.Context(), r)
+	invoiceType := h.Adapter.GetInvoiceTypeFromParameter(r)
+	invoiceinfo, invoicehtml, err := h.InvoiceService.GetInvoiceInfo(r.Context(), invoiceType)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err, 500)
@@ -35,7 +38,12 @@ func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
-	pdf, err := h.InvoiceService.CreateInvoice(r.Context(), r)
+	invo, err := h.Adapter.ParseInvoiceFromRequest(r)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err, 500)
+	}
+	pdf, err := h.InvoiceService.CreateInvoice(r.Context(), invo)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err, 500)

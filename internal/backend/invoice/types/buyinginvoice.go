@@ -9,6 +9,11 @@ type Buying_Invoice struct {
 	Payload *payload.InvoicePayload
 }
 
+func (r *Buying_Invoice) Initialize() {
+	r.Payload = &payload.InvoicePayload{}
+	r.Payload.Invoices = make([]payload.Invoice, 1)
+}
+
 func (r *Buying_Invoice) GetInvoice() (payload *payload.Invoice) {
 	return &r.Payload.Invoices[0]
 }

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"-invoice_manager/internal/backend/customer"
 	"-invoice_manager/internal/backend/invoice"
+	"-invoice_manager/internal/backend/invoice/adapter"
 	"-invoice_manager/internal/backend/middleware"
 	"-invoice_manager/internal/backend/product"
 	"-invoice_manager/internal/backend/routes"
@@ -41,8 +42,10 @@ func New() (http.Handler, *sql.DB) {
 	products_service := product.NewProductsService(productsRepo)
 	htmlexcecuteservice := services.NewHTMLExcecutor(tmpl)
 
+	//the adapter for the Invoices
+	invoiceAdapter := adapter.NewInvoiceParser()
 	// Handlers
-	invoiceHandler := invoice.NewInvoiceHandler(invoice_service, htmlexcecuteservice)
+	invoiceHandler := invoice.NewInvoiceHandler(invoice_service, htmlexcecuteservice, invoiceAdapter)
 	customersHandler := customer.NewCustomersHandler(customers_service, htmlexcecuteservice)
 	productsHandler := product.NewProductsHandler(products_service, htmlexcecuteservice)
 
