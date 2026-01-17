@@ -28,11 +28,11 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.I
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) (pdf []byte, err error) {
-	err = s.Invoice.CompleteInvoice(ctx, invo)
+	err = s.Invoice.HydrateInvoice(ctx, invo)
 	if err != nil {
 		return nil, err
 	}
-	err = invo.CalculateAlltheInvoiceLines()
+	err = invo.CalculateInvoiceLines()
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err != nil {
 		return nil, err
 	}
-	err = s.Invoice.UpdateDB(ctx, invo)
+	err = s.Invoice.Save(ctx, invo)
 	if err != nil {
 		return nil, err
 	}

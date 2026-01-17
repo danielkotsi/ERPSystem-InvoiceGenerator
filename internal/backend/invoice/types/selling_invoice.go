@@ -1,8 +1,13 @@
 package types
 
 import (
+	"bytes"
+	"context"
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
+	"html/template"
+	"log"
+	"path/filepath"
 )
 
 type SellingInvoice struct {
@@ -39,7 +44,7 @@ func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
 		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 		summary.TotalVatAmount += line.VatAmount
 		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+		if err := AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
 		}
 	}
@@ -70,16 +75,6 @@ func (r *SellingInvoice) InvoiceLinePrices(line *payload.InvoiceRow, discount in
 	return nil
 }
 
-func (r *SellingInvoice) AddIncomeClassificationInSummary(classificationItem *payload.ClassificationItem, summary *payload.InvoiceSummary) error {
-	index, exists := IncomeCategoryExists(*classificationItem, summary.IncomeClassification)
-	if exists {
-		summary.IncomeClassification[index].Amount += classificationItem.Amount
-	} else {
-		summary.IncomeClassification = append(summary.IncomeClassification, *classificationItem)
-	}
-	return nil
-}
-
 func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentMethods, buyer *payload.Company, totalgrossamount float64) error {
 	paymenttypes := map[string]int{
 		"Επαγ. Λογαριασμός Πληρωμών Ημεδαπής":  1,
@@ -100,4 +95,32 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 	}
 
 	return nil
+}
+
+// makepdf must be in the domain interface
+func (r *SellingInvoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
+	r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
+	r.GetInvoice().LogoImage = r.logo
+	if err != nil {
+		return nil, err
+	}
+
+	invoicehtmltemp := filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	tmpl, err := template.ParseFiles(invoicehtmltemp)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *r.GetInvoice()})
+	if err != nil {
+		log.Println(err)
+	}
+
+	pdf, err = utils.HTMLtoPDF2(buf.String())
+	if err != nil {
+		return nil, err
+	}
+
+	return pdf, nil
 }
