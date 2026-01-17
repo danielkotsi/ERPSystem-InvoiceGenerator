@@ -20,7 +20,6 @@ func NewInvoiceService(in reposinterfaces.Invoice_repo, mydata MyData_repo) *Inv
 }
 
 func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, err error) {
-
 	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
 	if err != nil {
 		return invoiceinfo, err
@@ -29,7 +28,6 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.I
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) (pdf []byte, err error) {
-	//this one i dont know if it should be a pointer or not
 	err = s.Invoice.CompleteInvoice(ctx, invo)
 	if err != nil {
 		return nil, err
@@ -46,10 +44,5 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err != nil {
 		return nil, err
 	}
-	pdf, err = invo.MakePDF()
-	if err != nil {
-		return nil, err
-	}
-
-	return pdf, nil
+	return invo.MakePDF()
 }

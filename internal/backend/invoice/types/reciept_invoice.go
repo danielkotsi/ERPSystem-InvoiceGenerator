@@ -21,15 +21,15 @@ func (r *Reciept) Initialize() {
 func (r *Reciept) CalculateAlltheInvoiceLines() error {
 	emptylines := 24
 	invoicelines := r.GetInvoice().InvoiceDetails
-	buyer := r.GetInvoice().Byer
-	summary := r.GetInvoice().InvoiceSummary
+	buyer := &r.GetInvoice().Byer
+	summary := &r.GetInvoice().InvoiceSummary
 	paymentmethods := r.GetInvoice().PaymentMethods
 	for i, line := range invoicelines {
 		emptylines--
 		line.LineNumber = i + 1
 		line.IncomeClassification.Amount = line.NetValue
 		summary.TotalNetValue = line.NetValue
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
+		if err := AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
 		}
 	}

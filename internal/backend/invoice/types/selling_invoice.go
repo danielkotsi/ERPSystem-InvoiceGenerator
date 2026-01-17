@@ -21,8 +21,8 @@ func (r *SellingInvoice) GetInvoice() (payload *payload.Invoice) {
 func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
 	emptylines := 24
 	invoicelines := r.GetInvoice().InvoiceDetails
-	buyer := r.GetInvoice().Byer
-	summary := r.GetInvoice().InvoiceSummary
+	buyer := &r.GetInvoice().Byer
+	summary := &r.GetInvoice().InvoiceSummary
 	paymentmethods := r.GetInvoice().PaymentMethods
 	for i, line := range invoicelines {
 		emptylines--
@@ -39,14 +39,14 @@ func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
 		summary.TotalNetValue = utils.RoundTo2(summary.TotalNetValue)
 		summary.TotalVatAmount += line.VatAmount
 		summary.TotalVatAmount = utils.RoundTo2(summary.TotalVatAmount)
-		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, &summary); err != nil {
+		if err := r.AddIncomeClassificationInSummary(line.IncomeClassification, summary); err != nil {
 			return err
 		}
 	}
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
 	buyer.NewBalance = buyer.OldBalance
 
-	if err := r.CompletePaymentMethods(paymentmethods, &buyer, summary.TotalGrossValue); err != nil {
+	if err := r.CompletePaymentMethods(paymentmethods, buyer, summary.TotalGrossValue); err != nil {
 		return err
 	}
 

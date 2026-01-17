@@ -18,15 +18,11 @@ func (r *Buying_Invoice) GetInvoice() (payload *payload.Invoice) {
 	return &r.Payload.Invoices[0]
 }
 
-func (r *Buying_Invoice) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
-	if err := r.BuyingInvoiceLines(invoicetype, invoicelines, summary, buyer, paymentmethods); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *Buying_Invoice) BuyingInvoiceLines(invoicetype string, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company, paymentmethods *payload.PaymentMethods) error {
+func (r *Buying_Invoice) CalculateAlltheInvoiceLines() error {
 	emptylines := 24
+	invoicelines := r.GetInvoice().InvoiceDetails
+	buyer := &r.GetInvoice().Byer
+	summary := &r.GetInvoice().InvoiceSummary
 	for i, line := range invoicelines {
 		emptylines--
 		line.VatCategoryName = utils.VatNames(line.VatCategory)

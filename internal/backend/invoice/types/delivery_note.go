@@ -16,8 +16,11 @@ func (r *DeliveryNote) GetInvoice() (payload *payload.Invoice) {
 	return &r.Payload.Invoices[0]
 }
 
-func (r *DeliveryNote) CalculateAlltheInvoiceLines(invoicetype string, paymentmethods *payload.PaymentMethods, invoicelines []*payload.InvoiceRow, summary *payload.InvoiceSummary, buyer *payload.Company) error {
+func (r *DeliveryNote) CalculateAlltheInvoiceLines() error {
 	emptylines := 24
+	invoicelines := r.GetInvoice().InvoiceDetails
+	buyer := &r.GetInvoice().Byer
+	summary := &r.GetInvoice().InvoiceSummary
 	for i, line := range invoicelines {
 		emptylines--
 		line.LineNumber = i + 1
