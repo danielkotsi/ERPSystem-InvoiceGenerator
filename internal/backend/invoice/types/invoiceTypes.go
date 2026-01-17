@@ -12,8 +12,23 @@ const (
 type InvoiceHTML string
 
 const (
-	SellingInvoiceHTML      InvoiceHTML = "1.1"
-	BuyingInvoiceHTML       InvoiceHTML = "13.1"
-	DeliveryNoteInvoiceHTML InvoiceHTML = "9.3"
-	RecieptInvoiceHTML      InvoiceHTML = "8.1"
+	SellingInvoiceHTML      InvoiceHTML = "create_selling_invoice.page.html"
+	BuyingInvoiceHTML       InvoiceHTML = "create_buying_invoice.page.html"
+	DeliveryNoteInvoiceHTML InvoiceHTML = "create_deliverynote_invoice.page.html"
+	RecieptInvoiceHTML      InvoiceHTML = "create_reciept_invoice.page.html"
 )
+
+func (r InvoiceType) HTMLTemplate() InvoiceHTML {
+	switch r {
+	case SellingInvoiceType:
+		return SellingInvoiceHTML
+	case BuyingInvoiceType:
+		return BuyingInvoiceHTML
+	case DeliveryNoteInvoiceType:
+		return DeliveryNoteInvoiceHTML
+	case RecieptInvoiceType:
+		return RecieptInvoiceHTML
+	default:
+		return ""
+	}
+}
