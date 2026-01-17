@@ -1,16 +1,18 @@
 package routes
 
 import (
-	"-invoice_manager/internal/backend/handlers"
+	"-invoice_manager/internal/backend/customer"
+	"-invoice_manager/internal/backend/invoice"
 	"-invoice_manager/internal/backend/middleware"
+	"-invoice_manager/internal/backend/product"
 	"net/http"
 	"path/filepath"
 )
 
 type Router struct {
-	InvoiceHandler   *handlers.InvoiceHandler
-	CustomersHandler *handlers.CustomersHandler
-	ProductsHandler  *handlers.ProductsHandler
+	InvoiceHandler   *invoice.InvoiceHandler
+	CustomersHandler *customer.CustomersHandler
+	ProductsHandler  *product.ProductsHandler
 	Middleware       *middleware.Middleware
 }
 

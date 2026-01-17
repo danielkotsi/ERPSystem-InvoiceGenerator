@@ -35,3 +35,53 @@ TO DO :
 -need to calculate expenses classification seperately for buying invoice
 reciept invoice vat cat. 8
 inc cat 1_8
+
+
+
+
+New Architecture (Domain Driven => Microsetvoces scalable):
+internal/
+├── backend/                  # could eventually become a microservice
+│   ├── invoice/
+│   │   ├── handler.go
+│   │   ├── service.go
+│   │   ├── repository.go      # interface
+│   │   ├── types/
+│   │   │   ├── selling.go
+│   │   │   ├── buying.go
+│   │   │   ├── receipt.go
+│   │   │   └── delivery.go
+│   │   └── payload/
+│   │       └── invoice_payload.go
+│   │
+│   ├── customer/
+│   │   ├── handler.go
+│   │   ├── service.go
+│   │   └── repository.go
+│   │
+│   ├── product/
+│   │   ├── handler.go
+│   │   ├── service.go
+│   │   └── repository.go
+│   │
+│   └── routes/
+│       └── routes.go
+│
+├── infrastructure/           # external systems
+│   ├── sqlite/
+│   │   ├── invoice_repo.go
+│   │   ├── customer_repo.go
+│   │   └── product_repo.go
+│   └── mydata/
+│       ├── client.go
+│       └── invoice_sender.go
+│
+├── shared/                   # truly shared utilities
+│   ├── utils/
+│   │   ├── htmltopdf.go
+│   │   ├── vatcalculation.go
+│   │   └── ...
+│   └── models/
+│       ├── config.go
+│       └── common_structs.go
+

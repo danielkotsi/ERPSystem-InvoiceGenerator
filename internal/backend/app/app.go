@@ -2,12 +2,15 @@ package app
 
 import (
 	"database/sql"
-	"-invoice_manager/internal/backend/db/sqlite"
-	"-invoice_manager/internal/backend/handlers"
+	"-invoice_manager/internal/backend/customer"
+	"-invoice_manager/internal/backend/invoice"
+	"-invoice_manager/internal/backend/invoice/adapter"
 	"-invoice_manager/internal/backend/middleware"
-	"-invoice_manager/internal/backend/mydata"
+	"-invoice_manager/internal/backend/product"
 	"-invoice_manager/internal/backend/routes"
 	"-invoice_manager/internal/backend/services"
+	"-invoice_manager/internal/infrastructure/db/sqlite"
+	"-invoice_manager/internal/infrastructure/mydata"
 	"-invoice_manager/internal/utils"
 	"html/template"
 	"net/http"
@@ -34,15 +37,17 @@ func New() (http.Handler, *sql.DB) {
 	myDataRepo := mydata.NewMyDataRepo()
 
 	// Services
-	invoice_service := services.NewInvoiceService(invoiceRepo, myDataRepo)
-	customers_service := services.NewCustomersService(customersRepo)
-	products_service := services.NewProductsService(productsRepo)
+	invoice_service := invoice.NewInvoiceService(invoiceRepo, myDataRepo)
+	customers_service := customer.NewCustomersService(customersRepo)
+	products_service := product.NewProductsService(productsRepo)
 	htmlexcecuteservice := services.NewHTMLExcecutor(tmpl)
 
+	//the adapter for the Invoices
+	invoiceAdapter := adapter.NewInvoiceParser(logo, exeDir)
 	// Handlers
-	invoiceHandler := handlers.NewInvoiceHandler(invoice_service, htmlexcecuteservice)
-	customersHandler := handlers.NewCustomersHandler(customers_service, htmlexcecuteservice)
-	productsHandler := handlers.NewProductsHandler(products_service, htmlexcecuteservice)
+	invoiceHandler := invoice.NewInvoiceHandler(invoice_service, htmlexcecuteservice, invoiceAdapter)
+	customersHandler := customer.NewCustomersHandler(customers_service, htmlexcecuteservice)
+	productsHandler := product.NewProductsHandler(products_service, htmlexcecuteservice)
 
 	middleware := middleware.NewMiddleware()
 
