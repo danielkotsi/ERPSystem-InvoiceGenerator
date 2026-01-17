@@ -4,10 +4,7 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/customer/models"
 	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/utils"
 	"fmt"
-	"net/http"
-	"strings"
 )
 
 type CustomersService struct {
@@ -18,9 +15,7 @@ func NewCustomersService(in Customers_repo) *CustomersService {
 	return &CustomersService{Customers: in}
 }
 
-func (s *CustomersService) ListCustomers(ctx context.Context, r *http.Request) (resp []payload.Company, err error) {
-
-	search := r.URL.Query().Get("search")
+func (s *CustomersService) ListCustomers(ctx context.Context, search string) (resp []payload.Company, err error) {
 	customers, err := s.Customers.ListCustomers(ctx, search)
 	if err != nil {
 		return []payload.Company{}, err
@@ -28,9 +23,8 @@ func (s *CustomersService) ListCustomers(ctx context.Context, r *http.Request) (
 	return customers, nil
 }
 
-func (s *CustomersService) GetCustomerById(ctx context.Context, r *http.Request) (resp models.CustomerById, err error) {
+func (s *CustomersService) GetCustomerById(ctx context.Context, codeNumber string) (resp models.CustomerById, err error) {
 
-	codeNumber := strings.TrimPrefix(r.URL.String(), "/customers/byid/")
 	customer, err := s.Customers.GetCustomerById(ctx, codeNumber)
 	if err != nil {
 		return resp, err
@@ -45,10 +39,8 @@ func (s *CustomersService) GetCustomerById(ctx context.Context, r *http.Request)
 	return resp, nil
 }
 
-func (s *CustomersService) ListBranchCompanies(ctx context.Context, r *http.Request) (resp []payload.BranchCompany, err error) {
+func (s *CustomersService) ListBranchCompanies(ctx context.Context, search, company string) (resp []payload.BranchCompany, err error) {
 
-	search := r.URL.Query().Get("search")
-	company := r.URL.Query().Get("company")
 	customers, err := s.Customers.ListBranchCompanies(ctx, company, search)
 	if err != nil {
 		return []payload.BranchCompany{}, err
@@ -56,27 +48,17 @@ func (s *CustomersService) ListBranchCompanies(ctx context.Context, r *http.Requ
 	return customers, nil
 }
 
-func (s *CustomersService) CreateCustomer(ctx context.Context, r *http.Request) error {
+func (s *CustomersService) CreateCustomer(ctx context.Context, customer payload.Company) error {
 
-	var customer payload.Company
-	if err := utils.ParseFormData(r, &customer); err != nil {
-		return err
-	}
-
-	if err := s.Customers.CreateCustomer(r.Context(), customer); err != nil {
+	if err := s.Customers.CreateCustomer(ctx, customer); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *CustomersService) CreateBranchCompany(ctx context.Context, r *http.Request) (err error) {
+func (s *CustomersService) CreateBranchCompany(ctx context.Context, branch payload.BranchCompany) (err error) {
 
-	var branch payload.BranchCompany
-	if err := utils.ParseFormData(r, &branch); err != nil {
-		return err
-	}
-
-	if err := s.Customers.CreateBranchCompany(r.Context(), branch); err != nil {
+	if err := s.Customers.CreateBranchCompany(ctx, branch); err != nil {
 		return err
 	}
 	return nil

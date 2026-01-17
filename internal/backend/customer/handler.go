@@ -7,6 +7,7 @@ import (
 	"-invoice_manager/internal/utils"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type CustomersHandler struct {
@@ -19,8 +20,8 @@ func NewCustomersHandler(invoserv *CustomersService, executor *services.Excecuto
 }
 
 func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) {
-
-	resp, err := h.CustomersService.ListCustomers(r.Context(), r)
+	search := r.URL.Query().Get("search")
+	resp, err := h.CustomersService.ListCustomers(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
@@ -33,8 +34,8 @@ func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *CustomersHandler) GetCustomerById(w http.ResponseWriter, r *http.Request) {
-
-	resp, err := h.CustomersService.GetCustomerById(r.Context(), r)
+	codeNumber := strings.TrimPrefix(r.URL.String(), "/customers/byid/")
+	resp, err := h.CustomersService.GetCustomerById(r.Context(), codeNumber)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
@@ -48,7 +49,8 @@ func (h *CustomersHandler) GetCustomerById(w http.ResponseWriter, r *http.Reques
 
 func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := h.CustomersService.ListCustomers(r.Context(), r)
+	search := r.URL.Query().Get("search")
+	resp, err := h.CustomersService.ListCustomers(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
@@ -60,7 +62,9 @@ func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http
 
 func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := h.CustomersService.ListBranchCompanies(r.Context(), r)
+	search := r.URL.Query().Get("search")
+	company := r.URL.Query().Get("company")
+	resp, err := h.CustomersService.ListBranchCompanies(r.Context(), search, company)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
@@ -71,8 +75,13 @@ func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, 
 }
 
 func (h *CustomersHandler) CreateBranchCompany(w http.ResponseWriter, r *http.Request) {
-	err := h.CustomersService.CreateBranchCompany(r.Context(), r)
-	if err != nil {
+	var branch payload.BranchCompany
+	if err := utils.ParseFormData(r, &branch); err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := h.CustomersService.CreateBranchCompany(r.Context(), branch); err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -82,7 +91,13 @@ func (h *CustomersHandler) CreateBranchCompany(w http.ResponseWriter, r *http.Re
 }
 
 func (h *CustomersHandler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
-	err := h.CustomersService.CreateCustomer(r.Context(), r)
+	var customer payload.Company
+	if err := utils.ParseFormData(r, &customer); err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err := h.CustomersService.CreateCustomer(r.Context(), customer)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)

@@ -19,7 +19,8 @@ func NewProductsHandler(invoserv *ProductsService, executor *services.Excecutor)
 
 func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := h.ProductsService.ListProducts(r.Context(), r)
+	search := r.URL.Query().Get("search")
+	resp, err := h.ProductsService.ListProducts(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
@@ -32,8 +33,8 @@ func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductsHandler) GetProductSuggestions(w http.ResponseWriter, r *http.Request) {
-
-	resp, err := h.ProductsService.ListProducts(r.Context(), r)
+	search := r.URL.Query().Get("search")
+	resp, err := h.ProductsService.ListProducts(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
@@ -44,7 +45,13 @@ func (h *ProductsHandler) GetProductSuggestions(w http.ResponseWriter, r *http.R
 }
 
 func (h *ProductsHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	err := h.ProductsService.CreateProduct(r.Context(), r)
+	var product models.Product
+	if err := utils.ParseFormData(r, &product); err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err := h.ProductsService.CreateProduct(r.Context(), product)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
