@@ -43,7 +43,7 @@ func New() (http.Handler, *sql.DB) {
 	htmlexcecuteservice := services.NewHTMLExcecutor(tmpl)
 
 	//the adapter for the Invoices
-	invoiceAdapter := adapter.NewInvoiceParser()
+	invoiceAdapter := adapter.NewInvoiceParser(logo, exeDir)
 	// Handlers
 	invoiceHandler := invoice.NewInvoiceHandler(invoice_service, htmlexcecuteservice, invoiceAdapter)
 	customersHandler := customer.NewCustomersHandler(customers_service, htmlexcecuteservice)

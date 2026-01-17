@@ -8,11 +8,14 @@ import (
 	"net/http"
 )
 
+// logo might go away from this and be fetched from the db for each user
 type InvoiceParser struct {
+	Abspath string
+	Logo    string
 }
 
-func NewInvoiceParser() *InvoiceParser {
-	return &InvoiceParser{}
+func NewInvoiceParser(logo string, abspath string) *InvoiceParser {
+	return &InvoiceParser{Logo: logo, Abspath: abspath}
 }
 func (a *InvoiceParser) GetInvoiceTypeFromParameter(r *http.Request) types.InvoiceType {
 	return types.InvoiceType(r.URL.Query().Get("invoice_type"))
@@ -27,6 +30,8 @@ func (a *InvoiceParser) ParseInvoiceFromRequest(r *http.Request) (invoicetype re
 		if err != nil {
 			return nil, err
 		}
+		invoice.Abspath = a.Abspath
+		invoice.Logo = a.Logo
 		return invoice, nil
 	case types.BuyingInvoiceType:
 		invoice := &types.Buying_Invoice{}
@@ -35,6 +40,8 @@ func (a *InvoiceParser) ParseInvoiceFromRequest(r *http.Request) (invoicetype re
 		if err != nil {
 			return nil, err
 		}
+		invoice.Abspath = a.Abspath
+		invoice.Logo = a.Logo
 		return invoice, nil
 	case types.DeliveryNoteInvoiceType:
 		invoice := &types.DeliveryNote{}
@@ -43,6 +50,8 @@ func (a *InvoiceParser) ParseInvoiceFromRequest(r *http.Request) (invoicetype re
 		if err != nil {
 			return nil, err
 		}
+		invoice.Abspath = a.Abspath
+		invoice.Logo = a.Logo
 		return invoice, nil
 	case types.RecieptInvoiceType:
 		invoice := &types.Reciept{}
@@ -51,6 +60,8 @@ func (a *InvoiceParser) ParseInvoiceFromRequest(r *http.Request) (invoicetype re
 		if err != nil {
 			return nil, err
 		}
+		invoice.Abspath = a.Abspath
+		invoice.Logo = a.Logo
 		return invoice, nil
 	default:
 		return nil, errors.New("InvoiceType Not Supperted or Invalid InvoiceType")

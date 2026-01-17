@@ -21,14 +21,11 @@ func NewInvoiceHandler(invoserv *InvoiceService, executor *services.Excecutor, a
 }
 
 func (h *InvoiceHandler) GetHome(w http.ResponseWriter, r *http.Request) {
-	// h.InvoiceService.Invoice.DesignInvoice()
 	h.Excecutor.Tmpl.ExecuteTemplate(w, "home.page.html", nil)
 }
 
 func (h *InvoiceHandler) GetMakeInvoicePage(w http.ResponseWriter, r *http.Request) {
-
 	invoiceType := h.Adapter.GetInvoiceTypeFromParameter(r)
-
 	invoiceinfo, err := h.InvoiceService.GetInvoiceInfo(r.Context(), invoiceType)
 	if err != nil {
 		log.Println(err)
@@ -52,9 +49,5 @@ func (h *InvoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, err, 500)
 	}
 
-	// if err := h.Excecutor.Tmpl.ExecuteTemplate(w, "invoice.page.html", map[string]models.Invoice{"Customers": pdf}); err != nil {
-	// 	h.Excecutor.ServeErrorwithHTML(w, err, 500)
-	// }
 	utils.PDFResponse(w, pdf, 200)
-	// utils.XMLResponse(w, pdf, 200)
 }

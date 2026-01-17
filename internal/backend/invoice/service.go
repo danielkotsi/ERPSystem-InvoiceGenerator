@@ -5,6 +5,7 @@ import (
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
+	"fmt"
 )
 
 type InvoiceService struct {
@@ -22,27 +23,27 @@ func NewInvoiceService(in reposinterfaces.Invoice_repo, mydata MyData_repo) *Inv
 func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, err error) {
 	invoiceinfo, err = s.Invoice.GetInvoiceInfo(ctx, invoicetype)
 	if err != nil {
-		return invoiceinfo, err
+		return invoiceinfo, fmt.Errorf("Error In Getting InvoiceHTML info from DB: %w", err)
 	}
 	return invoiceinfo, nil
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) (pdf []byte, err error) {
-	err = s.Invoice.HydrateInvoice(ctx, invo)
-	if err != nil {
-		return nil, err
+	if err := s.Invoice.HydrateInvoice(ctx, invo); err != nil {
+		return nil, fmt.Errorf("Error in Hydration from DB: %w", err)
 	}
-	err = invo.CalculateInvoiceLines()
-	if err != nil {
-		return nil, err
+	if err := invo.CalculateInvoiceLines(); err != nil {
+		return nil, fmt.Errorf("Error in InvoiceLines Calculation: %w", err)
 	}
-	err = s.MyData.SendInvoice(ctx, invo)
-	if err != nil {
-		return nil, err
+	if err := s.MyData.SendInvoice(ctx, invo); err != nil {
+		return nil, fmt.Errorf("Error Sending Invoice to Mydata: %w", err)
 	}
-	err = s.Invoice.Save(ctx, invo)
-	if err != nil {
-		return nil, err
+	if err := s.Invoice.Save(ctx, invo); err != nil {
+		return nil, fmt.Errorf("Error Saving the Invoice to the DB: %w", err)
 	}
-	return invo.MakePDF()
+	pdf, err = invo.MakePDF(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Error in PDF Generation: %w", err)
+	}
+	return pdf, nil
 }

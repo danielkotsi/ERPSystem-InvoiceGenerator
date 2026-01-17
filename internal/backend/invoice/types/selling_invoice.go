@@ -12,6 +12,8 @@ import (
 
 type SellingInvoice struct {
 	Payload *payload.InvoicePayload
+	Logo    string
+	Abspath string
 }
 
 func (r *SellingInvoice) Initialize() {
@@ -23,7 +25,7 @@ func (r *SellingInvoice) GetInvoice() (payload *payload.Invoice) {
 	return &r.Payload.Invoices[0]
 }
 
-func (r *SellingInvoice) CalculateAlltheInvoiceLines() error {
+func (r *SellingInvoice) CalculateInvoiceLines() error {
 	emptylines := 24
 	invoicelines := r.GetInvoice().InvoiceDetails
 	buyer := &r.GetInvoice().Byer
@@ -100,12 +102,12 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 // makepdf must be in the domain interface
 func (r *SellingInvoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
 	r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
-	r.GetInvoice().LogoImage = r.logo
+	r.GetInvoice().LogoImage = r.Logo
 	if err != nil {
 		return nil, err
 	}
 
-	invoicehtmltemp := filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
+	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "invoice.page.html")
 	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)

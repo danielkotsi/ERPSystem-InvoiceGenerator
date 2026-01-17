@@ -1,42 +1,35 @@
 package sqlite
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/payload"
+	reposinterfaces "-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
-	"-invoice_manager/internal/utils"
-	"html/template"
-	"log"
-	"path/filepath"
+	"fmt"
+	"strconv"
+	"time"
 )
 
 type InvoiceRepo struct {
-	DB      *sql.DB
-	abspath string
-	logo    string
+	DB *sql.DB
 }
 
 func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
-	return &InvoiceRepo{DB: db, abspath: abspath, logo: logo}
+	return &InvoiceRepo{DB: db}
 }
 
-func (r *InvoiceRepo) CompleteInvoice(ctx context.Context, invo *payload.Invoice) error {
-	if err := r.GetSellerInfo(ctx, &invo.Seller); err != nil {
+func (r *InvoiceRepo) HydrateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) error {
+	if err := r.GetSellerInfo(ctx, &invo.GetInvoice().Seller); err != nil {
 		return err
 	}
-	if err := r.GetBuyerBalance(ctx, &invo.Byer); err != nil {
+	if err := r.GetBuyerBalance(ctx, &invo.GetInvoice().Byer); err != nil {
 		return err
 	}
-	if err := r.CompleteInvoiceHeader(&invo.InvoiceHeader); err != nil {
+	if err := r.CompleteInvoiceHeader(&invo.GetInvoice().InvoiceHeader); err != nil {
 		return err
 	}
-	// if err := r.CalculateAlltheInvoiceLines(invo.InvoiceHeader.InvoiceType, invo.PaymentMethods, invo.InvoiceDetails, &invo.InvoiceSummary, &invo.Byer); err != nil {
-	// 	return err
-	// }
-
 	return nil
 }
 
@@ -93,35 +86,97 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 	return invoiceinfo, nil
 }
 
-func (r *InvoiceRepo) MakePDF(ctx context.Context, finalInvoice *payload.Invoice) (pdf []byte, err error) {
-	finalInvoice.QrBase64, err = utils.GenerateQRcodeBase64(finalInvoice.QrURL)
-	finalInvoice.LogoImage = r.logo
+func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *payload.Company) error {
+	query := "select Balance from customers where CodeNumber=?;"
+	rows, err := r.DB.QueryContext(ctx, query, buyer.CodeNumber)
 	if err != nil {
-		return nil, err
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&buyer.OldBalance); err != nil {
+			return err
+		}
 	}
 
-	var invoicehtmltemp string
-	switch finalInvoice.InvoiceHeader.InvoiceType {
-	case "8.1":
-		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "reciept_invoice.page.html")
-	default:
-		invoicehtmltemp = filepath.Join(r.abspath, "assets", "templates", "invoice.page.html")
-	}
-	tmpl, err := template.ParseFiles(invoicehtmltemp)
-	if err != nil {
-		log.Println(err)
-	}
+	return nil
+}
+func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company) error {
+	query := `select PostalCellName, PostalCellNumber,PostalCellPostalCode, PostalCellCity from users where CodeNumber==?;`
 
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *finalInvoice})
+	rows, err := r.DB.QueryContext(ctx, query, seller.CodeNumber)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
-
-	pdf, err = utils.HTMLtoPDF2(buf.String())
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&seller.PostalAddress.Naming, &seller.PostalAddress.Cellnumber, &seller.PostalAddress.PostalCode, &seller.PostalAddress.City); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (r *InvoiceRepo) UpdateBalance(ctx context.Context, buyerCodeNumber string, buyerNewBalance float64) error {
+	query := "update customers set Balance=? where CodeNumber==?;"
+	if _, err := r.DB.ExecContext(ctx, query, buyerNewBalance, buyerCodeNumber); err != nil {
+		return err
+	}
+	return nil
+}
+func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error {
+	aaint, err := strconv.Atoi(aa)
 	if err != nil {
-		return nil, err
+		return err
 	}
+	aaint++
+	aa = fmt.Sprintf("%05d", aaint)
+	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
 
-	return pdf, nil
+	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *InvoiceRepo) CompleteHTMLinfo(invoiceinfo *models.InvoiceHTMLinfo, invoicetype types.InvoiceType) error {
+	invoiceinfo.Invoiceinfo.Currency = "EUR"
+	invoiceinfo.Invoiceinfo.Invoicetype = string(invoicetype)
+	switch invoicetype {
+	case types.SellingInvoiceType:
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_2"
+		invoiceinfo.Invoiceinfo.MovePurpose = "1"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
+	case types.RecieptInvoiceType:
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_561_001"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category1_8"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
+		invoiceinfo.Invoiceinfo.VatCategory = 8
+	case types.DeliveryNoteInvoiceType:
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = ""
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category3"
+		invoiceinfo.Invoiceinfo.MovePurpose = "3"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = true
+	case types.BuyingInvoiceType:
+		invoiceinfo.Invoiceinfo.IncomeClassificationType = "E3_201"
+		invoiceinfo.Invoiceinfo.IncomeClassificationCat = "category2_2"
+		invoiceinfo.Invoiceinfo.IsDeliveryNote = false
+	}
+	return nil
+}
+
+func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error {
+	movepurpses := map[int]string{
+		1: "Πώληση",
+		3: "Δειγματισμός",
+		9: "Αγορά",
+	}
+	header.IssueDate = time.Now().Format("2006-01-02")
+	header.Time = time.Now().Format("15:04")
+	header.MovePurposeName = movepurpses[header.MovePurpose]
+	return nil
+}
+
+func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_type) error {
+	return nil
 }
