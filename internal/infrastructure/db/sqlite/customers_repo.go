@@ -9,58 +9,26 @@ import (
 
 type CustomersRepo struct {
 	DB *sql.DB
+
+	CustomerStmts *CustomerStmts
+}
+type CustomerStmts struct {
+	CreateCustomer      *sql.Stmt
+	CreateBranchCompany *sql.Stmt
+	SearchByName        *sql.Stmt
+	SearchBranch        *sql.Stmt
+	SearchById          *sql.Stmt
 }
 
-func NewCustomersRepo(db *sql.DB) *CustomersRepo {
-	return &CustomersRepo{DB: db}
-}
-
-func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]payload.Company, error) {
-	search = fmt.Sprintf("%v%%", search)
-	fmt.Println(search)
-	query := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where NAME LIKE ? "
-
-	rows, err := r.DB.QueryContext(ctx, query, search)
+func NewCustomersRepo(db *sql.DB) (*CustomersRepo, error) {
+	customerStmts, err := NewCustomerStmts(db)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
-	var customers []payload.Company
-	for rows.Next() {
-		var p payload.Company
-		p.Address = &payload.AddressType{}
-		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
-			return nil, err
-		}
-		customers = append(customers, p)
-	}
-	fmt.Println(customers)
-	return customers, nil
+	return &CustomersRepo{DB: db, CustomerStmts: customerStmts}, nil
 }
-
-func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (customer payload.Company, err error) {
-	query := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where CodeNumber== ? "
-
-	rows, err := r.DB.QueryContext(ctx, query, code)
-	if err != nil {
-		return customer, err
-	}
-	defer rows.Close()
-
-	var p payload.Company
-	p.Address = &payload.AddressType{}
-	for rows.Next() {
-		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
-			return customer, err
-		}
-	}
-	return p, nil
-}
-
-func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data payload.Company) error {
-
-	query := `insert into customers(
+func NewCustomerStmts(db *sql.DB) (*CustomerStmts, error) {
+	createCustomerQuery := `insert into customers(
 	CodeNumber,
 	NAME,
 	DOI,
@@ -82,18 +50,37 @@ func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data payloa
 	Balance,
 	Discount
 	) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `
-
-	_, err := r.DB.ExecContext(ctx, query, customer_data.CodeNumber, customer_data.Name, customer_data.DOI, customer_data.GEMI, customer_data.Phone, customer_data.Mobile_Phone, customer_data.Email, customer_data.PostalAddress.Naming, customer_data.PostalAddress.Cellnumber, customer_data.PostalAddress.PostalCode, customer_data.PostalAddress.City, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.PostalCode, customer_data.Address.City, customer_data.VatNumber, customer_data.Country, customer_data.Branch, customer_data.OldBalance, customer_data.Discount)
+	insertStmt, err := db.Prepare(createCustomerQuery)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
-}
+	createBranchQuery := `insert into BranchCompanies(
+	BranchCode,
+	CompanyCode,
+	NAME,
+	Phone,
+	Mobile_Phone,
+	Email,
+	AddStreet  ,
+	AddNumber  ,
+	AddPostalCode  ,
+	AddCity,
+	Country,
+	Branch,
+	Balance,
+	Discount
+	) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) `
+	createBranchStmt, err := db.Prepare(createBranchQuery)
+	if err != nil {
+		return nil, err
+	}
+	selectByNameQuery := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where NAME LIKE ? "
+	selectByNameStmt, err := db.Prepare(selectByNameQuery)
+	if err != nil {
+		return nil, err
+	}
 
-func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]payload.BranchCompany, error) {
-	search = fmt.Sprintf("%v%%", search)
-	fmt.Println(search)
-	query := `SELECT 
+	selectBranchQuery := `SELECT 
 	BranchCode,
 	CompanyCode,
 	NAME,
@@ -108,8 +95,71 @@ func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search
 	Balance
 	from BranchCompanies 
 	where CompanyCode==? and BranchCode like ?;`
+	selectBranchStmt, err := db.Prepare(selectBranchQuery)
+	if err != nil {
+		return nil, err
+	}
+	searchByIdQuery := "SELECT CodeNumber, NAME,DOI,GEMI,Phone,Mobile_Phone,Email,PostalCellName,PostalCellNumber,PostalCellPostalCode,PostalCellCity,AddStreet,AddNumber, AddPostalCode,AddCity,VatNumber,Country,Branch,Balance,Discount from customers  where CodeNumber== ? "
+	searchByIdStmt, err := db.Prepare(searchByIdQuery)
+	if err != nil {
+		return nil, err
+	}
+	return &CustomerStmts{CreateCustomer: insertStmt,
+		CreateBranchCompany: createBranchStmt,
+		SearchByName:        selectByNameStmt,
+		SearchBranch:        selectBranchStmt,
+		SearchById:          searchByIdStmt,
+	}, nil
+}
 
-	rows, err := r.DB.QueryContext(ctx, query, company, search)
+func (r *CustomersRepo) ListCustomers(ctx context.Context, search string) ([]payload.Company, error) {
+	search = fmt.Sprintf("%v%%", search)
+	fmt.Println(search)
+	rows, err := r.CustomerStmts.SearchByName.QueryContext(ctx, search)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var customers []payload.Company
+	for rows.Next() {
+		var p payload.Company
+		p.Address = &payload.AddressType{}
+		if err := rows.Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount); err != nil {
+			return nil, err
+		}
+		customers = append(customers, p)
+	}
+	return customers, nil
+}
+
+func (r *CustomersRepo) GetCustomerById(ctx context.Context, code string) (customer payload.Company, err error) {
+	var p payload.Company
+	p.Address = &payload.AddressType{}
+
+	err = r.CustomerStmts.SearchById.
+		QueryRowContext(ctx, code).
+		Scan(&p.CodeNumber, &p.Name, &p.DOI, &p.GEMI, &p.Phone, &p.Mobile_Phone, &p.Email, &p.PostalAddress.Naming, &p.PostalAddress.Cellnumber, &p.PostalAddress.PostalCode, &p.PostalAddress.City, &p.Address.Street, &p.Address.Number, &p.Address.PostalCode, &p.Address.City, &p.VatNumber, &p.Country, &p.Branch, &p.OldBalance, &p.Discount)
+	if err != nil {
+		return customer, err
+	}
+	return p, nil
+}
+
+func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data payload.Company) error {
+
+	_, err := r.CustomerStmts.CreateCustomer.ExecContext(ctx, customer_data.CodeNumber, customer_data.Name, customer_data.DOI, customer_data.GEMI, customer_data.Phone, customer_data.Mobile_Phone, customer_data.Email, customer_data.PostalAddress.Naming, customer_data.PostalAddress.Cellnumber, customer_data.PostalAddress.PostalCode, customer_data.PostalAddress.City, customer_data.Address.Street, customer_data.Address.Number, customer_data.Address.PostalCode, customer_data.Address.City, customer_data.VatNumber, customer_data.Country, customer_data.Branch, customer_data.OldBalance, customer_data.Discount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]payload.BranchCompany, error) {
+	search = fmt.Sprintf("%v%%", search)
+	fmt.Println(search)
+
+	rows, err := r.CustomerStmts.SearchBranch.QueryContext(ctx, company, search)
 	if err != nil {
 		return nil, err
 	}
@@ -128,24 +178,7 @@ func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search
 
 func (r *CustomersRepo) CreateBranchCompany(ctx context.Context, branch_data payload.BranchCompany) error {
 
-	query := `insert into BranchCompanies(
-	BranchCode,
-	CompanyCode,
-	NAME,
-	Phone,
-	Mobile_Phone,
-	Email,
-	AddStreet  ,
-	AddNumber  ,
-	AddPostalCode  ,
-	AddCity,
-	Country,
-	Branch,
-	Balance,
-	Discount
-	) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) `
-
-	_, err := r.DB.ExecContext(ctx, query, branch_data.BranchCode, branch_data.CompanyCode, branch_data.Name, branch_data.Phone, branch_data.Mobile_Phone, branch_data.Email, branch_data.Address.Street, branch_data.Address.Number, branch_data.Address.PostalCode, branch_data.Address.City, branch_data.Country, 0, branch_data.OldBalance, 0)
+	_, err := r.CustomerStmts.CreateBranchCompany.ExecContext(ctx, branch_data.BranchCode, branch_data.CompanyCode, branch_data.Name, branch_data.Phone, branch_data.Mobile_Phone, branch_data.Email, branch_data.Address.Street, branch_data.Address.Number, branch_data.Address.PostalCode, branch_data.Address.City, branch_data.Country, 0, branch_data.OldBalance, 0)
 	if err != nil {
 		return err
 	}

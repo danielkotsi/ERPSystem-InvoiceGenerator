@@ -12,6 +12,7 @@ import (
 	"-invoice_manager/internal/infrastructure/db/sqlite"
 	"-invoice_manager/internal/infrastructure/mydata"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -31,7 +32,11 @@ func New() (http.Handler, *sql.DB) {
 	tmpl := template.Must(template.ParseGlob(templatesDir))
 
 	invoiceRepo := sqlite.NewInvoiceRepo(db, exeDir, logo)
-	customersRepo := sqlite.NewCustomersRepo(db)
+	customersRepo, err := sqlite.NewCustomersRepo(db)
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
 	productsRepo := sqlite.NewProductsRepo(db)
 	myDataRepo := mydata.NewMyDataRepo()
 
