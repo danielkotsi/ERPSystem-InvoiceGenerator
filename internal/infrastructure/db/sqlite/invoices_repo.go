@@ -14,11 +14,16 @@ import (
 )
 
 type InvoiceRepo struct {
-	DB *sql.DB
+	DB    *sql.DB
+	Stmts *InvoiceStmts
 }
 
-func NewInvoiceRepo(db *sql.DB, abspath string, logo string) *InvoiceRepo {
-	return &InvoiceRepo{DB: db}
+func NewInvoiceRepo(db *sql.DB, abspath string, logo string) (*InvoiceRepo, error) {
+	InvoiceStmts, err := NewInvoiceStmts(db)
+	if err != nil {
+		return nil, err
+	}
+	return &InvoiceRepo{DB: db, Stmts: InvoiceStmts}, nil
 }
 
 func (r *InvoiceRepo) HydrateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) error {
@@ -44,40 +49,32 @@ func (r *InvoiceRepo) UpdateDB(ctx context.Context, buyerNewBalance float64, buy
 	return nil
 }
 func (r *InvoiceRepo) GetInvoiceInfo(ctx context.Context, invoicetype types.InvoiceType) (invoiceinfo models.InvoiceHTMLinfo, err error) {
-	query := `
-select users.CodeNumber, 
-	NAME,
-	DOI,
-	GEMI,
-	Phone,
-	Mobile_Phone,
-	Email,
-	PostalCellName,
-	PostalCellNumber,
-	PostalCellPostalCode,
-	PostalCellCity,
-	AddStreet,
-	AddNumber, 
-	AddPostalCode,
-	AddCity,
-	VatNumber,
-	Country,
-	Branch,
-	series,
-	aa
-from users join user_invoice_types_series on users.CodeNumber==user_invoice_types_series.codeNumber where users.CodeNumber== ? and invoice_type==?;
-`
-	rows, err := r.DB.QueryContext(ctx, query, "COMP01", string(invoicetype))
+	invoiceinfo.User.Address = &payload.AddressType{}
+
+	err = r.Stmts.GetInvoiceInfo.
+		QueryRowContext(ctx, "COMP01", string(invoicetype)).
+		Scan(&invoiceinfo.User.CodeNumber,
+			&invoiceinfo.User.Name,
+			&invoiceinfo.User.DOI,
+			&invoiceinfo.User.GEMI,
+			&invoiceinfo.User.Phone,
+			&invoiceinfo.User.Mobile_Phone,
+			&invoiceinfo.User.Email,
+			&invoiceinfo.User.PostalAddress.Naming,
+			&invoiceinfo.User.PostalAddress.Cellnumber,
+			&invoiceinfo.User.PostalAddress.PostalCode,
+			&invoiceinfo.User.PostalAddress.City,
+			&invoiceinfo.User.Address.Street,
+			&invoiceinfo.User.Address.Number,
+			&invoiceinfo.User.Address.PostalCode,
+			&invoiceinfo.User.Address.City,
+			&invoiceinfo.User.VatNumber,
+			&invoiceinfo.User.Country,
+			&invoiceinfo.User.Branch,
+			&invoiceinfo.Invoiceinfo.Series,
+			&invoiceinfo.Invoiceinfo.Aa)
 	if err != nil {
 		return invoiceinfo, err
-	}
-	defer rows.Close()
-
-	invoiceinfo.User.Address = &payload.AddressType{}
-	for rows.Next() {
-		if err := rows.Scan(&invoiceinfo.User.CodeNumber, &invoiceinfo.User.Name, &invoiceinfo.User.DOI, &invoiceinfo.User.GEMI, &invoiceinfo.User.Phone, &invoiceinfo.User.Mobile_Phone, &invoiceinfo.User.Email, &invoiceinfo.User.PostalAddress.Naming, &invoiceinfo.User.PostalAddress.Cellnumber, &invoiceinfo.User.PostalAddress.PostalCode, &invoiceinfo.User.PostalAddress.City, &invoiceinfo.User.Address.Street, &invoiceinfo.User.Address.Number, &invoiceinfo.User.Address.PostalCode, &invoiceinfo.User.Address.City, &invoiceinfo.User.VatNumber, &invoiceinfo.User.Country, &invoiceinfo.User.Branch, &invoiceinfo.Invoiceinfo.Series, &invoiceinfo.Invoiceinfo.Aa); err != nil {
-			return invoiceinfo, err
-		}
 	}
 
 	err = r.CompleteHTMLinfo(&invoiceinfo, invoicetype)
@@ -88,38 +85,32 @@ from users join user_invoice_types_series on users.CodeNumber==user_invoice_type
 }
 
 func (r *InvoiceRepo) GetBuyerBalance(ctx context.Context, buyer *payload.Company) error {
-	query := "select Balance from customers where CodeNumber=?;"
-	rows, err := r.DB.QueryContext(ctx, query, buyer.CodeNumber)
+	err := r.Stmts.GetBuyerBalance.
+		QueryRowContext(ctx, buyer.CodeNumber).Scan(&buyer.OldBalance)
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		if err := rows.Scan(&buyer.OldBalance); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
-func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company) error {
-	query := `select PostalCellName, PostalCellNumber,PostalCellPostalCode, PostalCellCity from users where CodeNumber==?;`
 
-	rows, err := r.DB.QueryContext(ctx, query, seller.CodeNumber)
+func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company) error {
+	//we might get an error here because of the comma inside scan
+	err := r.Stmts.GetSellerInfo.
+		QueryRowContext(ctx, seller.CodeNumber).
+		Scan(
+			&seller.PostalAddress.Naming,
+			&seller.PostalAddress.Cellnumber,
+			&seller.PostalAddress.PostalCode,
+			&seller.PostalAddress.City,
+		)
 	if err != nil {
 		return err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		if err := rows.Scan(&seller.PostalAddress.Naming, &seller.PostalAddress.Cellnumber, &seller.PostalAddress.PostalCode, &seller.PostalAddress.City); err != nil {
-			return err
-		}
 	}
 	return nil
 }
 func (r *InvoiceRepo) UpdateBalance(ctx context.Context, buyerCodeNumber string, buyerNewBalance float64) error {
-	query := "update customers set Balance=? where CodeNumber==?;"
-	if _, err := r.DB.ExecContext(ctx, query, utils.RoundTo2(buyerNewBalance), buyerCodeNumber); err != nil {
+	if _, err := r.Stmts.UpdateBalance.
+		ExecContext(ctx, buyerNewBalance, buyerCodeNumber); err != nil {
 		return err
 	}
 	return nil
@@ -131,9 +122,9 @@ func (r *InvoiceRepo) AddToAA(ctx context.Context, invoicetype, aa string) error
 	}
 	aaint++
 	aa = fmt.Sprintf("%05d", aaint)
-	query := `update user_invoice_types_series set aa=? where invoice_type==?;`
 
-	if _, err := r.DB.ExecContext(ctx, query, aa, invoicetype); err != nil {
+	if _, err := r.Stmts.UpdateAA.
+		ExecContext(ctx, aa, invoicetype); err != nil {
 		return err
 	}
 	return nil
@@ -183,19 +174,54 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error
 // and on the invoice that is going to be saved,
 // the seller name,the Buyer name, the OtherDeliveryNoteHeader as well
 func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_type) error {
-	invoice := invo.GetInvoice()
-	// uncomment the following lines for reciept invoice and buying invoice not to panic
-	// invoice.Seller.Address = &payload.AddressType{}
-	// invoice.Seller.Address.Street = "athina"
-	// invoice.Seller.Address.Number = "123"
-	// invoice.Seller.Address.PostalCode = "12fh3"
-	// invoice.Seller.Address.City = "berling"
-	// name := "alex"
-	// invoice.Seller.Name = &name
-	// invoice.Byer.Name = &name
-	// invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
 	if err := r.UpdateDB(ctx, invoice.Byer.NewBalance, invoice.Byer.CodeNumber, invoice.InvoiceHeader.InvoiceType, invoice.InvoiceHeader.Aa); err != nil {
 		return fmt.Errorf("Error on updating the Database %w", err)
 	}
+	switch invo.(type) {
+	case *types.SellingInvoice:
+		_, err := r.Stmts.SaveSellingInvoice.ExecContext(ctx, invo.GetInvoice())
+		if err != nil {
+			return err
+		}
+	case *types.Buying_Invoice:
+		//this is so that it doesn't panic on empty values
+		invoice := invo.GetInvoice()
+		invoice.Seller.Address = &payload.AddressType{}
+		invoice.Seller.Address.Street = "athina"
+		invoice.Seller.Address.Number = "123"
+		invoice.Seller.Address.PostalCode = "12fh3"
+		invoice.Seller.Address.City = "berling"
+		name := "alex"
+		invoice.Seller.Name = &name
+		invoice.Byer.Name = &name
+		invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
+		_, err := r.Stmts.SaveBuyingInvoice.ExecContext(ctx, invo.GetInvoice())
+		if err != nil {
+			return err
+		}
+	case *types.DeliveryNote:
+		_, err := r.Stmts.SaveDeliveryNote.ExecContext(ctx, invo.GetInvoice())
+		if err != nil {
+			return err
+		}
+	case *types.Reciept:
+		//this is so that it doesn't panic on empty values
+		invoice := invo.GetInvoice()
+		invoice.Seller.Address = &payload.AddressType{}
+		invoice.Seller.Address.Street = "athina"
+		invoice.Seller.Address.Number = "123"
+		invoice.Seller.Address.PostalCode = "12fh3"
+		invoice.Seller.Address.City = "berling"
+		name := "alex"
+		invoice.Seller.Name = &name
+		invoice.Byer.Name = &name
+		invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
+		_, err := r.Stmts.SaveReciept.ExecContext(ctx, invo.GetInvoice())
+		if err != nil {
+			return err
+		}
+	default:
+	}
+
 	return nil
 }

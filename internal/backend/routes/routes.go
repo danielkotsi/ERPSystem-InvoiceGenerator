@@ -16,6 +16,14 @@ type Router struct {
 	Middleware       *middleware.Middleware
 }
 
+func NewRouter(invoiceHandler *invoice.InvoiceHandler, customersHandler *customer.CustomersHandler, productsHandler *product.ProductsHandler, middleware *middleware.Middleware) *Router {
+	return &Router{
+		InvoiceHandler:   invoiceHandler,
+		CustomersHandler: customersHandler,
+		ProductsHandler:  productsHandler,
+		Middleware:       middleware,
+	}
+}
 func (r *Router) Setup(abspath string) http.Handler {
 	mux := http.NewServeMux()
 
