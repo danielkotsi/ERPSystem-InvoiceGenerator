@@ -5,15 +5,17 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
-	"html/template"
-	"log"
-	"path/filepath"
+	"fmt"
+
+	"github.com/signintech/gopdf"
+	"github.com/skip2/go-qrcode"
 )
 
 type SellingInvoice struct {
-	Payload *payload.InvoicePayload
-	Logo    string
-	Abspath string
+	Payload     *payload.InvoicePayload
+	Logo        string
+	Abspath     string
+	PDFtemplate []byte
 }
 
 func (r *SellingInvoice) Initialize() {
@@ -100,28 +102,45 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 }
 
 // makepdf must be in the domain interface
-func (r *SellingInvoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
+func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
 	// r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
 	// r.GetInvoice().LogoImage = r.Logo
 	// if err != nil {
 	// 	return nil, err
 	// }
 
-	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "emptyinvoice.html")
-	tmpl, err := template.ParseFiles(invoicehtmltemp)
-	if err != nil {
-		log.Println(err)
-	}
-
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *r.GetInvoice()})
-	if err != nil {
-		log.Println(err)
-	}
-
-	pdf, err = utils.HTMLtoPDF2(buf.String())
+	pdf, err := r.GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
+	}
+
+	qrpng, err := qrcode.Encode("http://localhost:8080", qrcode.Medium, 256)
+	if err != nil {
+		return nil, err
+	}
+	pdf.ImageFromImageInBytes(qrpng, 20, 20, &gopdf.Rect{
+		W: 80,
+		H: 80,
+	})
+
+	result := &bytes.Buffer{}
+	_, err = pdf.WriteTo(result)
+	if err != nil {
+		return nil, err
+	}
+	return result.Bytes(), nil
+}
+
+func (r *SellingInvoice) GeneratePDFfromTemp() (*gopdf.GoPdf, error) {
+	pdf := &gopdf.GoPdf{}
+
+	// Start the PDF (normal start)
+	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
+
+	// Import the first page of the template
+	err := pdf.ImportPagesFromSource(r.PDFtemplate, "/MediaBox")
+	if err != nil {
+		return nil, fmt.Errorf("couldn't load template into pdf %w", err)
 	}
 
 	return pdf, nil
