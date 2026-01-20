@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>InvoiceManager</title>
+  <link rel="stylesheet" href="/static/styles/styles.css" />
+  <link rel="stylesheet" href="/static/home.page.css" />
+  </head>
+
+
+  <body>
+
+<nav class="navbar">
+  <a href="/customers" class="customers">Customers</a>
+  <a href="/products" class="products">Products</a>
+  <div class="invoice-wrapper">
+    <a href="/makeaninvoice" class="invoice">Make an invoice</a>
+    <div class="invoice-suggestions"></div> 
+  </div>
+</nav>
+ <script src="/static/scripts/customer.page.js"></script>
+	</body>

@@ -35,9 +35,9 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err := invo.CalculateInvoiceLines(); err != nil {
 		return nil, fmt.Errorf("Error in InvoiceLines Calculation: %w", err)
 	}
-	if err := s.MyData.SendInvoice(ctx, invo); err != nil {
-		return nil, fmt.Errorf("Error Sending Invoice to Mydata: %w", err)
-	}
+	// if err := s.MyData.SendInvoice(ctx, invo); err != nil {
+	// 	return nil, fmt.Errorf("Error Sending Invoice to Mydata: %w", err)
+	// }
 	if err := s.Invoice.Save(ctx, invo); err != nil {
 		return nil, fmt.Errorf("Error Saving the Invoice to the DB: %w", err)
 	}

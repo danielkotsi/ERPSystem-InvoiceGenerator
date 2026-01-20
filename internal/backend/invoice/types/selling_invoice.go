@@ -101,13 +101,13 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 
 // makepdf must be in the domain interface
 func (r *SellingInvoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
-	r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
-	r.GetInvoice().LogoImage = r.Logo
-	if err != nil {
-		return nil, err
-	}
+	// r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
+	// r.GetInvoice().LogoImage = r.Logo
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "invoice.page.html")
+	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "emptyinvoice.html")
 	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)
