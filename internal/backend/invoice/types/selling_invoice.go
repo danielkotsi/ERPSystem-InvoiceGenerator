@@ -6,6 +6,7 @@ import (
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
 	"fmt"
+	"log"
 
 	"github.com/signintech/gopdf"
 	"github.com/skip2/go-qrcode"
@@ -122,7 +123,20 @@ func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err err
 		W: 80,
 		H: 80,
 	})
+	err = pdf.AddTTFFont("OpenSans", "../../../../../usr/share/fonts/open-sans/OpenSans-Bold.ttf")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = pdf.SetFont("OpenSans", "", 14)
+	if err != nil {
+		log.Fatal(err)
+	}
+	pdf.SetXY(500, 50)
 
+	pdf.MultiCell(&gopdf.Rect{
+		W: 300, // wrap at 300 points
+		H: 16,  // 16pt line height
+	}, "This is a very long product description that will wrap automatically inside the defined rectangle.")
 	result := &bytes.Buffer{}
 	_, err = pdf.WriteTo(result)
 	if err != nil {

@@ -78,7 +78,7 @@ func (r *Reciept) MakePDF(ctx context.Context) (pdf []byte, err error) {
 		return nil, err
 	}
 
-	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "reciept_invoice.page.html")
+	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "invoicetemplate.html")
 	tmpl, err := template.ParseFiles(invoicehtmltemp)
 	if err != nil {
 		log.Println(err)
