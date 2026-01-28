@@ -6,7 +6,7 @@ import (
 
 func IncomeCategoryExists(classificationitem payload.ClassificationItem, summary []payload.ClassificationItem) (int, bool) {
 	for index, category := range summary {
-		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
+		if classificationitem.ClassificationCategory == category.ClassificationCategory && *classificationitem.ClassificationType == *category.ClassificationType {
 			return index, true
 		}
 	}
