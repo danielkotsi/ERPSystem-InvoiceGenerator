@@ -152,16 +152,3 @@ func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err err
 	}
 	return result.Bytes(), nil
 }
-
-func (r *SellingInvoice) GeneratePDFfromTemp() (*gopdf.GoPdf, error) {
-	pdf := &gopdf.GoPdf{}
-
-	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
-
-	err := pdf.ImportPagesFromSource(r.PDFtemplate, "/MediaBox")
-	if err != nil {
-		return nil, fmt.Errorf("couldn't load template into pdf %w", err)
-	}
-
-	return pdf, nil
-}

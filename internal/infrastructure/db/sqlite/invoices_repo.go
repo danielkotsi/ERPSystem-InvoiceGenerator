@@ -177,6 +177,24 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error
 	return nil
 }
 
+// over here i want to populate the address of the seller in the case of a reciept invoice
+// becasue myData doesn't want it on the method SendInvoice but i need it on the final pdf
+// and on the invoice that is going to be saved,
+// the seller name,the Buyer name, the OtherDeliveryNoteHeader as well
 func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_type) error {
+	invoice := invo.GetInvoice()
+	//uncomment the following lines for reciept invoice not to panic
+	// invoice.Seller.Address = &payload.AddressType{}
+	// invoice.Seller.Address.Street = "athina"
+	// invoice.Seller.Address.Number = "123"
+	// invoice.Seller.Address.PostalCode = "12fh3"
+	// invoice.Seller.Address.City = "berling"
+	// name := "alex"
+	// invoice.Seller.Name = &name
+	// invoice.Byer.Name = &name
+	// invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
+	if err := r.UpdateDB(ctx, invoice.Byer.NewBalance, invoice.Byer.CodeNumber, invoice.InvoiceHeader.InvoiceType, invoice.InvoiceHeader.Aa); err != nil {
+		return fmt.Errorf("Error on updating the Database %w", err)
+	}
 	return nil
 }

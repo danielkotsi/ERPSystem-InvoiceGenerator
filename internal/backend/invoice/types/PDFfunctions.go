@@ -129,10 +129,13 @@ func AddRows(pdf *gopdf.GoPdf, x float64, y float64, colWidths []float64, lineHe
 					text := wrapped[c][i]
 					textWidth, _ := pdf.MeasureTextWidth(text)
 					var offsetX float64
-					if c == 1 {
-						offsetX = colWidths[c] - textWidth - 4 // optional small padding
-					} else {
+					switch c {
+					case 0, 2:
 						offsetX = (colWidths[c] - textWidth) / 2
+					case 6:
+						offsetX = colWidths[c] - textWidth - 1
+					default:
+						offsetX = colWidths[c] - textWidth - 4
 					}
 					pdf.SetXY(currX+offsetX, currY)
 					pdf.Text(text)
@@ -215,15 +218,21 @@ func SelectInvoiceRowFields(row payload.InvoiceRow) []string {
 		row.CodeNumber,
 		row.ItemDescr,
 		row.MeasurementUnitName,
-		strconv.Itoa(int(*row.Quantity)),
-		strconv.Itoa(int(row.UnitNetPrice)),
-		strconv.Itoa(int(row.TotalNetBeforeDiscount)),
-		strconv.Itoa(int(row.Discount)),
-		strconv.Itoa(int(row.DiscountAmount)),
-		strconv.Itoa(int(row.NetValue)),
+		floatValue(row.Quantity),
+		strconv.FormatFloat(row.UnitNetPrice, 'f', 2, 64),
+		strconv.FormatFloat(row.TotalNetBeforeDiscount, 'f', 2, 64),
+		strconv.FormatFloat(row.Discount, 'f', 2, 64),
+		strconv.FormatFloat(row.DiscountAmount, 'f', 2, 64),
+		strconv.FormatFloat(row.NetValue, 'f', 2, 64),
 		strconv.Itoa(int(row.VatCategoryName)),
-		strconv.Itoa(int(row.VatAmount)),
+		strconv.FormatFloat(row.VatAmount, 'f', 2, 64),
 	}
+}
+func floatValue(s *float64) string {
+	if s == nil {
+		return ""
+	}
+	return strconv.FormatFloat(*s, 'f', 2, 64)
 }
 func MakeBalance(pdf *gopdf.GoPdf, invo *payload.Invoice) {
 	err := pdf.SetFont("OpenSans", "", 9)
