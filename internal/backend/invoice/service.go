@@ -5,10 +5,7 @@ import (
 	"-invoice_manager/internal/backend/invoice/models"
 	"-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
-	"encoding/json"
 	"fmt"
-	"log"
-	"os"
 )
 
 type InvoiceService struct {
@@ -44,15 +41,6 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err := s.Invoice.Save(ctx, invo); err != nil {
 		return nil, fmt.Errorf("Error Saving the Invoice to the DB: %w", err)
 	}
-	data, err := json.Marshal(invo.GetInvoice())
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.WriteFile("product.json", data, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	pdf, err = invo.MakePDF(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("Error in PDF Generation: %w", err)

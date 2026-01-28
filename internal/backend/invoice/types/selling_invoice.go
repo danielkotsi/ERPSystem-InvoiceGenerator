@@ -104,39 +104,47 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 
 // makepdf must be in the domain interface
 func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
-	// r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
-	// r.GetInvoice().LogoImage = r.Logo
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	pdf, err := r.GeneratePDFfromTemp()
+	invo := r.GetInvoice()
+	invo.QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
+	invo.LogoImage = r.Logo
 	if err != nil {
 		return nil, err
 	}
 
-	qrpng, err := qrcode.Encode("http://localhost:8080", qrcode.Medium, 256)
+	pdf, err := GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
 	}
-	pdf.ImageFromImageInBytes(qrpng, 20, 20, &gopdf.Rect{
-		W: 80,
-		H: 80,
+
+	qrpng, err := qrcode.Encode(invo.QrURL, qrcode.Medium, 256)
+	if err != nil {
+		log.Fatal(err)
+	}
+	pdf.ImageFromImageFile(invo.LogoImage, 35, 15, &gopdf.Rect{
+		W: 155,
+		H: 95,
 	})
-	err = pdf.AddTTFFont("OpenSans", "../../../../../usr/share/fonts/open-sans/OpenSans-Bold.ttf")
+	pdf.ImageFromImageInBytes(qrpng, 480, 15, &gopdf.Rect{
+		W: 100,
+		H: 100,
+	})
+	err = pdf.AddTTFFont("OpenSans", "/usr/share/fonts/open-sans/OpenSans-Regular.ttf")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = pdf.SetFont("OpenSans", "", 14)
+	err = pdf.AddTTFFont("OpenSansBold", "../../../../../usr/share/fonts/open-sans/OpenSans-Bold.ttf")
 	if err != nil {
 		log.Fatal(err)
 	}
-	pdf.SetXY(500, 50)
+	MakeHeader(pdf, invo)
+	MakeVatCalculations(pdf, invo.InvoiceSummary)
+	MakePrices(pdf, invo.InvoiceSummary)
+	MakeInvoiceHeader(pdf, invo)
+	MakeBalance(pdf, invo)
+	MakeByer(pdf, invo.Byer)
+	MakeDelivery(pdf, invo)
+	MakeDetails(pdf, invo.InvoiceDetails)
 
-	pdf.MultiCell(&gopdf.Rect{
-		W: 300, // wrap at 300 points
-		H: 16,  // 16pt line height
-	}, "This is a very long product description that will wrap automatically inside the defined rectangle.")
 	result := &bytes.Buffer{}
 	_, err = pdf.WriteTo(result)
 	if err != nil {
@@ -148,10 +156,8 @@ func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err err
 func (r *SellingInvoice) GeneratePDFfromTemp() (*gopdf.GoPdf, error) {
 	pdf := &gopdf.GoPdf{}
 
-	// Start the PDF (normal start)
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
 
-	// Import the first page of the template
 	err := pdf.ImportPagesFromSource(r.PDFtemplate, "/MediaBox")
 	if err != nil {
 		return nil, fmt.Errorf("couldn't load template into pdf %w", err)
