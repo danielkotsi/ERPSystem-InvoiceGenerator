@@ -7,6 +7,7 @@ import (
 	"-invoice_manager/internal/backend/invoice/payload"
 	reposinterfaces "-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
+	"-invoice_manager/internal/utils"
 	"fmt"
 	"strconv"
 	"time"
@@ -118,7 +119,7 @@ func (r *InvoiceRepo) GetSellerInfo(ctx context.Context, seller *payload.Company
 }
 func (r *InvoiceRepo) UpdateBalance(ctx context.Context, buyerCodeNumber string, buyerNewBalance float64) error {
 	query := "update customers set Balance=? where CodeNumber==?;"
-	if _, err := r.DB.ExecContext(ctx, query, buyerNewBalance, buyerCodeNumber); err != nil {
+	if _, err := r.DB.ExecContext(ctx, query, utils.RoundTo2(buyerNewBalance), buyerCodeNumber); err != nil {
 		return err
 	}
 	return nil
@@ -183,7 +184,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error
 // the seller name,the Buyer name, the OtherDeliveryNoteHeader as well
 func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_type) error {
 	invoice := invo.GetInvoice()
-	//uncomment the following lines for reciept invoice not to panic
+	// uncomment the following lines for reciept invoice and buying invoice not to panic
 	// invoice.Seller.Address = &payload.AddressType{}
 	// invoice.Seller.Address.Street = "athina"
 	// invoice.Seller.Address.Number = "123"

@@ -5,9 +5,9 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
-	"html/template"
+	"github.com/signintech/gopdf"
+	"github.com/skip2/go-qrcode"
 	"log"
-	"path/filepath"
 )
 
 type Buying_Invoice struct {
@@ -30,6 +30,7 @@ func (r *Buying_Invoice) CalculateInvoiceLines() error {
 	invoicelines := r.GetInvoice().InvoiceDetails
 	buyer := &r.GetInvoice().Byer
 	summary := &r.GetInvoice().InvoiceSummary
+	paymentmethods := r.GetInvoice().PaymentMethods
 	for i, line := range invoicelines {
 		emptylines--
 		line.VatCategoryName = utils.VatNames(line.VatCategory)
@@ -50,6 +51,9 @@ func (r *Buying_Invoice) CalculateInvoiceLines() error {
 		}
 	}
 	summary.TotalGrossValue = utils.RoundTo2(summary.TotalNetValue + summary.TotalVatAmount)
+	if err := r.CompletePaymentMethods(paymentmethods, buyer, summary.TotalGrossValue); err != nil {
+		return err
+	}
 	summary.Emptylines = make([]int, emptylines)
 	return nil
 }
@@ -94,37 +98,55 @@ func (r *Buying_Invoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 	for i, payment := range paymentmethods.Details {
 		paymentmethods.Details[i].Type = paymenttypes[payment.Name]
 		paymentmethods.Details[i].Amount = totalgrossamount
-		if paymentmethods.Details[i].Type == 5 {
-			buyer.NewBalance = utils.RoundTo2(buyer.OldBalance + totalgrossamount)
-		}
 	}
 
 	return nil
 }
 
-func (r *Buying_Invoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
-	r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
-	r.GetInvoice().LogoImage = r.Logo
+func (r *Buying_Invoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
+
+	invo := r.GetInvoice()
+	invo.LogoImage = r.Logo
+
+	pdf, err := GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
 	}
 
-	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "invoice.page.html")
-	tmpl, err := template.ParseFiles(invoicehtmltemp)
+	qrpng, err := qrcode.Encode("http://localhost:8080", qrcode.Medium, 256)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
-
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *r.GetInvoice()})
+	pdf.ImageFromImageFile(invo.LogoImage, 35, 15, &gopdf.Rect{
+		W: 155,
+		H: 95,
+	})
+	pdf.ImageFromImageInBytes(qrpng, 480, 15, &gopdf.Rect{
+		W: 100,
+		H: 100,
+	})
+	err = pdf.AddTTFFont("OpenSans", "/usr/share/fonts/open-sans/OpenSans-Regular.ttf")
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
+	err = pdf.AddTTFFont("OpenSansBold", "../../../../../usr/share/fonts/open-sans/OpenSans-Bold.ttf")
+	if err != nil {
+		log.Fatal(err)
+	}
+	MakeHeader(pdf, invo)
+	MakeVatCalculations(pdf, invo.InvoiceSummary)
+	MakePrices(pdf, invo.InvoiceSummary)
+	MakeInvoiceHeader(pdf, invo)
+	MakeBalance(pdf, invo)
+	MakeByer(pdf, invo.Byer)
+	MakeDelivery(pdf, invo)
+	MakeDetails(pdf, invo.InvoiceDetails)
 
-	pdf, err = utils.HTMLtoPDF2(buf.String())
+	result := &bytes.Buffer{}
+	_, err = pdf.WriteTo(result)
 	if err != nil {
 		return nil, err
 	}
+	return result.Bytes(), nil
 
-	return pdf, nil
 }

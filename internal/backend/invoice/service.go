@@ -37,7 +37,7 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	}
 	//i need to go to the my data client and base on the invoice type not to send the invoice in the case of a buying invoice
 	if err := s.MyData.SendInvoice(ctx, invo); err != nil {
-		return nil, fmt.Errorf("Error Sending Invoice to Mydata: %w", err)
+		return nil, err
 	}
 	if err := s.Invoice.Save(ctx, invo); err != nil {
 		return nil, fmt.Errorf("Error Saving the Invoice to the DB: %w", err)

@@ -5,7 +5,6 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
-	"fmt"
 	"log"
 
 	"github.com/signintech/gopdf"
