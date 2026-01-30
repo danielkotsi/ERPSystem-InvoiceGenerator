@@ -5,15 +5,17 @@ import (
 	"context"
 	"-invoice_manager/internal/backend/invoice/payload"
 	"-invoice_manager/internal/utils"
-	"html/template"
 	"log"
-	"path/filepath"
+
+	"github.com/signintech/gopdf"
+	"github.com/skip2/go-qrcode"
 )
 
 type SellingInvoice struct {
-	Payload *payload.InvoicePayload
-	Logo    string
-	Abspath string
+	Payload     *payload.InvoicePayload
+	Logo        string
+	Abspath     string
+	PDFtemplate []byte
 }
 
 func (r *SellingInvoice) Initialize() {
@@ -100,29 +102,48 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 }
 
 // makepdf must be in the domain interface
-func (r *SellingInvoice) MakePDF(ctx context.Context) (pdf []byte, err error) {
-	r.GetInvoice().QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
-	r.GetInvoice().LogoImage = r.Logo
+func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
+	invo := r.GetInvoice()
+	invo.LogoImage = r.Logo
+
+	pdf, err := GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
 	}
 
-	invoicehtmltemp := filepath.Join(r.Abspath, "assets", "templates", "invoice.page.html")
-	tmpl, err := template.ParseFiles(invoicehtmltemp)
+	qrpng, err := qrcode.Encode(invo.QrURL, qrcode.Medium, 256)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
-
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, map[string]payload.Invoice{"Invoice": *r.GetInvoice()})
+	pdf.ImageFromImageFile(invo.LogoImage, 35, 15, &gopdf.Rect{
+		W: 155,
+		H: 95,
+	})
+	pdf.ImageFromImageInBytes(qrpng, 480, 15, &gopdf.Rect{
+		W: 100,
+		H: 100,
+	})
+	err = pdf.AddTTFFont("OpenSans", "/usr/share/fonts/open-sans/OpenSans-Regular.ttf")
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
+	err = pdf.AddTTFFont("OpenSansBold", "../../../../../usr/share/fonts/open-sans/OpenSans-Bold.ttf")
+	if err != nil {
+		log.Fatal(err)
+	}
+	MakeHeader(pdf, invo)
+	MakeVatCalculations(pdf, invo.InvoiceSummary)
+	MakePrices(pdf, invo.InvoiceSummary)
+	MakeInvoiceHeader(pdf, invo)
+	MakeBalance(pdf, invo)
+	MakeByer(pdf, invo.Byer)
+	MakeDelivery(pdf, invo)
+	MakeDetails(pdf, invo.InvoiceDetails)
 
-	pdf, err = utils.HTMLtoPDF2(buf.String())
+	result := &bytes.Buffer{}
+	_, err = pdf.WriteTo(result)
 	if err != nil {
 		return nil, err
 	}
-
-	return pdf, nil
+	return result.Bytes(), nil
 }

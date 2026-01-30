@@ -1,15 +1,23 @@
 package types
 
-import "-invoice_manager/internal/backend/invoice/payload"
+import (
+	"-invoice_manager/internal/backend/invoice/payload"
+)
 
 func IncomeCategoryExists(classificationitem payload.ClassificationItem, summary []payload.ClassificationItem) (int, bool) {
 	for index, category := range summary {
-		if classificationitem.ClassificationCategory == category.ClassificationCategory && classificationitem.ClassificationType == category.ClassificationType {
+		if classificationitem.ClassificationCategory == category.ClassificationCategory && stringValue(classificationitem.ClassificationType) == stringValue(category.ClassificationType) {
 			return index, true
 		}
 	}
 
 	return 0, false
+}
+func stringValue(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }
 
 func ExpenseCategoryExists(classificationitem payload.ExpensesClassificationItem, summary []payload.ExpensesClassificationItem) (int, bool) {
