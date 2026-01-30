@@ -104,11 +104,7 @@ func (r *SellingInvoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 // makepdf must be in the domain interface
 func (r *SellingInvoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
 	invo := r.GetInvoice()
-	invo.QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
 	invo.LogoImage = r.Logo
-	if err != nil {
-		return nil, err
-	}
 
 	pdf, err := GeneratePDFfromTemp()
 	if err != nil {

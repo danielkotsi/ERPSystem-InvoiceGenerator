@@ -43,17 +43,11 @@ func (r *DeliveryNote) CalculateInvoiceLines() error {
 
 func (r *DeliveryNote) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
 	invo := r.GetInvoice()
-	invo.QrBase64, err = utils.GenerateQRcodeBase64(r.GetInvoice().QrURL)
 	invo.LogoImage = r.Logo
-	if err != nil {
-		return nil, err
-	}
-
 	pdf, err := GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
 	}
-
 	qrpng, err := qrcode.Encode(invo.QrURL, qrcode.Medium, 256)
 	if err != nil {
 		log.Fatal(err)

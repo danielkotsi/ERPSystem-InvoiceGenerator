@@ -35,7 +35,6 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err := invo.CalculateInvoiceLines(); err != nil {
 		return nil, fmt.Errorf("Error in InvoiceLines Calculation: %w", err)
 	}
-	//i need to go to the my data client and base on the invoice type not to send the invoice in the case of a buying invoice
 	if err := s.MyData.SendInvoice(ctx, invo); err != nil {
 		return nil, err
 	}

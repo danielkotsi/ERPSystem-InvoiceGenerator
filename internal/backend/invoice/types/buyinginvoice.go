@@ -104,15 +104,12 @@ func (r *Buying_Invoice) CompletePaymentMethods(paymentmethods *payload.PaymentM
 }
 
 func (r *Buying_Invoice) MakePDF(ctx context.Context) (resultpdf []byte, err error) {
-
 	invo := r.GetInvoice()
 	invo.LogoImage = r.Logo
-
 	pdf, err := GeneratePDFfromTemp()
 	if err != nil {
 		return nil, err
 	}
-
 	qrpng, err := qrcode.Encode("http://localhost:8080", qrcode.Medium, 256)
 	if err != nil {
 		log.Fatal(err)
@@ -148,5 +145,4 @@ func (r *Buying_Invoice) MakePDF(ctx context.Context) (resultpdf []byte, err err
 		return nil, err
 	}
 	return result.Bytes(), nil
-
 }
