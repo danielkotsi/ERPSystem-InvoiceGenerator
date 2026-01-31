@@ -5,14 +5,35 @@ import (
 )
 
 type CustomerStmts struct {
-	CreateCustomer      *sql.Stmt
-	CreateBranchCompany *sql.Stmt
-	SearchByName        *sql.Stmt
-	SearchBranch        *sql.Stmt
-	SearchById          *sql.Stmt
+	CreateCustomer            *sql.Stmt
+	CreateBranchCompany       *sql.Stmt
+	SearchByName              *sql.Stmt
+	CustomerSuggestionsByName *sql.Stmt
+	SearchBranch              *sql.Stmt
+	BranchSuggestions         *sql.Stmt
+	SearchById                *sql.Stmt
 }
 
 func NewCustomerStmts(db *sql.DB) (*CustomerStmts, error) {
+	branchSuggestionsQuery := `SELECT 
+	BranchCode,
+	CompanyCode,
+	NAME
+	from BranchCompanies 
+	where CompanyCode==? and BranchCode like ?;
+	`
+	branchSuggestionsStmt, err := db.Prepare(branchSuggestionsQuery)
+	if err != nil {
+		return nil, err
+	}
+	customersSuggestionsByNameQuery := `SELECT CodeNumber,
+	NAME
+	from customers  where NAME LIKE ? 
+	`
+	customerSuggestionsStmt, err := db.Prepare(customersSuggestionsByNameQuery)
+	if err != nil {
+		return nil, err
+	}
 	createCustomerQuery := `insert into customers(
 	CodeNumber,
 	NAME,
@@ -131,9 +152,11 @@ func NewCustomerStmts(db *sql.DB) (*CustomerStmts, error) {
 		return nil, err
 	}
 	return &CustomerStmts{CreateCustomer: insertStmt,
-		CreateBranchCompany: createBranchStmt,
-		SearchByName:        selectByNameStmt,
-		SearchBranch:        selectBranchStmt,
-		SearchById:          searchByIdStmt,
+		CreateBranchCompany:       createBranchStmt,
+		SearchByName:              selectByNameStmt,
+		SearchBranch:              selectBranchStmt,
+		SearchById:                searchByIdStmt,
+		CustomerSuggestionsByName: customerSuggestionsStmt,
+		BranchSuggestions:         branchSuggestionsStmt,
 	}, nil
 }

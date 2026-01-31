@@ -19,6 +19,8 @@ func NewCustomersHandler(invoserv *CustomersService, executor *services.Excecuto
 	return &CustomersHandler{CustomersService: invoserv, Excecutor: executor}
 }
 
+// excecutes html for customers page, uses the customer repo to get all the info for all the customers
+// Need to add a limit for the cusotmers returned and maybe choose less info to be returned
 func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 	resp, err := h.CustomersService.ListCustomers(r.Context(), search)
@@ -33,6 +35,8 @@ func (h *CustomersHandler) GetCustomers(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+// That's done doesnt need to change
+// ececute the html for the customer by id uses the customer repo to get all the info for one customer based on the codeNumber
 func (h *CustomersHandler) GetCustomerById(w http.ResponseWriter, r *http.Request) {
 	codeNumber := strings.TrimPrefix(r.URL.String(), "/customers/byid/")
 	resp, err := h.CustomersService.GetCustomerById(r.Context(), codeNumber)
@@ -47,10 +51,12 @@ func (h *CustomersHandler) GetCustomerById(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+// responds with Json, returns all the customers with all the info for the suggestions to render and also fill the fields when they are chosen
+// needs to be refactored so that it returns only the name.
 func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http.Request) {
 
 	search := r.URL.Query().Get("search")
-	resp, err := h.CustomersService.ListCustomers(r.Context(), search)
+	resp, err := h.CustomersService.ListCustomerSuggestions(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
@@ -60,11 +66,13 @@ func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http
 	utils.JsonResponse(w, resp, 200)
 }
 
+// responds with Json, returns all the info for all the branch Companies of a certain company
+// needs to be refactored so that it returns only the name and the codeNumber
 func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, r *http.Request) {
 
 	search := r.URL.Query().Get("search")
 	company := r.URL.Query().Get("company")
-	resp, err := h.CustomersService.ListBranchCompanies(r.Context(), search, company)
+	resp, err := h.CustomersService.ListBranchCompanySuggestions(r.Context(), search, company)
 	if err != nil {
 		log.Println(err)
 		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)

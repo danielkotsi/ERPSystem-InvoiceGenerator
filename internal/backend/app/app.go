@@ -64,8 +64,8 @@ func NewAppConsts() (exeDir, logo string, db *sql.DB, tmpl *template.Template) {
 		exePath, _ := os.Executable()
 		exeDir = filepath.Dir(exePath)
 	}
-	logo := filepath.Join(exeDir, "static", "images", "logo.png")
-	db := sqlite.NewDatabase(exeDir)
+	logo = filepath.Join(exeDir, "static", "images", "logo.png")
+	db = sqlite.NewDatabase(exeDir)
 	templatesDir := filepath.Join(exeDir, "assets", "templates", "*.page.html")
 	tmpl = template.Must(template.ParseGlob(templatesDir))
 	return exeDir, logo, db, tmpl

@@ -7,7 +7,6 @@ import (
 	"-invoice_manager/internal/backend/invoice/payload"
 	reposinterfaces "-invoice_manager/internal/backend/invoice/reposInterfaces"
 	"-invoice_manager/internal/backend/invoice/types"
-	"-invoice_manager/internal/utils"
 	"fmt"
 	"strconv"
 	"time"
@@ -174,6 +173,7 @@ func (r *InvoiceRepo) CompleteInvoiceHeader(header *payload.InvoiceHeader) error
 // and on the invoice that is going to be saved,
 // the seller name,the Buyer name, the OtherDeliveryNoteHeader as well
 func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_type) error {
+	invoice := invo.GetInvoice()
 	if err := r.UpdateDB(ctx, invoice.Byer.NewBalance, invoice.Byer.CodeNumber, invoice.InvoiceHeader.InvoiceType, invoice.InvoiceHeader.Aa); err != nil {
 		return fmt.Errorf("Error on updating the Database %w", err)
 	}
@@ -185,7 +185,6 @@ func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_typ
 		}
 	case *types.Buying_Invoice:
 		//this is so that it doesn't panic on empty values
-		invoice := invo.GetInvoice()
 		invoice.Seller.Address = &payload.AddressType{}
 		invoice.Seller.Address.Street = "athina"
 		invoice.Seller.Address.Number = "123"

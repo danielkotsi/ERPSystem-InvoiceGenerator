@@ -29,6 +29,7 @@ func (s *InvoiceService) GetInvoiceInfo(ctx context.Context, invoicetype types.I
 }
 
 func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces.Invoice_type) (pdf []byte, err error) {
+
 	if err := s.Invoice.HydrateInvoice(ctx, invo); err != nil {
 		return nil, fmt.Errorf("Error in Hydration from DB: %w", err)
 	}
@@ -45,5 +46,6 @@ func (s *InvoiceService) CreateInvoice(ctx context.Context, invo reposinterfaces
 	if err != nil {
 		return nil, fmt.Errorf("Error in PDF Generation: %w", err)
 	}
+
 	return pdf, nil
 }
