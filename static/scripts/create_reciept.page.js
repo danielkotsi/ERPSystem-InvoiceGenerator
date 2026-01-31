@@ -59,7 +59,7 @@ const customers_fields = {
 
 
 
-addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields);
+addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields, 'suggestions/full/customer?search=');
 
 
 attachAutocomplete('paymentdue-input', paymentDueCodes, 'paymentdue-suggestions');
