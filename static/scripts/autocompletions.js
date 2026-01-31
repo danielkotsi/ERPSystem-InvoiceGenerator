@@ -12,27 +12,22 @@ async function fetchDB(fetchurl) {
 	}
 };
 
-export function addBranchCompletion(element, elementsuggestions, endpoint, fieldsMap = {}) {
+export function addBranchCompletion(element, elementsuggestions, endpoint, fieldsMap = {}, endpoint2) {
 	element.addEventListener('input', async (e) => {
-		console.log(e.target.value);
 		const company = document.getElementById('customersCode')
 		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
-		console.log(url);
 		const resultsuggestions = await fetchDB(url)
-		console.log(resultsuggestions, Array.isArray(resultsuggestions))
-		console.log(resultsuggestions);
-		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		const endpoint3 = endpoint2 + company.value + '&search='
+		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap, endpoint3);
 	});
 
 
 	element.addEventListener('focus', async (e) => {
-		console.log(e.target.value);
 		const company = document.getElementById('customersCode')
 		const url = baseURL + endpoint + '?company=' + company.value + '&' + 'search=' + e.target.value
-		console.log(url);
 		const resultsuggestions = await fetchDB(url)
-		console.log(resultsuggestions);
-		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		const endpoint3 = endpoint2 + company.value + '&search='
+		showBranchSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap, endpoint3);
 	});
 
 	document.addEventListener("click", (e) => {
@@ -41,13 +36,13 @@ export function addBranchCompletion(element, elementsuggestions, endpoint, field
 		}
 	});
 }
-export function addAutocompletion(element, elementsuggestions, endpoint, fieldsMap = {}) {
+export function addAutocompletion(element, elementsuggestions, endpoint, fieldsMap = {}, endpoint2) {
 	element.addEventListener('input', async (e) => {
 		console.log(e.target.value);
 		const resultsuggestions = await fetchDB(baseURL + endpoint + e.target.value)
 		console.log(resultsuggestions, Array.isArray(resultsuggestions))
 		console.log(resultsuggestions);
-		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap, endpoint2);
 	});
 
 
@@ -55,7 +50,7 @@ export function addAutocompletion(element, elementsuggestions, endpoint, fieldsM
 		console.log(e.target.value);
 		const resultsuggestions = await fetchDB(baseURL + endpoint + e.target.value)
 		console.log(resultsuggestions);
-		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap);
+		showSuggestions(resultsuggestions, element, elementsuggestions, fieldsMap, endpoint2);
 	});
 
 	document.addEventListener("click", (e) => {
@@ -66,22 +61,22 @@ export function addAutocompletion(element, elementsuggestions, endpoint, fieldsM
 };
 
 
-function showBranchSuggestions(results, input, element, fieldsMap = {}) {
+function showBranchSuggestions(results, input, element, fieldsMap = {}, endpoint2) {
 	clearSuggestions(element);
 
 	results.forEach(item => {
 		const div = document.createElement("div");
 		div.className = "suggestion-item";
-		div.textContent = item.branchCode + item.name;
+		div.textContent = item.codeNumber + item.name;
 
 		div.addEventListener("click", () => {
-			selectSuggestion(item, input, element, fieldsMap);
+			selectSuggestion(item, input, element, fieldsMap, endpoint2);
 		});
 
 		element.appendChild(div);
 	});
 }
-function showSuggestions(results, input, element, fieldsMap = {}) {
+function showSuggestions(results, input, element, fieldsMap = {}, endpoint) {
 	clearSuggestions(element);
 
 	results.forEach(item => {
@@ -90,7 +85,7 @@ function showSuggestions(results, input, element, fieldsMap = {}) {
 		div.textContent = item.name;
 
 		div.addEventListener("click", () => {
-			selectSuggestion(item, input, element, fieldsMap);
+			selectSuggestion(item, input, element, fieldsMap, endpoint);
 		});
 
 		element.appendChild(div);
@@ -101,9 +96,12 @@ function showSuggestions(results, input, element, fieldsMap = {}) {
 function clearSuggestions(element) {
 	element.innerHTML = "";
 }
-function selectSuggestion(item, input, element, fieldsMap = {}) {
-	input.value = item.name;
+async function selectSuggestion(item, input, element, fieldsMap = {}, endpoint) {
+	// input.value = item.name;
 	clearSuggestions(element);
+	console.log(baseURL + endpoint + item.codeNumber);
+	item = await fetchDB(baseURL + endpoint + item.codeNumber);
+	console.log(item.name);
 
 	for (const key in fieldsMap) {
 		const el = fieldsMap[key];

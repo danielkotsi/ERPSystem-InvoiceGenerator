@@ -21,7 +21,23 @@ func (s *ProductsService) ListProducts(ctx context.Context, search string) (resp
 	}
 	return products, nil
 }
+func (s *ProductsService) GetProductSuggestions(ctx context.Context, search string) (resp []models.ProductSuggestion, err error) {
 
+	products, err := s.Products.GetProductSuggestions(ctx, search)
+	if err != nil {
+		return []models.ProductSuggestion{}, err
+	}
+	return products, nil
+}
+
+func (s *ProductsService) GetProductById(ctx context.Context, search string) (resp models.Product, err error) {
+
+	product, err := s.Products.GetProductById(ctx, search)
+	if err != nil {
+		return models.Product{}, err
+	}
+	return product, nil
+}
 func (s *ProductsService) CreateProduct(ctx context.Context, product models.Product) error {
 
 	if err := s.Products.CreateProduct(ctx, product); err != nil {

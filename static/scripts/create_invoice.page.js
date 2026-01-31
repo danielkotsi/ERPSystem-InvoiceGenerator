@@ -63,6 +63,7 @@ const customers_fields = {
 
 
 const product_fields = {
+	name: document.getElementById('product_name_input-0'),
 	codeNumber: document.getElementById('product_code_input-0'),
 	description: document.getElementById('product_description-0'),
 	measurementUnit: document.getElementById('product_measurementUnit-0'),
@@ -172,6 +173,7 @@ addproductButton.addEventListener('click', () => {
 	const productwithIndexNameInput = document.getElementById('product_name_input-' + (lineItemIndex - 1));
 	const productwithIndexsuggestionsDiv = document.getElementById('product-suggestions-' + (lineItemIndex - 1));
 	const productwithIndexfields = {
+		name: document.getElementById('product_name_input-' + (lineItemIndex - 1)),
 		codeNumber: document.getElementById('product_code_input-' + (lineItemIndex - 1)),
 		description: document.getElementById('product_description-' + (lineItemIndex - 1)),
 		measurementUnit: document.getElementById('product_measurementUnit-' + (lineItemIndex - 1)),
@@ -179,15 +181,15 @@ addproductButton.addEventListener('click', () => {
 		unitNetPrice: document.getElementById('product_unit_net_price-' + (lineItemIndex - 1)),
 		vatCategory: document.getElementById('product_vatCategory-' + (lineItemIndex - 1)),
 	};
-	addAutocompletion(productwithIndexNameInput, productwithIndexsuggestionsDiv, 'suggestions/products?search=', productwithIndexfields);
+	addAutocompletion(productwithIndexNameInput, productwithIndexsuggestionsDiv, 'suggestions/products?search=', productwithIndexfields, 'suggestions/full/product?search=');
 
 });
 
 
 
-addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies", branches_fieldsmap);
-addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields);
-addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields);
+addBranchCompletion(branchesCodeInput, branches_suggestionsDiv, "suggestions/branchcompanies", branches_fieldsmap, 'suggestions/full/branchcompany?company=');
+addAutocompletion(customersNameInput, customer_suggestionsDiv, 'suggestions/customers?search=', customers_fields, 'suggestions/full/customer?search=');
+addAutocompletion(productNameInput, product_suggestionsDiv, 'suggestions/products?search=', product_fields, 'suggestions/full/product?search=');
 
 
 attachAutocomplete('paymentdue-input', paymentDueCodes, 'paymentdue-suggestions');
@@ -196,9 +198,6 @@ attachAutocomplete('paymentmethods-input', paymentMethodCodes, 'paymentmethods-s
 attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
 attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
 attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');
-
-
-
 
 
 const discountelement = document.getElementById('customersDiscount');
@@ -215,24 +214,3 @@ discountelement.addEventListener("change", () => {
 		}
 	});
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

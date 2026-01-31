@@ -10,3 +10,8 @@ type Product struct {
 	VatCategory         int     `json:"vatCategory" form:"vatCategory"`
 	ProductCategory     *string `json:"productCategory,omitempty" form:"productCategory"`
 }
+
+type ProductSuggestion struct {
+	CodeNumber string `json:"codeNumber" form:"codeNumber"`
+	Name       string `json:"name" form:"name"`
+}

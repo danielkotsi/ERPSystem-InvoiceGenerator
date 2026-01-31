@@ -151,6 +151,28 @@ func (r *CustomersRepo) CreateCustomer(ctx context.Context, customer_data payloa
 	return nil
 }
 
+func (r *CustomersRepo) ListFullBranchCompany(ctx context.Context, company, search string) (payload.BranchCompany, error) {
+	var p payload.BranchCompany
+
+	err := r.Stmts.SearchFullBranch.QueryRowContext(ctx, company, search).Scan(
+		&p.BranchCode,
+		&p.CompanyCode,
+		&p.Name,
+		&p.Phone,
+		&p.Mobile_Phone,
+		&p.Email,
+		&p.Address.Street,
+		&p.Address.Number,
+		&p.Address.PostalCode,
+		&p.Address.City,
+		&p.Country,
+		&p.OldBalance,
+	)
+	if err != nil {
+		return payload.BranchCompany{}, err
+	}
+	return p, nil
+}
 func (r *CustomersRepo) ListBranchCompanies(ctx context.Context, company, search string) ([]payload.BranchCompany, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)

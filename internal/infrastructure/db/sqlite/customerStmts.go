@@ -10,11 +10,33 @@ type CustomerStmts struct {
 	SearchByName              *sql.Stmt
 	CustomerSuggestionsByName *sql.Stmt
 	SearchBranch              *sql.Stmt
+	SearchFullBranch          *sql.Stmt
 	BranchSuggestions         *sql.Stmt
 	SearchById                *sql.Stmt
 }
 
 func NewCustomerStmts(db *sql.DB) (*CustomerStmts, error) {
+	searchFullBranchQuery := `
+	SELECT 
+	BranchCode,
+	CompanyCode,
+	NAME,
+	Phone,
+	Mobile_Phone,
+	Email,
+	AddStreet,
+	AddNumber,
+	AddPostalCode,
+	AddCity,
+	Country,
+	Balance
+	from BranchCompanies 
+	where CompanyCode==? and BranchCode==?;
+`
+	searchFullBranchStmt, err := db.Prepare(searchFullBranchQuery)
+	if err != nil {
+		return nil, err
+	}
 	branchSuggestionsQuery := `SELECT 
 	BranchCode,
 	CompanyCode,
@@ -151,12 +173,14 @@ func NewCustomerStmts(db *sql.DB) (*CustomerStmts, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &CustomerStmts{CreateCustomer: insertStmt,
+	return &CustomerStmts{
+		CreateCustomer:            insertStmt,
 		CreateBranchCompany:       createBranchStmt,
 		SearchByName:              selectByNameStmt,
 		SearchBranch:              selectBranchStmt,
 		SearchById:                searchByIdStmt,
 		CustomerSuggestionsByName: customerSuggestionsStmt,
 		BranchSuggestions:         branchSuggestionsStmt,
+		SearchFullBranch:          searchFullBranchStmt,
 	}, nil
 }

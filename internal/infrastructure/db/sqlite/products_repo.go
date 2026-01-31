@@ -18,6 +18,59 @@ func NewProductsRepo(db *sql.DB) *ProductsRepo {
 	return &ProductsRepo{DB: db}
 }
 
+func (r *ProductsRepo) GetProductSuggestions(ctx context.Context, search string) (products []models.ProductSuggestion, err error) {
+	search = fmt.Sprintf("%v%%", search)
+	fmt.Println(search)
+	query := `SELECT 
+	products.CodeNumber,
+	products.name
+	from products 
+	left join product_categories on products.CodeNumber==product_categories.product_id 
+	left join categoriesforproducts on product_categories.category_id==categoriesforproducts.id
+	left join measurementUnits on products.measurmentUnit==measurementUnits.id 
+	where products.name LIKE ? ;`
+	rows, err := r.DB.QueryContext(ctx, query, search)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []models.ProductSuggestion
+	for rows.Next() {
+		var p models.ProductSuggestion
+		if err := rows.Scan(&p.CodeNumber, &p.Name); err != nil {
+			return nil, err
+		}
+		out = append(out, p)
+	}
+	return out, nil
+}
+func (r *ProductsRepo) GetProductById(ctx context.Context, search string) (product models.Product, err error) {
+	var productCat sql.NullString
+	var p models.Product
+	query := `SELECT 
+	products.CodeNumber,
+	products.name,
+	products.description,
+	products.unit_net_price,
+	products.measurmentUnit,
+	measurementUnits.unit,
+	products.vat_category,
+	categoriesforproducts.name 
+	from products 
+	left join product_categories on products.CodeNumber==product_categories.product_id 
+	left join categoriesforproducts on product_categories.category_id==categoriesforproducts.id
+	left join measurementUnits on products.measurmentUnit==measurementUnits.id 
+	where products.codeNumber==? ;`
+
+	err = r.DB.QueryRowContext(ctx, query, search).Scan(&p.CodeNumber, &p.Name, &p.Description, &p.Unit_Net_Price, &p.MeasurementUnitCode, &p.MeasurementUnit, &p.VatCategory, &productCat)
+	if err != nil {
+		return models.Product{}, err
+	}
+	p.ProductCategory = utils.NullableString(productCat)
+
+	return p, nil
+}
 func (r *ProductsRepo) ListProducts(ctx context.Context, search string) ([]models.Product, error) {
 	search = fmt.Sprintf("%v%%", search)
 	fmt.Println(search)

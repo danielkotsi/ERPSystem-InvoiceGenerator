@@ -41,6 +41,13 @@ func (s *CustomersService) ListBranchCompanies(ctx context.Context, search, comp
 	}
 	return customers, nil
 }
+func (s *CustomersService) GetBranchCompanyById(ctx context.Context, search, company string) (resp payload.BranchCompany, err error) {
+	branchCompany, err := s.Customers.ListFullBranchCompany(ctx, company, search)
+	if err != nil {
+		return resp, err
+	}
+	return branchCompany, nil
+}
 
 // returns basic Branch Company Info just for the suggestions
 func (s *CustomersService) ListBranchCompanySuggestions(ctx context.Context, search, company string) (resp []models.BranchSuggestion, err error) {
@@ -51,6 +58,13 @@ func (s *CustomersService) ListBranchCompanySuggestions(ctx context.Context, sea
 	return customers, nil
 }
 
+func (s *CustomersService) GetCustomerByIdWithoutBranchCompanies(ctx context.Context, codeNumber string) (resp payload.Company, err error) {
+	customer, err := s.Customers.GetCustomerById(ctx, codeNumber)
+	if err != nil {
+		return resp, err
+	}
+	return customer, nil
+}
 func (s *CustomersService) GetCustomerById(ctx context.Context, codeNumber string) (resp models.CustomerById, err error) {
 	customer, err := s.Customers.GetCustomerById(ctx, codeNumber)
 	if err != nil {

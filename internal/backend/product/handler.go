@@ -34,7 +34,19 @@ func (h *ProductsHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 func (h *ProductsHandler) GetProductSuggestions(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
-	resp, err := h.ProductsService.ListProducts(r.Context(), search)
+	resp, err := h.ProductsService.GetProductSuggestions(r.Context(), search)
+	if err != nil {
+		log.Println(err)
+		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
+}
+
+func (h *ProductsHandler) GetProductById(w http.ResponseWriter, r *http.Request) {
+	search := r.URL.Query().Get("search")
+	resp, err := h.ProductsService.GetProductById(r.Context(), search)
 	if err != nil {
 		log.Println(err)
 		h.Excecutor.Tmpl.ExecuteTemplate(w, "error.page.html", err)

@@ -66,6 +66,19 @@ func (h *CustomersHandler) GetCustomerSuggestions(w http.ResponseWriter, r *http
 	utils.JsonResponse(w, resp, 200)
 }
 
+func (h *CustomersHandler) GetFullCustomer(w http.ResponseWriter, r *http.Request) {
+
+	search := r.URL.Query().Get("search")
+	resp, err := h.CustomersService.GetCustomerByIdWithoutBranchCompanies(r.Context(), search)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
+}
+
 // responds with Json, returns all the info for all the branch Companies of a certain company
 // needs to be refactored so that it returns only the name and the codeNumber
 func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +95,19 @@ func (h *CustomersHandler) GetBranchCompaniesSuggestions(w http.ResponseWriter, 
 	utils.JsonResponse(w, resp, 200)
 }
 
+func (h *CustomersHandler) GetFullBranchCompany(w http.ResponseWriter, r *http.Request) {
+
+	search := r.URL.Query().Get("search")
+	company := r.URL.Query().Get("company")
+	resp, err := h.CustomersService.GetBranchCompanyById(r.Context(), search, company)
+	if err != nil {
+		log.Println(err)
+		utils.JsonResponse(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.JsonResponse(w, resp, 200)
+}
 func (h *CustomersHandler) CreateBranchCompany(w http.ResponseWriter, r *http.Request) {
 	var branch payload.BranchCompany
 	if err := utils.ParseFormData(r, &branch); err != nil {

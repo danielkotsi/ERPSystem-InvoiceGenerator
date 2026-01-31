@@ -68,29 +68,3 @@ attachAutocomplete('paymentmethods-input', paymentMethodCodes, 'paymentmethods-s
 attachAutocomplete('income_classification_type', incomeClassificationTypes, 'income-classification-type-suggestions');
 attachAutocomplete('income_classification_category', incomeClassificationCategories, 'income-classification-category-suggestions');
 attachAutocomplete('invoiceType', invoiceTypes, 'invoiceType-suggestions');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

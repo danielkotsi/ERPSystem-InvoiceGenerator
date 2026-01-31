@@ -177,50 +177,50 @@ func (r *InvoiceRepo) Save(ctx context.Context, invo reposinterfaces.Invoice_typ
 	if err := r.UpdateDB(ctx, invoice.Byer.NewBalance, invoice.Byer.CodeNumber, invoice.InvoiceHeader.InvoiceType, invoice.InvoiceHeader.Aa); err != nil {
 		return fmt.Errorf("Error on updating the Database %w", err)
 	}
-	switch invo.(type) {
-	case *types.SellingInvoice:
-		_, err := r.Stmts.SaveSellingInvoice.ExecContext(ctx, invo.GetInvoice())
-		if err != nil {
-			return err
-		}
-	case *types.Buying_Invoice:
-		//this is so that it doesn't panic on empty values
-		invoice.Seller.Address = &payload.AddressType{}
-		invoice.Seller.Address.Street = "athina"
-		invoice.Seller.Address.Number = "123"
-		invoice.Seller.Address.PostalCode = "12fh3"
-		invoice.Seller.Address.City = "berling"
-		name := "alex"
-		invoice.Seller.Name = &name
-		invoice.Byer.Name = &name
-		invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
-		_, err := r.Stmts.SaveBuyingInvoice.ExecContext(ctx, invo.GetInvoice())
-		if err != nil {
-			return err
-		}
-	case *types.DeliveryNote:
-		_, err := r.Stmts.SaveDeliveryNote.ExecContext(ctx, invo.GetInvoice())
-		if err != nil {
-			return err
-		}
-	case *types.Reciept:
-		//this is so that it doesn't panic on empty values
-		invoice := invo.GetInvoice()
-		invoice.Seller.Address = &payload.AddressType{}
-		invoice.Seller.Address.Street = "athina"
-		invoice.Seller.Address.Number = "123"
-		invoice.Seller.Address.PostalCode = "12fh3"
-		invoice.Seller.Address.City = "berling"
-		name := "alex"
-		invoice.Seller.Name = &name
-		invoice.Byer.Name = &name
-		invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
-		_, err := r.Stmts.SaveReciept.ExecContext(ctx, invo.GetInvoice())
-		if err != nil {
-			return err
-		}
-	default:
-	}
+	// switch invo.(type) {
+	// case *types.SellingInvoice:
+	// 	_, err := r.Stmts.SaveSellingInvoice.ExecContext(ctx, invo.GetInvoice())
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// case *types.Buying_Invoice:
+	// 	//this is so that it doesn't panic on empty values
+	// 	invoice.Seller.Address = &payload.AddressType{}
+	// 	invoice.Seller.Address.Street = "athina"
+	// 	invoice.Seller.Address.Number = "123"
+	// 	invoice.Seller.Address.PostalCode = "12fh3"
+	// 	invoice.Seller.Address.City = "berling"
+	// 	name := "alex"
+	// 	invoice.Seller.Name = &name
+	// 	invoice.Byer.Name = &name
+	// 	invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
+	// 	_, err := r.Stmts.SaveBuyingInvoice.ExecContext(ctx, invo.GetInvoice())
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// case *types.DeliveryNote:
+	// 	_, err := r.Stmts.SaveDeliveryNote.ExecContext(ctx, invo.GetInvoice())
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// case *types.Reciept:
+	// 	//this is so that it doesn't panic on empty values
+	// 	invoice := invo.GetInvoice()
+	// 	invoice.Seller.Address = &payload.AddressType{}
+	// 	invoice.Seller.Address.Street = "athina"
+	// 	invoice.Seller.Address.Number = "123"
+	// 	invoice.Seller.Address.PostalCode = "12fh3"
+	// 	invoice.Seller.Address.City = "berling"
+	// 	name := "alex"
+	// 	invoice.Seller.Name = &name
+	// 	invoice.Byer.Name = &name
+	// 	invoice.InvoiceHeader.OtherDeliveryNoteHeader = &payload.OtherDeliveryNoteHeader{}
+	// 	_, err := r.Stmts.SaveReciept.ExecContext(ctx, invo.GetInvoice())
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// default:
+	// }
 
 	return nil
 }
