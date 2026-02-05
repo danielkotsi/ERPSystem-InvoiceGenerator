@@ -1,87 +1,71 @@
-# 
-an internal tool for companies to create reciepts
+# ERP System - Invoice Management
 
-this is the first commit just starting out with the structure
+This is a Go-based ERP system for managing invoices, clients, and products. It uses **SQLite** as the database and a frontend built with **HTML, CSS, and JavaScript**.
 
+## Features
 
+* Create, read, and manage invoices (buying, selling, receipts, delivery notes)
+* Store and manage client and product information
+* Generate PDF invoices from HTML templates
+* Interactive frontend for invoice creation and data management
 
-So:
--the company table is good.
+## Project Structure
 
--i need the VAT category for the products
+```
+├── cmd/app                  # Main application entry point
+├── internal                 # Backend logic, models, services, and utilities
+├── assets                   # HTML templates and PDF templates
+├── static                   # Frontend scripts, styles, images
+├── go.mod                   # Go module file
+├── go.sum                   # Go module checksums
+├── replacements.txt         # File for sensitive data replacement
+```
 
-το τιμολογιο πωλησης ειναι κατηγοριας 1.1 μαζι με κατηγοριεσ εσοδων
-το τιμολογιο αγορας ειναι κατηγοριασς 1.1 μαζι με κατηγοριεσ εξοδψν
+## Requirements
 
-το δελτιο αποστολης ειναι κατηγοριας 9.3
+* Go >= 1.25
+* SQLite3
+* `.env` file containing environment variables (database path, API keys, etc.)
 
+## Setup and Run
 
-ο δειγματισμος αναφερεται στον σκοπο διακινησης, και ειναι σε δελτιο αποστολης (9.3)
+1. **Clone the repository**
 
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
 
+2. **Add `.env` file**
 
-TO DO :
+* Place your environment variables in the `.env` file at the root of the project.
 
--When a company with no subcompanies is chosen the fileds of the delivery must filled up
--AA must be changalble
--Customers, subcompanies and products must be editable.
-<!-- -epi pistosi must have options for how long, which is going to be presented in the invoice. -->
-<!-- -PaymentMethod must be passed with the readble type not the number that it corresponds -->
-<!-- -make the add product in greek -->
--Pass the values about the products and the prices into the final invoice
--fix(calculate) payment amount
--need a different pdf generating html for the reciept and probably for the selling invoice as well
--need to calculate the new balance differently for the reciepts and also check whether it is epi pistosi or not in order to highten it
--need to calculate expenses classification seperately for buying invoice
-reciept invoice vat cat. 8
-inc cat 1_8
+3. **Export environment variables**
 
+```bash
+cd cmd/app
+. ./exportenv.sh
+```
 
+4. **Run the application**
 
+```bash
+go run .
+```
 
-New Architecture (Domain Driven => Microsetvoces scalable):
-internal/
-├── backend/                  # could eventually become a microservice
-│   ├── invoice/
-│   │   ├── handler.go
-│   │   ├── service.go
-│   │   ├── repository.go      # interface
-│   │   ├── types/
-│   │   │   ├── selling.go
-│   │   │   ├── buying.go
-│   │   │   ├── receipt.go
-│   │   │   └── delivery.go
-│   │   └── payload/
-│   │       └── invoice_payload.go
-│   │
-│   ├── customer/
-│   │   ├── handler.go
-│   │   ├── service.go
-│   │   └── repository.go
-│   │
-│   ├── product/
-│   │   ├── handler.go
-│   │   ├── service.go
-│   │   └── repository.go
-│   │
-│   └── routes/
-│       └── routes.go
-│
-├── infrastructure/           # external systems
-│   ├── sqlite/
-│   │   ├── invoice_repo.go
-│   │   ├── customer_repo.go
-│   │   └── product_repo.go
-│   └── mydata/
-│       ├── client.go
-│       └── invoice_sender.go
-│
-├── shared/                   # truly shared utilities
-│   ├── utils/
-│   │   ├── htmltopdf.go
-│   │   ├── vatcalculation.go
-│   │   └── ...
-│   └── models/
-│       ├── config.go
-│       └── common_structs.go
+* The backend server will start and interact with the SQLite database.
+* Access the frontend through the static HTML/CSS/JS files in your browser.
 
+## Usage
+
+* Use the frontend pages in `assets/templates` and `static/scripts` to create invoices, manage clients, and products.
+* PDFs are generated using the templates in `assets/pdftemplates`.
+
+## Notes
+
+* Make sure the SQLite database file path is correctly set in `.env`.
+* All sensitive data should be kept out of the repository when making it public; use `replacements.txt` if needed to scrub secrets before sharing.
+
+---
+
+**Enjoy managing your invoices efficiently with this ERP system!**
