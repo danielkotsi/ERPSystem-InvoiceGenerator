@@ -18,7 +18,6 @@ This is a Go-based ERP system for managing invoices, clients, and products. It u
 ├── static                   # Frontend scripts, styles, images
 ├── go.mod                   # Go module file
 ├── go.sum                   # Go module checksums
-├── replacements.txt         # File for sensitive data replacement
 ```
 
 ## Requirements
@@ -64,7 +63,6 @@ go run .
 ## Notes
 
 * Make sure the SQLite database file path is correctly set in `.env`.
-* All sensitive data should be kept out of the repository when making it public; use `replacements.txt` if needed to scrub secrets before sharing.
 
 ---
 
