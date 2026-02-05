@@ -1,7 +1,7 @@
 package types
 
 import (
-	"-invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/backend/invoice/payload"
 )
 
 func IncomeCategoryExists(classificationitem payload.ClassificationItem, summary []payload.ClassificationItem) (int, bool) {

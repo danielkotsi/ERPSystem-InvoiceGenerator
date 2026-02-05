@@ -1,10 +1,10 @@
 package invoice
 
 import (
-	"-invoice_manager/internal/backend/invoice/adapter"
-	"-invoice_manager/internal/backend/invoice/models"
-	"-invoice_manager/internal/backend/services"
-	"-invoice_manager/internal/utils"
+	"invoice_manager/internal/backend/invoice/adapter"
+	"invoice_manager/internal/backend/invoice/models"
+	"invoice_manager/internal/backend/services"
+	"invoice_manager/internal/utils"
 	"log"
 	"net/http"
 )

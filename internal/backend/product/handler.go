@@ -1,9 +1,9 @@
 package product
 
 import (
-	"-invoice_manager/internal/backend/product/models"
-	"-invoice_manager/internal/backend/services"
-	"-invoice_manager/internal/utils"
+	"invoice_manager/internal/backend/product/models"
+	"invoice_manager/internal/backend/services"
+	"invoice_manager/internal/utils"
 	"log"
 	"net/http"
 )

@@ -2,10 +2,10 @@ package invoice
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/invoice/models"
-	"-invoice_manager/internal/backend/invoice/reposInterfaces"
-	"-invoice_manager/internal/backend/invoice/types"
 	"fmt"
+	"invoice_manager/internal/backend/invoice/models"
+	"invoice_manager/internal/backend/invoice/reposInterfaces"
+	"invoice_manager/internal/backend/invoice/types"
 )
 
 type InvoiceService struct {

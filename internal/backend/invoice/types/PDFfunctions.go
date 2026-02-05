@@ -1,9 +1,9 @@
 package types
 
 import (
-	"-invoice_manager/internal/backend/invoice/payload"
 	"fmt"
 	"github.com/signintech/gopdf"
+	"invoice_manager/internal/backend/invoice/payload"
 	"log"
 	"os"
 	"strconv"

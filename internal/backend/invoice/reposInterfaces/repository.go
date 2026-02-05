@@ -2,9 +2,9 @@ package reposinterfaces
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/invoice/models"
-	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/backend/invoice/types"
+	"invoice_manager/internal/backend/invoice/models"
+	"invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/backend/invoice/types"
 )
 
 type Invoice_repo interface {

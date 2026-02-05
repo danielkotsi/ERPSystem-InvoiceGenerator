@@ -3,12 +3,12 @@ package sqlite
 import (
 	"context"
 	"database/sql"
-	"-invoice_manager/internal/backend/invoice/models"
-	"-invoice_manager/internal/backend/invoice/payload"
-	reposinterfaces "-invoice_manager/internal/backend/invoice/reposInterfaces"
-	"-invoice_manager/internal/backend/invoice/types"
-	"-invoice_manager/internal/utils"
 	"fmt"
+	"invoice_manager/internal/backend/invoice/models"
+	"invoice_manager/internal/backend/invoice/payload"
+	reposinterfaces "invoice_manager/internal/backend/invoice/reposInterfaces"
+	"invoice_manager/internal/backend/invoice/types"
+	"invoice_manager/internal/utils"
 	"strconv"
 	"time"
 )

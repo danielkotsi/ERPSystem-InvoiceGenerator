@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"-invoice_manager/internal/models"
 	"encoding/json"
+	"invoice_manager/internal/models"
 	"log"
 	"os"
 )

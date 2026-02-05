@@ -3,10 +3,10 @@ package mydata
 import (
 	"bytes"
 	"context"
-	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/models"
 	"encoding/xml"
 	"fmt"
+	"invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/models"
 	"io"
 	"log"
 	"net/http"

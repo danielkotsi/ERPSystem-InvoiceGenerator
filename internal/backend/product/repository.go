@@ -2,7 +2,7 @@ package product
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/product/models"
+	"invoice_manager/internal/backend/product/models"
 )
 
 type Products_repo interface {

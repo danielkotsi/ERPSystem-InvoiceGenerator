@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"-invoice_manager/internal/backend/customer"
-	"-invoice_manager/internal/backend/invoice"
-	"-invoice_manager/internal/backend/middleware"
-	"-invoice_manager/internal/backend/product"
+	"invoice_manager/internal/backend/customer"
+	"invoice_manager/internal/backend/invoice"
+	"invoice_manager/internal/backend/middleware"
+	"invoice_manager/internal/backend/product"
 	"net/http"
 	"path/filepath"
 )

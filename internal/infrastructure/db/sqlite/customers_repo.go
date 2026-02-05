@@ -3,8 +3,8 @@ package sqlite
 import (
 	"context"
 	"database/sql"
-	"-invoice_manager/internal/backend/invoice/payload"
 	"fmt"
+	"invoice_manager/internal/backend/invoice/payload"
 )
 
 type CustomersRepo struct {

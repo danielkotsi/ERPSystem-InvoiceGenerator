@@ -2,7 +2,7 @@ package invoice
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/invoice/reposInterfaces"
+	"invoice_manager/internal/backend/invoice/reposInterfaces"
 )
 
 type MyData_repo interface {

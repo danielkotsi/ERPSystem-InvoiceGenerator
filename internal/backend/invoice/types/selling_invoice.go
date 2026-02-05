@@ -3,8 +3,8 @@ package types
 import (
 	"bytes"
 	"context"
-	"-invoice_manager/internal/backend/invoice/payload"
-	"-invoice_manager/internal/utils"
+	"invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/utils"
 	"log"
 
 	"github.com/signintech/gopdf"

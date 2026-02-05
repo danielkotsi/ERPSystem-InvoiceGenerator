@@ -2,7 +2,7 @@ package customer
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/backend/invoice/payload"
 )
 
 type Customers_repo interface {

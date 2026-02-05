@@ -1,7 +1,7 @@
 package models
 
 import (
-	"-invoice_manager/internal/backend/invoice/payload"
+	"invoice_manager/internal/backend/invoice/payload"
 )
 
 type CustomerById struct {

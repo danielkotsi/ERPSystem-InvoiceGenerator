@@ -1,10 +1,10 @@
 package adapter
 
 import (
-	"-invoice_manager/internal/backend/invoice/reposInterfaces"
-	"-invoice_manager/internal/backend/invoice/types"
-	"-invoice_manager/internal/utils"
 	"errors"
+	"invoice_manager/internal/backend/invoice/reposInterfaces"
+	"invoice_manager/internal/backend/invoice/types"
+	"invoice_manager/internal/utils"
 	"log"
 	"net/http"
 	"os"

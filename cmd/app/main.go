@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"-invoice_manager/internal/backend/app"
+	"invoice_manager/internal/backend/app"
 
 	_ "github.com/mattn/go-sqlite3"
 )

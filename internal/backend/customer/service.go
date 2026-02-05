@@ -2,9 +2,9 @@ package customer
 
 import (
 	"context"
-	"-invoice_manager/internal/backend/customer/models"
-	"-invoice_manager/internal/backend/invoice/payload"
 	"fmt"
+	"invoice_manager/internal/backend/customer/models"
+	"invoice_manager/internal/backend/invoice/payload"
 )
 
 type CustomersService struct {

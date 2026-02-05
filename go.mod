@@ -1,4 +1,4 @@
-module -invoice_manager
+module invoice_manager
 
 go 1.25.4
 
@@ -22,4 +22,4 @@ require (
 	golang.org/x/sys v0.38.0 // indirect
 )
 
-replace github.com/signintech/gopdf => github.com//gopdffork v0.2.0
+replace github.com/signintech/gopdf => github.com/danielkotsi/gopdffork v0.2.0

@@ -2,8 +2,8 @@ package mydata
 
 import (
 	"context"
-	reposinterfaces "-invoice_manager/internal/backend/invoice/reposInterfaces"
-	"-invoice_manager/internal/backend/invoice/types"
+	reposinterfaces "invoice_manager/internal/backend/invoice/reposInterfaces"
+	"invoice_manager/internal/backend/invoice/types"
 )
 
 type MyDataRepo struct {
